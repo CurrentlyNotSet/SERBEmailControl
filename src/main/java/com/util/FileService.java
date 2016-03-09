@@ -23,7 +23,6 @@ public class FileService {
             switch(InetAddress.getLocalHost().getHostName()) {
                 case "Parkers-MacBook-Air.local":
                 case "Parkers-Air":
-                    Global.setDev(true);
                     Global.setScanPath("/Users/parkerjohnston/Desktop/SERB/Scan/");
                     Global.setEmailPath("/Users/parkerjohnston/Desktop/SERB/Email/");
                     Global.setActivityPath("/Users/parkerjohnston/Desktop/SERB/Activity/");
@@ -31,13 +30,11 @@ public class FileService {
                 //TODO: Add in other machines with the correct paths
                 case "Alienware15":
                 case "Sniper":
-                    Global.setDev(true);
                     Global.setScanPath("C:\\SERB\\Scan\\");
                     Global.setEmailPath("C:\\SERB\\Email\\");
                     Global.setActivityPath("C:\\SERB\\Activity\\");
                     break;
                 default:
-                    Global.setDev(false);
                     Global.setScanPath("G:\\SERB\\Scan\\");
                     Global.setEmailPath("G:\\SERB\\Email\\");
                     Global.setActivityPath("G:\\SERB\\Activity\\");

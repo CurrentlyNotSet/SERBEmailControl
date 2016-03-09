@@ -6,7 +6,7 @@
 package com.email;
 
 import com.fileOperations.EmailBodyToPDF;
-import com.model.EmailModel;
+import com.model.EmailMessageModel;
 import com.sql.EMail;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
 import java.io.BufferedOutputStream;
@@ -66,8 +66,7 @@ public class recieveEmail {
         Authenticator auth = new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-               return new PasswordAuthentication(
-                  authUser, authPass);
+               return new PasswordAuthentication(authUser, authPass);
             }
          };
         
@@ -94,7 +93,7 @@ public class recieveEmail {
             inbox.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
-                    EmailModel eml = new EmailModel();
+                    EmailMessageModel eml = new EmailMessageModel();
                     eml.setSection("");
                     eml = saveEnvelope(msg, msg, eml);
                     eml = EmailBodyToPDF.createEmailBody(eml);
@@ -114,7 +113,7 @@ public class recieveEmail {
         }
     }
     
-    private EmailModel saveEnvelope(Message m, Part p, EmailModel eml) {
+    private EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
         try {
             Address[] address;
             //From

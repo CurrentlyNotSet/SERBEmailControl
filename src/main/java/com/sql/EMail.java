@@ -5,7 +5,7 @@
  */
 package com.sql;
 
-import com.model.EmailModel;
+import com.model.EmailMessageModel;
 import com.util.SlackNotification;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EMail {
     
-    public static int InsertEmail(EmailModel eml){
+    public static int InsertEmail(EmailMessageModel eml){
         Connection conn = null;
         PreparedStatement ps = null;
         try {

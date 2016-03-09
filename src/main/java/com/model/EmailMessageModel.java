@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  *
  * @author Andrew
  */
-public class EmailModel {
+public class EmailMessageModel {
     
     private int id;
     private String section;

@@ -5,7 +5,7 @@
  */
 package com.fileOperations;
 
-import com.model.EmailModel;
+import com.model.EmailMessageModel;
 import com.util.PDFBoxTools;
 import java.awt.Color;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class EmailBodyToPDF {
 
-    public static EmailModel createEmailBody(EmailModel emailText) {
+    public static EmailMessageModel createEmailBody(EmailMessageModel emailText) {
         String file = "";
         
         

@@ -5,7 +5,9 @@
  */
 package com.util;
 
+import com.model.SystemEmailModel;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  *
@@ -14,7 +16,6 @@ import java.text.SimpleDateFormat;
 public class Global {
         
     private static final int sleep = 0;
-    private static boolean dev = false;
     public static Thread emailThread, scansThread;
     
     //Date Time Formatters
@@ -25,21 +26,12 @@ public class Global {
     private static String emailPath;
     private static String activityPath;
     
-    
-    public static SimpleDateFormat getMmddyyyyhhmmssa() {
-        return mmddyyyyhhmmssa;
-    }
+    //System Email
+    private static List<SystemEmailModel> incomingEmailParams;
+    private static List<SystemEmailModel> outgoingEmailParams;
 
     public static int getSleep() {
         return sleep;
-    }
-    
-    public static boolean isDev() {
-        return dev;
-    }
-
-    public static void setDev(boolean dev) {
-        Global.dev = dev;
     }
 
     public static String getScanPath() {
@@ -66,4 +58,23 @@ public class Global {
         Global.activityPath = activityPath;
     }
 
+    public static List<SystemEmailModel> getIncomingEmailParams() {
+        return incomingEmailParams;
+    }
+
+    public static void setIncomingEmailParams(List<SystemEmailModel> incomingEmailParams) {
+        Global.incomingEmailParams = incomingEmailParams;
+    }
+
+    public static List<SystemEmailModel> getOutgoingEmailParams() {
+        return outgoingEmailParams;
+    }
+
+    public static void setOutgoingEmailParams(List<SystemEmailModel> outgoingEmailParams) {
+        Global.outgoingEmailParams = outgoingEmailParams;
+    }
+
+    public static SimpleDateFormat getMmddyyyyhhmmssa() {
+        return mmddyyyyhhmmssa;
+    }
 }

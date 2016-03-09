@@ -7,8 +7,10 @@ package com;
 
 import com.calInvites.*;
 import com.incomingEmails.*;
+import com.model.SystemEmailModel;
 import com.outgoingEmail.*;
 import com.scans.ScansStamper;
+import com.sql.SystemEmail;
 import com.util.FileService;
 import com.util.Global;
 import java.util.Date;
@@ -22,6 +24,7 @@ public class MainClass {
     
     public void setDefaults() {
         FileService.setFolderPaths();
+        SystemEmail.loadEmailConnectionInformation();
         threads();
     }
     

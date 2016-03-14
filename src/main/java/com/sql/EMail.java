@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -25,7 +26,6 @@ public class EMail {
         try {
             conn = DBConnection.connectToDB();
             String sql = "INSERT INTO EMail ("
-                    + "id, "
                     + "section, "
                     + "emailFrom, "
                     + "emailTo, "
@@ -37,7 +37,6 @@ public class EMail {
                     + "emailBody, "
                     + "emailBodyFileName "
                     + ") VALUES ("
-                    + "default, "
                     + "?, " //1
                     + "?, " //2
                     + "?, " //3
@@ -48,7 +47,7 @@ public class EMail {
                     + "?, " //8
                     + "?, " //9
                     + "?)"; //10
-            ps = conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString   ( 1, eml.getSection());
             ps.setString   ( 2, eml.getEmailFrom());
             ps.setString   ( 3, eml.getEmailTo());
@@ -60,8 +59,10 @@ public class EMail {
             ps.setString   ( 9, eml.getEmailBody());
             ps.setString   (10, eml.getEmailBodyFileName());
             ps.executeUpdate();
-            ResultSet newRow = ps.getResultSet();
-            return newRow.getInt("id");
+            ResultSet newRow = ps.getGeneratedKeys();
+            if (newRow.next()){
+                return newRow.getInt(1);
+            }
         } catch (SQLException ex) {
             SlackNotification.sendNotification(ex.toString());
         } finally {

@@ -22,9 +22,8 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class SystemEmail {
     
-    public static void loadEmailConnectionInformation() {
-        List<SystemEmailModel> incomingList = new ArrayList();
-        List<SystemEmailModel> outgoingList = new ArrayList();
+    public static boolean loadEmailConnectionInformation() {
+        List<SystemEmailModel> systemEmailList = new ArrayList();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -37,33 +36,30 @@ public class SystemEmail {
                 SystemEmailModel row = new SystemEmailModel();
                 row.setId(rs.getInt("id"));
                 row.setActive(rs.getInt("active"));
-                row.setIO(rs.getString("inout"));
                 row.setSection(rs.getString("section"));
-                row.setProtocol(rs.getString("protocol"));
                 row.setEmailAddress(rs.getString("emailAddress"));
-                row.setUrl(rs.getString("url"));
-                row.setUser(rs.getString("username"));
-                row.setPass(rs.getString("password"));
-                row.setFolder(rs.getString("folder"));
-
-                switch (rs.getString("inout")) {
-                    case "IN":
-                        incomingList.add(row);
-                        break;
-                    case "OUT":
-                        outgoingList.add(row);
-                        break;
-                }
+                row.setUsername(rs.getString("username"));
+                row.setPassword(rs.getString("password"));
+                row.setIncomingURL(rs.getString("incomingURL"));
+                row.setIncomingPort(rs.getInt("incomingPort"));
+                row.setIncomingProtocol(rs.getString("incomingProtocol"));
+                row.setIncomingFolder(rs.getString("incomingFolder"));
+                row.setOutgoingURL(rs.getString("outgoingURL"));
+                row.setOutgoingPort(rs.getInt("outgoingPort"));
+                row.setOutgoingProtocol(rs.getString("outgoingProtocol"));
+                row.setOutgoingFolder(rs.getString("outgoingFolder"));
+                systemEmailList.add(row);
             }
-            Global.setIncomingEmailParams(incomingList);
-            Global.setOutgoingEmailParams(outgoingList);
+            Global.setSystemEmailParams(systemEmailList);
         } catch (SQLException ex) {
             SlackNotification.sendNotification(ex.toString());
+            return false;
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(rs);
         }
+        return true;
     }
     
 }

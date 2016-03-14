@@ -25,7 +25,7 @@ public class ScansStamper {
             System.out.println(item.getId() + ": " + path);
             
             if (FileService.testFileLock(path)){
-                StampPDF.stampDocument(path);
+                StampPDF.stampDocument(path, item.getDate());
                 Activity.markEntryStamped(item.getId());
             }
         }

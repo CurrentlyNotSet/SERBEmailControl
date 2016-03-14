@@ -14,7 +14,8 @@ import java.util.List;
  * @author Andrew
  */
 public class Global {
-        
+    
+    private static final boolean debug = true;    
     private static final int sleep = 0;
     public static Thread emailThread, scansThread;
     
@@ -27,8 +28,11 @@ public class Global {
     private static String activityPath;
     
     //System Email
-    private static List<SystemEmailModel> incomingEmailParams;
-    private static List<SystemEmailModel> outgoingEmailParams;
+    private static List<SystemEmailModel> systemEmailParams;
+
+    public static boolean isDebug() {
+        return debug;
+    }
 
     public static int getSleep() {
         return sleep;
@@ -58,22 +62,14 @@ public class Global {
         Global.activityPath = activityPath;
     }
 
-    public static List<SystemEmailModel> getIncomingEmailParams() {
-        return incomingEmailParams;
+    public static List<SystemEmailModel> getSystemEmailParams() {
+        return systemEmailParams;
     }
 
-    public static void setIncomingEmailParams(List<SystemEmailModel> incomingEmailParams) {
-        Global.incomingEmailParams = incomingEmailParams;
+    public static void setSystemEmailParams(List<SystemEmailModel> systemEmailParams) {
+        Global.systemEmailParams = systemEmailParams;
     }
-
-    public static List<SystemEmailModel> getOutgoingEmailParams() {
-        return outgoingEmailParams;
-    }
-
-    public static void setOutgoingEmailParams(List<SystemEmailModel> outgoingEmailParams) {
-        Global.outgoingEmailParams = outgoingEmailParams;
-    }
-
+    
     public static SimpleDateFormat getMmddyyyyhhmmssa() {
         return mmddyyyyhhmmssa;
     }

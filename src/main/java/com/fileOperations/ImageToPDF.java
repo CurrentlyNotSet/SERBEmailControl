@@ -64,7 +64,6 @@ public class ImageToPDF {
                 } catch (IOException ex) {
                     Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                StampPDF.stampDocument(file);
             }
         }
     }

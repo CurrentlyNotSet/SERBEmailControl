@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +34,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
  */
 public class PDFBoxTools {
     
-    public static String HeaderTimeStamp() {
-        return Global.getMmddyyyyhhmmssa().format(new Date()) + " - SERB";
+    public static String HeaderTimeStamp(Timestamp docketDate) {
+        return Global.getMmddyyyyhhmmssa().format(docketDate);
     }
     
     public static List<String> setLineBreaks(String text, float width, float fontSize, PDFont pdfFont) {

@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class FileService {
     
-    public static void setFolderPaths() {
+    public static boolean setFolderPaths() {
         try {
             switch(InetAddress.getLocalHost().getHostName()) {
                 case "Parkers-MacBook-Air.local":
@@ -26,21 +26,24 @@ public class FileService {
                     Global.setScanPath("/Users/parkerjohnston/Desktop/SERB/Scan/");
                     Global.setEmailPath("/Users/parkerjohnston/Desktop/SERB/Email/");
                     Global.setActivityPath("/Users/parkerjohnston/Desktop/SERB/Activity/");
-                    break;
+                    return true;
                 //TODO: Add in other machines with the correct paths
                 case "Alienware15":
                 case "Sniper":
                     Global.setScanPath("C:\\SERB\\Scan\\");
                     Global.setEmailPath("C:\\SERB\\Email\\");
                     Global.setActivityPath("C:\\SERB\\Activity\\");
-                    break;
+                    return true;
                 default:
                     Global.setScanPath("G:\\SERB\\Scan\\");
                     Global.setEmailPath("G:\\SERB\\Email\\");
                     Global.setActivityPath("G:\\SERB\\Activity\\");
+                    return true;
             }
+            
         } catch (UnknownHostException ex) {
             SlackNotification.sendNotification(ex.getMessage());
+            return false;
         }
     }
 

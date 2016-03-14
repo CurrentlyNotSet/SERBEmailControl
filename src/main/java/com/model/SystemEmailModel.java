@@ -11,16 +11,20 @@ package com.model;
  */
 public class SystemEmailModel {
     
-    private int id;
-    private int active;
-    private String IO;
+    private int    id;
+    private int    active;
     private String section;
-    private String protocol;
     private String emailAddress;
-    private String url;
-    private String user;
-    private String pass;
-    private String folder;
+    private String username;
+    private String password;
+    private String incomingURL;
+    private int    incomingPort;
+    private String incomingProtocol;
+    private String incomingFolder;
+    private String outgoingURL;
+    private int    outgoingPort;
+    private String outgoingProtocol;
+    private String outgoingFolder;
 
     public int getId() {
         return id;
@@ -38,28 +42,12 @@ public class SystemEmailModel {
         this.active = active;
     }
 
-    public String getIO() {
-        return IO;
-    }
-
-    public void setIO(String IO) {
-        this.IO = IO;
-    }
-
     public String getSection() {
         return section;
     }
 
     public void setSection(String section) {
         this.section = section;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
     }
 
     public String getEmailAddress() {
@@ -70,37 +58,85 @@ public class SystemEmailModel {
         this.emailAddress = emailAddress;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getUser() {
-        return user;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getPass() {
-        return pass;
+    public String getIncomingURL() {
+        return incomingURL;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setIncomingURL(String incomingURL) {
+        this.incomingURL = incomingURL;
     }
 
-    public String getFolder() {
-        return folder;
+    public int getIncomingPort() {
+        return incomingPort;
     }
 
-    public void setFolder(String folder) {
-        this.folder = folder;
+    public void setIncomingPort(int incomingPort) {
+        this.incomingPort = incomingPort;
     }
-    
+
+    public String getIncomingProtocol() {
+        return incomingProtocol;
+    }
+
+    public void setIncomingProtocol(String incomingProtocol) {
+        this.incomingProtocol = incomingProtocol;
+    }
+
+    public String getIncomingFolder() {
+        return incomingFolder;
+    }
+
+    public void setIncomingFolder(String incomingFolder) {
+        this.incomingFolder = incomingFolder;
+    }
+
+    public String getOutgoingURL() {
+        return outgoingURL;
+    }
+
+    public void setOutgoingURL(String outgoingURL) {
+        this.outgoingURL = outgoingURL;
+    }
+
+    public int getOutgoingPort() {
+        return outgoingPort;
+    }
+
+    public void setOutgoingPort(int outgoingPort) {
+        this.outgoingPort = outgoingPort;
+    }
+
+    public String getOutgoingProtocol() {
+        return outgoingProtocol;
+    }
+
+    public void setOutgoingProtocol(String outgoingProtocol) {
+        this.outgoingProtocol = outgoingProtocol;
+    }
+
+    public String getOutgoingFolder() {
+        return outgoingFolder;
+    }
+
+    public void setOutgoingFolder(String outgoingFolder) {
+        this.outgoingFolder = outgoingFolder;
+    }
+
     
 }

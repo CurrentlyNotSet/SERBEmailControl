@@ -9,6 +9,7 @@ import com.util.PDFBoxTools;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -23,13 +24,13 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class StampPDF {
 
-    public static void stampDocument(String file) {
+    public static void stampDocument(String file, Timestamp docketTime) {
         // the document
             PDDocument doc = null;
         try {    
             PDFont stampFont = PDType1Font.TIMES_ROMAN;
             float stampFontSize = 10;
-            String title = PDFBoxTools.HeaderTimeStamp();
+            String title = PDFBoxTools.HeaderTimeStamp(docketTime);
             float titleWidth = stampFont.getStringWidth(title) / 1000 * stampFontSize;
             float titleHeight = stampFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * stampFontSize;
             int marginTop = 20;

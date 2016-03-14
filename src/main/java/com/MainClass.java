@@ -6,7 +6,7 @@
 package com;
 
 import com.calInvites.*;
-import com.incomingEmails.*;
+import com.email.recieveEmail;
 import com.model.SystemEmailModel;
 import com.outgoingEmail.*;
 import com.scans.ScansStamper;
@@ -23,9 +23,11 @@ import java.util.concurrent.TimeUnit;
 public class MainClass {
     
     public void setDefaults() {
-        FileService.setFolderPaths();
-        SystemEmail.loadEmailConnectionInformation();
-        threads();
+        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
+            threads();
+        } else {
+            System.err.println("unable to resolve network connections");
+        }
     }
     
     /**
@@ -98,16 +100,9 @@ public class MainClass {
     private void incomingEmails() {
         System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Started  Receiving Emails");
         
-        //SERB Emails
-        MEDincomingEmails.recieveEmails();
-        REPincomingEmails.recieveEmails();
-        ORGincomingEmails.recieveEmails();
-        ULPincomingEmails.recieveEmails();
-        HearingsIncomingEmails.recieveEmails();
-        
-        //PBR Emails
-        CMDSincomingEmails.recieveEmails();
-        CSCincomingEmails.recieveEmails();
+        for (SystemEmailModel account : Global.getSystemEmailParams()){
+            recieveEmail.fetchEmail(account);
+        }
         
         System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Finished Receiving Emails");
     }

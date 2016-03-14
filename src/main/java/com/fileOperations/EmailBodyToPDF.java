@@ -312,7 +312,6 @@ public class EmailBodyToPDF {
                 } catch (IOException ex) {
                     Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                StampPDF.stampDocument(file);
             }
             emailText.setEmailBodyFileName(file);
         }

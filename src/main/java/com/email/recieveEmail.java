@@ -7,8 +7,10 @@ package com.email;
 
 import com.fileOperations.EmailBodyToPDF;
 import com.model.EmailMessageModel;
+import com.model.SystemEmailModel;
 import com.sql.EMail;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
+import com.util.Global;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -39,58 +41,26 @@ import javax.mail.search.FlagTerm;
  * @author Andrew
  */
 public class recieveEmail {
-    
-    static String authUser = "";
-    static String authPass = "";
-    static String emailUsername = "";
-    static String emailPassword = "";
-    static String emailHost = "";
-    static String submitterName = "";
-    static int emailPort = 0;
-    static int lengthMsgs;
-    boolean textIsHtml = false;
-    
-    private void emailConnectionProperties() {
-        authUser = ""; //  User  "serb.testdocket"
-        authPass = ""; //  Pass  "xln.1211"
-        emailPassword = "";
-        emailUsername = "";
-        emailHost = "";
-        emailPort = 0;
-        submitterName = "";
-    }
+                
+    public static void fetchEmail(SystemEmailModel account) {
+        Authenticator auth = setEmailAuthenticator(account);
+        Properties properties = setEmailProperties(account);
         
-    public void fetchEmail() {
-        emailConnectionProperties();
-        
-        Authenticator auth = new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-               return new PasswordAuthentication(authUser, authPass);
-            }
-         };
-        
-        try {
-            Properties properties = new Properties();
-            properties.setProperty("mail.imap.submitter", submitterName);
-            properties.setProperty("mail.imap.auth", "true");
-            properties.setProperty("mail.imap.host", emailHost);
-            properties.put("mail.imap.port", String.valueOf(emailPort));
-            properties.put("mail.imap.fetchsize", "965536");
-            
-            properties.setProperty("mail.store.protocol", "imaps");
-            
+        try {  
             Session session = Session.getInstance(properties, auth);
             Store store = session.getStore();
-            store.connect(emailHost, emailUsername, emailPassword);
-            Folder inbox = store.getFolder("INBOX");
-            inbox.open(Folder.READ_WRITE);
+            store.connect(account.getIncomingURL(), account.getIncomingPort(), account.getUsername(), account.getPassword());
+            Folder fetchFolder = store.getFolder("INBOX");
+            if (!"".equals(account.getIncomingFolder().trim())){
+                fetchFolder = store.getFolder(account.getIncomingFolder());
+            }
+            
+            fetchFolder.open(Folder.READ_WRITE);
             Flags seen = new Flags(Flags.Flag.SEEN);
             FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-            Message[] msgs = inbox.search(unseenFlagTerm);
+            Message[] msgs = fetchFolder.search(unseenFlagTerm);
             //Message[] msgs = inbox.getMessages();
-            lengthMsgs = msgs.length;
-            inbox.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+            fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     EmailMessageModel eml = new EmailMessageModel();
@@ -102,7 +72,7 @@ public class recieveEmail {
                     //Add attachments to DB
                 }
             }
-            inbox.close(false);
+            fetchFolder.close(false);
             store.close();
 
         } catch (Exception ex) {
@@ -112,14 +82,53 @@ public class recieveEmail {
             }
         }
     }
-    
-    private EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
+
+    private static Authenticator setEmailAuthenticator(SystemEmailModel account) {
+        Authenticator auth = new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                        account.getUsername(), account.getPassword());
+            }
+        };
+        return auth;
+    }
+
+    private static Properties setEmailProperties(SystemEmailModel account) {
+        Properties properties = new Properties();
+        
+        properties.setProperty("mail.store.protocol", account.getIncomingProtocol());
+        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
+            case "imap":
+            case "imaps":
+                properties.setProperty("mail.imap.submitter", account.getUsername());
+                properties.setProperty("mail.imap.auth", "true");
+                properties.setProperty("mail.imap.host", account.getIncomingURL());
+                properties.put("mail.imap.port", String.valueOf(account.getIncomingPort()));
+                properties.put("mail.imap.fetchsize", "965536");
+                break;
+            case "pop":
+                properties.setProperty("mail.pop3s.host", account.getIncomingURL());
+                properties.put("mail.pop3s.port", String.valueOf(account.getIncomingPort()));
+                properties.put("mail.pop3s.starttls.enable", "true");                
+                break;
+            default:
+                break;
+        }
+        if (Global.isDebug() == true){
+            properties.setProperty("mail.debug", "true");
+        }
+        return properties;
+    }
+
+    private static EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
         try {
             Address[] address;
             //From
             if ((address = m.getFrom()) != null) {
-                for (Address addres : address) {
-                    eml.setEmailFrom(addres.toString());
+                for (Address addy : address) {
+                    eml.setEmailFrom(addy.toString());
+                    System.out.println("From: " + addy.toString());
                 }
             }
             //to
@@ -177,11 +186,10 @@ public class recieveEmail {
         return eml;
     }
     
-    private String getEmailBodyText(Part p) {
+    private static String getEmailBodyText(Part p) {
         try {
             if (p.isMimeType("text/*")) {
                 String s = (String) p.getContent();
-                textIsHtml = p.isMimeType("text/html");
                 return s;
             }
             
@@ -221,9 +229,7 @@ public class recieveEmail {
         return "";
     }
   
-    
-
-    private void saveAttachments(Part p, Message m, int emailID) {
+    private static void saveAttachments(Part p, Message m, int emailID) {
         try {
             String ct = p.getContentType();
             String filename = p.getFileName();
@@ -265,9 +271,8 @@ public class recieveEmail {
             System.err.println("CRASH");
         }
     }
-
     
-    private String removeEmojiAndSymbolFromString(String content) {
+    private static String removeEmojiAndSymbolFromString(String content) {
         String utf8tweet = "";
         try {
             byte[] utf8Bytes = content.getBytes("UTF-8");
@@ -287,7 +292,7 @@ public class recieveEmail {
         return utf8tweet;
     }
     
-    private void saveFile(Part p, String filename) {
+    private static void saveFile(Part p, String filename) {
         DataOutputStream output = null;
         try {
             output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File("C:\\" + filename))));

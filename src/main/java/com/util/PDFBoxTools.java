@@ -41,38 +41,71 @@ public class PDFBoxTools {
     public static List<String> setLineBreaks(String text, float width, float fontSize, PDFont pdfFont) {
         List<String> lines = new ArrayList<>();
         int lastSpace = -1;
-        while (text.length() > 0) {
-            try {
-                int spaceIndex = text.indexOf(' ', lastSpace + 1);
-                if (spaceIndex < 0) {
-                    spaceIndex = text.length();
-                }
-                String subString = text.substring(0, spaceIndex);
-                float size = fontSize * pdfFont.getStringWidth(subString) / 1000;
+
+        if (text.contains(System.getProperty("line.separator"))) {
+            while (text.length() > 0) {
+                try {
+                    int spaceIndex = text.indexOf(System.getProperty("line.separator"), lastSpace + 1);
+                    if (spaceIndex < 0) {
+                        spaceIndex = text.length();
+                    }
+                    String subString = text.substring(0, spaceIndex);
+                    float size = fontSize * pdfFont.getStringWidth(subString) / 1000;
 //                System.out.printf("'%s' - %f of %f\n", subString, size, width);
-                if (size > width) {
-                    if (lastSpace < 0) {
+                    if (size > width) {
+                        if (lastSpace < 0) {
+                            lastSpace = spaceIndex;
+                        }
+                        subString = text.substring(0, lastSpace);
+                        lines.add(subString);
+                        text = text.substring(lastSpace).trim();
+//                    System.out.printf("'%s' is line\n", subString);
+                        lastSpace = -1;
+                    } else if (spaceIndex == text.length()) {
+                        lines.add(text);
+//                    System.out.printf("'%s' is line\n", text);
+                        text = "";
+                    } else {
                         lastSpace = spaceIndex;
                     }
-                    subString = text.substring(0, lastSpace);
-                    lines.add(subString);
-                    text = text.substring(lastSpace).trim();
-//                    System.out.printf("'%s' is line\n", subString);
-                    lastSpace = -1;
-                } else if (spaceIndex == text.length()) {
-                    lines.add(text);
-//                    System.out.printf("'%s' is line\n", text);
-                    text = "";
-                } else {
-                    lastSpace = spaceIndex;
+                } catch (IOException ex) {
+                    Logger.getLogger(PDFBoxTools.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(PDFBoxTools.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            while (text.length() > 0) {
+                try {
+                    int spaceIndex = text.indexOf(' ', lastSpace + 1);
+                    if (spaceIndex < 0) {
+                        spaceIndex = text.length();
+                    }
+                    String subString = text.substring(0, spaceIndex);
+                    float size = fontSize * pdfFont.getStringWidth(subString) / 1000;
+//                System.out.printf("'%s' - %f of %f\n", subString, size, width);
+                    if (size > width) {
+                        if (lastSpace < 0) {
+                            lastSpace = spaceIndex;
+                        }
+                        subString = text.substring(0, lastSpace);
+                        lines.add(subString);
+                        text = text.substring(lastSpace).trim();
+//                    System.out.printf("'%s' is line\n", subString);
+                        lastSpace = -1;
+                    } else if (spaceIndex == text.length()) {
+                        lines.add(text);
+//                    System.out.printf("'%s' is line\n", text);
+                        text = "";
+                    } else {
+                        lastSpace = spaceIndex;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(PDFBoxTools.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         return lines;
     }
-    
+
     public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
         int original_width = imgSize.width;
         int original_height = imgSize.height;

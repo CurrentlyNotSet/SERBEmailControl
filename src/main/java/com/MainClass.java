@@ -23,8 +23,16 @@ import java.util.concurrent.TimeUnit;
 public class MainClass {
     
     public void setDefaults() {
+        
+        
+        
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
-            threads();
+            incomingEmails();
+
+//            threads();
+
+
+
         } else {
             System.err.println("unable to resolve network connections");
         }
@@ -50,7 +58,7 @@ public class MainClass {
         };
         
         Global.emailThread.start();
-        Global.scansThread.start();
+//        Global.scansThread.start();
     }
 
     private void stampScansThread(){
@@ -101,6 +109,7 @@ public class MainClass {
         System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Started  Receiving Emails");
         
         for (SystemEmailModel account : Global.getSystemEmailParams()){
+            System.out.println("Recieving Email For: " + account.getEmailAddress());
             recieveEmail.fetchEmail(account);
         }
         

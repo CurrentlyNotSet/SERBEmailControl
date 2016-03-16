@@ -6,8 +6,10 @@
 package com.fileOperations;
 
 import com.model.EmailMessageModel;
+import com.util.Global;
 import com.util.PDFBoxTools;
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +28,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 public class EmailBodyToPDF {
 
     public static EmailMessageModel createEmailBody(EmailMessageModel emailText) {
-        String file = "";
+        String file = Global.getEmailPath()+ emailText.getSection() 
+                + File.separatorChar + "test.pdf";
         
         
         PDDocument doc = null;
@@ -72,7 +75,7 @@ public class EmailBodyToPDF {
             contentStream.newLineAtOffset(startX, startY);
 
             //Set Date Sent
-            if (!"".equals(emailText.getSentDate().toString())) {
+            if (emailText.getSentDate() != null || !"".equals(emailText.getSentDate().toString())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("Date Sent: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -101,7 +104,7 @@ public class EmailBodyToPDF {
             }
             
             //Set Date Received
-            if (!"".equals(emailText.getReceivedDate().toString())) {
+            if (emailText.getReceivedDate()!= null || !"".equals(emailText.getReceivedDate().toString())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("Date Received: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -131,7 +134,7 @@ public class EmailBodyToPDF {
             contentStream.newLineAtOffset(0, -leadingBody);
             
             //Set From
-            if (!"".equals(emailText.getEmailFrom())) {
+            if (emailText.getEmailFrom() != null || !"".equals(emailText.getEmailFrom())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("From: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -159,7 +162,7 @@ public class EmailBodyToPDF {
             }
             
             //Set To
-            if (!"".equals(emailText.getEmailTo())) {
+            if (emailText.getEmailTo() != null || !"".equals(emailText.getEmailTo())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("To: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -187,7 +190,7 @@ public class EmailBodyToPDF {
             }
             
             //Set CC
-            if (!"".equals(emailText.getEmailCC())) {
+            if (emailText.getEmailCC() != null || !"".equals(emailText.getEmailCC())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("CC: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -215,7 +218,7 @@ public class EmailBodyToPDF {
             }
             
             //Set BCC
-            if (!"".equals(emailText.getEmailBCC())) {
+            if (emailText.getEmailBCC() != null || !"".equals(emailText.getEmailBCC())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("BCC: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -243,7 +246,7 @@ public class EmailBodyToPDF {
             }
             
             //Set Subject
-            if (!"".equals(emailText.getEmailSubject())) {
+            if (emailText.getEmailSubject() != null || !"".equals(emailText.getEmailSubject())) {
                 contentStream.newLineAtOffset(0, -leadingBody);
                 contentStream.newLineAtOffset(0, -leadingBody);
                 contentStream.setFont(bodyTitleFont, bodyFontSize);
@@ -271,7 +274,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingBody;
                 }
             }
-
+            if (emailText.getEmailBody() != null || !"".equals(emailText.getEmailBody())) {
             // Set Email Body
             contentStream.newLineAtOffset(0, -leadingBody);
             contentStream.setFont(bodyTitleFont, bodyFontSize);
@@ -300,8 +303,9 @@ public class EmailBodyToPDF {
                 contentStream.newLineAtOffset(0, -leadingBody);
             }
             contentStream.endText();
+            
+            }
             contentStream.close();
-
             doc.save(file);
         } catch (IOException ex) {
             Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);

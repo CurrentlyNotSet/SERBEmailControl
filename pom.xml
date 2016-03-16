@@ -52,6 +52,11 @@
             <artifactId>sqljdbc4</artifactId>
             <version>6.0</version>
         </dependency>
+        <dependency>
+            <groupId>net.htmlparser.jericho</groupId>
+            <artifactId>jericho-html</artifactId>
+            <version>3.3</version>
+        </dependency>
     </dependencies>
     <repositories>    
         <repository>

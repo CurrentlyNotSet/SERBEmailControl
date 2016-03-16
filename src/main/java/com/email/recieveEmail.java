@@ -35,6 +35,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.search.FlagTerm;
+import net.htmlparser.jericho.Source;
 
 /**
  *
@@ -64,11 +65,13 @@ public class recieveEmail {
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     EmailMessageModel eml = new EmailMessageModel();
-                    eml.setSection("");
+                    eml.setSection(account.getSection());
                     eml = saveEnvelope(msg, msg, eml);
                     eml = EmailBodyToPDF.createEmailBody(eml);
+
                     int emailID = EMail.InsertEmail(eml);
-                    saveAttachments(msg, msg, emailID);
+                    System.err.println("emailID: " + emailID);
+//                    saveAttachments(msg, msg, emailID);
                     //Add attachments to DB
                 }
             }
@@ -77,8 +80,10 @@ public class recieveEmail {
 
         } catch (Exception ex) {
             if (ex != null) {
-                System.out.println("<html><center>Unable to connect to email Server.<br>"
-                        + "Please ensure you are connected to the network and press OK and try again.</center></html>");
+                System.out.println("Unable to connect to email Server for: " 
+                        + account.getEmailAddress()
+                        + "\nPlease ensure you are connected to the network and"
+                        + " try again.");
             }
         }
     }
@@ -122,18 +127,20 @@ public class recieveEmail {
     }
 
     private static EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
+        String to = "";
+        String cc = "";
+        String bcc = "";
+        
         try {
             Address[] address;
             //From
             if ((address = m.getFrom()) != null) {
                 for (Address addy : address) {
                     eml.setEmailFrom(addy.toString());
-                    System.out.println("From: " + addy.toString());
                 }
             }
             //to
-            if ((address = m.getRecipients(Message.RecipientType.TO)) != null) {
-                String to = "";
+            if ((address = m.getRecipients(Message.RecipientType.TO)) != null) {        
                 for (int j = 0; j < address.length; j++) {
                     if (j == 0) {
                         to = address[j].toString();
@@ -141,11 +148,11 @@ public class recieveEmail {
                         to += "; " + address[j].toString();
                     }
                 }
-                eml.setEmailTo(removeEmojiAndSymbolFromString(to));
             }
+            eml.setEmailTo(removeEmojiAndSymbolFromString(to));
             //CC
             if ((address = m.getRecipients(Message.RecipientType.CC)) != null) {
-                String cc = "";
+                
                 for (int j = 0; j < address.length; j++) {
                     if (j == 0) {
                         cc = address[j].toString();
@@ -153,11 +160,10 @@ public class recieveEmail {
                         cc += "; " + address[j].toString();
                     }
                 }
-                eml.setEmailCC(removeEmojiAndSymbolFromString(cc));
             }
+            eml.setEmailCC(removeEmojiAndSymbolFromString(cc));
             //BCC
             if ((address = m.getRecipients(Message.RecipientType.BCC)) != null) {
-                String bcc = "";
                 for (int j = 0; j < address.length; j++) {
                     if (j == 0) {
                         bcc = address[j].toString();
@@ -165,8 +171,8 @@ public class recieveEmail {
                         bcc += "; " + address[j].toString();
                     }
                 }
-                eml.setEmailBCC(removeEmojiAndSymbolFromString(bcc));
             }
+            eml.setEmailBCC(removeEmojiAndSymbolFromString(bcc));
             //subject
             if (m.getSubject() == null) {
                 eml.setEmailSubject("");
@@ -178,7 +184,9 @@ public class recieveEmail {
             eml.setSentDate(new java.sql.Timestamp(m.getSentDate().getTime()));
             eml.setReceivedDate(new java.sql.Timestamp(m.getReceivedDate().getTime()));
             
-            eml.setEmailBody(removeEmojiAndSymbolFromString(getEmailBodyText(p)));
+            Source htmlSource = new Source(getEmailBodyText(p));
+            String emailBody = htmlSource.getRenderer().toString();            
+            eml.setEmailBody(removeEmojiAndSymbolFromString(emailBody));
 
         } catch (MessagingException ex) {
             System.err.println("CRASH");

@@ -30,6 +30,7 @@ public class FileService {
                 //TODO: Add in other machines with the correct paths
                 case "Alienware15":
                 case "Sniper":
+                case "CS12-SRB-ES1":
                     Global.setScanPath("C:\\SERB\\Scan\\");
                     Global.setEmailPath("C:\\SERB\\Email\\");
                     Global.setActivityPath("C:\\SERB\\Activity\\");

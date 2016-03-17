@@ -51,9 +51,9 @@ public class recieveEmail {
             Session session = Session.getInstance(properties, auth);
             Store store = session.getStore();
             store.connect(account.getIncomingURL(), account.getIncomingPort(), account.getUsername(), account.getPassword());
-            Folder fetchFolder = store.getFolder("INBOX");
+            Folder fetchFolder = store.getFolder(account.getIncomingFolder());
             if (!"".equals(account.getIncomingFolder().trim())){
-                fetchFolder = store.getFolder(account.getIncomingFolder());
+                fetchFolder = store.getFolder("INBOX");
             }
             
             fetchFolder.open(Folder.READ_WRITE);

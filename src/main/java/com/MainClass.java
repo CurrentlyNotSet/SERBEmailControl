@@ -7,6 +7,7 @@ package com;
 
 import com.calInvites.*;
 import com.email.recieveEmail;
+import com.fileOperations.WordToPDF;
 import com.model.SystemEmailModel;
 import com.outgoingEmail.*;
 import com.scans.ScansStamper;
@@ -26,16 +27,17 @@ public class MainClass {
         
         
         
-        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
-            incomingEmails();
-
+        WordToPDF.createPDF();
+        
+        
+        
+        
+        
+//        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
 //            threads();
-
-
-
-        } else {
-            System.err.println("unable to resolve network connections");
-        }
+//        } else {
+//            System.err.println("unable to resolve network connections");
+//        }
     }
     
     /**

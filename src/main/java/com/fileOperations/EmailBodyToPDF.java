@@ -59,8 +59,8 @@ public class EmailBodyToPDF {
             float textYlocation = margin;
             
             //Set Line Breaks
-            List<String> sentDateContent = PDFBoxTools.setLineBreaks(emailText.getSentDate().toString(), width, emailHeaderFontSize, bodyFont);
-            List<String> recievedDateContent = PDFBoxTools.setLineBreaks(emailText.getReceivedDate().toString(), width, emailHeaderFontSize, bodyFont);
+//            List<String> sentDateContent = PDFBoxTools.setLineBreaks(Global.getMmddyyyyhhmmssa().format(emailText.getSentDate()), width, emailHeaderFontSize, bodyFont);
+            List<String> recievedDateContent = PDFBoxTools.setLineBreaks(Global.getMmddyyyyhhmmssa().format(emailText.getReceivedDate()), width, emailHeaderFontSize, bodyFont);
             List<String> toContent = PDFBoxTools.setLineBreaks(emailText.getEmailTo(), width, emailHeaderFontSize, bodyFont);
             List<String> fromContent = PDFBoxTools.setLineBreaks(emailText.getEmailFrom(), width, emailHeaderFontSize, bodyFont);
             List<String> ccContent = PDFBoxTools.setLineBreaks(emailText.getEmailCC(), width, emailHeaderFontSize, bodyFont);
@@ -74,37 +74,37 @@ public class EmailBodyToPDF {
             contentStream.setNonStrokingColor(Color.BLACK);
             contentStream.newLineAtOffset(startX, startY);
 
-            //Set Date Sent
-            if (emailText.getSentDate() != null || !"".equals(emailText.getSentDate().toString())) {
-                contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
-                contentStream.showText("Date Sent: ");
-                contentStream.setFont(bodyFont, emailHeaderFontSize);
-                contentStream.newLineAtOffset(0, -leadingEmailHeader);
-                textYlocation += leadingEmailHeader;
-                for (String line : sentDateContent) {
-                    if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingEmailHeader)) {
-                        contentStream.endText();
-                        contentStream.close();
-                        textYlocation = 0;
-
-                        page = new PDPage();
-                        doc.addPage(page);
-                        contentStream = new PDPageContentStream(doc, page, true, true, false);
-
-                        contentStream.beginText();
-                        contentStream.setFont(bodyFont, emailHeaderFontSize);
-                        contentStream.setNonStrokingColor(Color.BLACK);
-                        contentStream.newLineAtOffset(startX, startY);
-                    }
-
-                    contentStream.showText(line);
-                    contentStream.newLineAtOffset(0, -leadingEmailHeader);
-                    textYlocation += leadingEmailHeader;
-                }
-            }
+//            //Set Date Sent
+//            if (emailText.getSentDate() != null || !"".equals(emailText.getSentDate().toString())) {
+//                contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
+//                contentStream.showText("Date Sent: ");
+//                contentStream.setFont(bodyFont, emailHeaderFontSize);
+//                contentStream.newLineAtOffset(0, -leadingEmailHeader);
+//                textYlocation += leadingEmailHeader;
+//                for (String line : sentDateContent) {
+//                    if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingEmailHeader)) {
+//                        contentStream.endText();
+//                        contentStream.close();
+//                        textYlocation = 0;
+//
+//                        page = new PDPage();
+//                        doc.addPage(page);
+//                        contentStream = new PDPageContentStream(doc, page, true, true, false);
+//
+//                        contentStream.beginText();
+//                        contentStream.setFont(bodyFont, emailHeaderFontSize);
+//                        contentStream.setNonStrokingColor(Color.BLACK);
+//                        contentStream.newLineAtOffset(startX, startY);
+//                    }
+//
+//                    contentStream.showText(line);
+//                    contentStream.newLineAtOffset(0, -leadingEmailHeader);
+//                    textYlocation += leadingEmailHeader;
+//                }
+//            }
             
             //Set Date Received
-            if (emailText.getReceivedDate()!= null || !"".equals(emailText.getReceivedDate().toString())) {
+            if (emailText.getReceivedDate()!= null || !"".equals(emailText.getReceivedDate().toString().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("Date Received: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -134,7 +134,7 @@ public class EmailBodyToPDF {
             contentStream.newLineAtOffset(0, -leadingBody);
             
             //Set From
-            if (emailText.getEmailFrom() != null || !"".equals(emailText.getEmailFrom())) {
+            if (emailText.getEmailFrom() != null || !"".equals(emailText.getEmailFrom().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("From: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -162,7 +162,7 @@ public class EmailBodyToPDF {
             }
             
             //Set To
-            if (emailText.getEmailTo() != null || !"".equals(emailText.getEmailTo())) {
+            if (emailText.getEmailTo() != null || !"".equals(emailText.getEmailTo().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("To: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -190,7 +190,7 @@ public class EmailBodyToPDF {
             }
             
             //Set CC
-            if (emailText.getEmailCC() != null || !"".equals(emailText.getEmailCC())) {
+            if (emailText.getEmailCC() != null || !"".equals(emailText.getEmailCC().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("CC: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -218,7 +218,7 @@ public class EmailBodyToPDF {
             }
             
             //Set BCC
-            if (emailText.getEmailBCC() != null || !"".equals(emailText.getEmailBCC())) {
+            if (emailText.getEmailBCC() != null || !"".equals(emailText.getEmailBCC().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("BCC: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -246,7 +246,7 @@ public class EmailBodyToPDF {
             }
             
             //Set Subject
-            if (emailText.getEmailSubject() != null || !"".equals(emailText.getEmailSubject())) {
+            if (emailText.getEmailSubject() != null || !"".equals(emailText.getEmailSubject().trim())) {
                 contentStream.newLineAtOffset(0, -leadingBody);
                 contentStream.newLineAtOffset(0, -leadingBody);
                 contentStream.setFont(bodyTitleFont, bodyFontSize);
@@ -274,7 +274,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingBody;
                 }
             }
-            if (emailText.getEmailBody() != null || !"".equals(emailText.getEmailBody())) {
+            if (emailText.getEmailBody() != null || !"".equals(emailText.getEmailBody().trim())) {
             // Set Email Body
             contentStream.newLineAtOffset(0, -leadingBody);
             contentStream.setFont(bodyTitleFont, bodyFontSize);

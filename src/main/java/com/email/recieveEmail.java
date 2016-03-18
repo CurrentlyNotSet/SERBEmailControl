@@ -9,7 +9,7 @@ import com.fileOperations.EmailBodyToPDF;
 import com.model.EmailMessageModel;
 import com.model.SystemEmailModel;
 import com.sql.EMail;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
+import com.sun.mail.util.BASE64DecoderStream;
 import com.util.Global;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -70,14 +70,14 @@ public class recieveEmail {
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     EmailMessageModel eml = new EmailMessageModel();
-                    String emailTime = new Date().toString();
+                    String emailTime = String.valueOf(new Date().getTime());
                     eml.setSection(account.getSection());
                     eml = saveEnvelope(msg, msg, eml);
                     eml = EmailBodyToPDF.createEmailBody(eml, emailTime);
 
                     int emailID = EMail.InsertEmail(eml);
                     System.err.println("emailID: " + emailID);
-//                    saveAttachments(msg, msg, emailID, emailTime);
+//                    saveAttachments(msg, msg, emailID);
                     //Add attachments to DB
                 }
             }

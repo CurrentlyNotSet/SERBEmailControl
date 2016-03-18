@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class Global {
     
-    private static final boolean debug = false;    
+    private static final boolean debug = true;
+    private static boolean testEmail;
     private static final int sleep = 0;
     public static Thread emailThread, scansThread;
     
@@ -29,6 +30,14 @@ public class Global {
     
     //System Email
     private static List<SystemEmailModel> systemEmailParams;
+
+    public static boolean isTestEmail() {
+        return testEmail;
+    }
+
+    public static void setTestEmail(boolean testEmail) {
+        Global.testEmail = testEmail;
+    }
 
     public static boolean isDebug() {
         return debug;

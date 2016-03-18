@@ -46,6 +46,11 @@ public class recieveEmail {
     public static void fetchEmail(SystemEmailModel account) {
         Authenticator auth = setEmailAuthenticator(account);
         Properties properties = setEmailProperties(account);
+                
+        if (Global.isTestEmail()){
+            auth = setRemoteEmailAuthenticator(account);
+            properties = setRemoteEmailProperties(account);
+        }
         
         try {  
             Session session = Session.getInstance(properties, auth);
@@ -65,13 +70,14 @@ public class recieveEmail {
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     EmailMessageModel eml = new EmailMessageModel();
+                    String emailTime = new Date().toString();
                     eml.setSection(account.getSection());
                     eml = saveEnvelope(msg, msg, eml);
-                    eml = EmailBodyToPDF.createEmailBody(eml);
+                    eml = EmailBodyToPDF.createEmailBody(eml, emailTime);
 
                     int emailID = EMail.InsertEmail(eml);
                     System.err.println("emailID: " + emailID);
-//                    saveAttachments(msg, msg, emailID);
+//                    saveAttachments(msg, msg, emailID, emailTime);
                     //Add attachments to DB
                 }
             }
@@ -99,6 +105,17 @@ public class recieveEmail {
         return auth;
     }
 
+    private static Authenticator setRemoteEmailAuthenticator(SystemEmailModel account) {
+        Authenticator auth = new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                        "em.ohio.gov\\" + account.getUsername(), account.getPassword());
+            }
+        };
+        return auth;
+    }
+    
     private static Properties setEmailProperties(SystemEmailModel account) {
         Properties properties = new Properties();
         
@@ -126,6 +143,30 @@ public class recieveEmail {
         return properties;
     }
 
+    private static Properties setRemoteEmailProperties(SystemEmailModel account) {
+        Properties properties = new Properties();
+        
+        properties.setProperty("mail.store.protocol", account.getIncomingProtocol());
+        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
+            case "imap":
+            case "imaps":
+                properties.setProperty("mail.imap.submitter", "serb.testdocket");
+                properties.setProperty("mail.imap.auth", "true");
+                properties.setProperty("mail.imap.host", "outlook.em.ohio.gov");
+                properties.put("mail.imap.port", "143");
+                properties.put("mail.imap.fetchsize", "965536");
+                properties.put("mail.imap.auth.mechanisms","NTLM");
+                properties.put("mail.imap.auth.ntlm.domain","outlook.em.ohio.gov");
+                break;
+            default:
+                break;
+        }
+        if (Global.isDebug() == true){
+            properties.setProperty("mail.debug", "true");
+        }
+        return properties;
+    }
+    
     private static EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
         String to = "";
         String cc = "";

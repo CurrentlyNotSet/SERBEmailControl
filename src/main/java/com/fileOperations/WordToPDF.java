@@ -5,6 +5,7 @@
  */
 package com.fileOperations;
 
+import com.util.Global;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,9 +24,9 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  */
 public class WordToPDF {
     
-    public static void createPDF() {
-        File docFilePath = new File("C:\\Users\\Andrew\\Desktop\\QA.doc");
-        File pdfFilePath = new File("C:\\Users\\Andrew\\Desktop\\QA.pdf");
+    public static void createPDF(String oldFilePath) {
+        File docFilePath = new File(oldFilePath);
+        File pdfFilePath = new File(Global.getEmailPath() + "QA.pdf");
         
         try { 
             // 1) Load DOCX into XWPFDocument

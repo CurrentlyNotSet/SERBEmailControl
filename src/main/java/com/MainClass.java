@@ -7,7 +7,6 @@ package com;
 
 import com.calInvites.*;
 import com.email.recieveEmail;
-import com.fileOperations.WordToPDF;
 import com.model.SystemEmailModel;
 import com.outgoingEmail.*;
 import com.scans.ScansStamper;
@@ -24,20 +23,11 @@ import java.util.concurrent.TimeUnit;
 public class MainClass {
     
     public void setDefaults() {
-        
-        
-        
-        WordToPDF.createPDF();
-        
-        
-        
-        
-        
-//        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
-//            threads();
-//        } else {
-//            System.err.println("unable to resolve network connections");
-//        }
+        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
+            threads();
+        } else {
+            System.err.println("unable to resolve network connections");
+        }
     }
     
     /**

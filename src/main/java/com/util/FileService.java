@@ -26,19 +26,27 @@ public class FileService {
                     Global.setScanPath("/Users/parkerjohnston/Desktop/SERB/Scan/");
                     Global.setEmailPath("/Users/parkerjohnston/Desktop/SERB/Email/");
                     Global.setActivityPath("/Users/parkerjohnston/Desktop/SERB/Activity/");
+                    Global.setTestEmail(true);
                     return true;
                 //TODO: Add in other machines with the correct paths
                 case "Alienware15":
                 case "Sniper":
+                    Global.setScanPath("C:\\SERB\\Scan\\");
+                    Global.setEmailPath("C:\\SERB\\Email\\");
+                    Global.setActivityPath("C:\\SERB\\Activity\\");
+                    Global.setTestEmail(true);
+                    return true;
                 case "CS12-SRB-ES1":
                     Global.setScanPath("C:\\SERB\\Scan\\");
                     Global.setEmailPath("C:\\SERB\\Email\\");
                     Global.setActivityPath("C:\\SERB\\Activity\\");
+                    Global.setTestEmail(false);
                     return true;
                 default:
                     Global.setScanPath("G:\\SERB\\Scan\\");
                     Global.setEmailPath("G:\\SERB\\Email\\");
                     Global.setActivityPath("G:\\SERB\\Activity\\");
+                    Global.setTestEmail(false);
                     return true;
             }
             

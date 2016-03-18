@@ -27,10 +27,10 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class EmailBodyToPDF {
 
-    public static EmailMessageModel createEmailBody(EmailMessageModel emailText) {
-        String file = Global.getEmailPath()+ emailText.getSection() 
-                + File.separatorChar + "test.pdf";
-        
+    public static EmailMessageModel createEmailBody(EmailMessageModel emailText, String emailTime) {
+        String filePath = Global.getEmailPath()+ emailText.getSection() 
+                + File.separatorChar ;
+        String fileName = emailTime + ".pdf";
         
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
@@ -306,7 +306,7 @@ public class EmailBodyToPDF {
             
             }
             contentStream.close();
-            doc.save(file);
+            doc.save(filePath + fileName);
         } catch (IOException ex) {
             Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -317,7 +317,7 @@ public class EmailBodyToPDF {
                     Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            emailText.setEmailBodyFileName(file);
+            emailText.setEmailBodyFileName(fileName);
         }
         return emailText;
     }

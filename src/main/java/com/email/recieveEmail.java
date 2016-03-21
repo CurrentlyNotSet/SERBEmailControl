@@ -11,6 +11,7 @@ import com.model.SystemEmailModel;
 import com.sql.EMail;
 import com.sun.mail.util.BASE64DecoderStream;
 import com.util.Global;
+import com.util.StringUtilities;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -35,6 +36,8 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.search.FlagTerm;
+import net.htmlparser.jericho.Renderer;
+import net.htmlparser.jericho.Segment;
 import net.htmlparser.jericho.Source;
 
 /**
@@ -224,9 +227,15 @@ public class recieveEmail {
             //date
             eml.setSentDate(new java.sql.Timestamp(m.getSentDate().getTime()));
             eml.setReceivedDate(new java.sql.Timestamp(m.getReceivedDate().getTime()));
-            
-            Source htmlSource = new Source(getEmailBodyText(p));
-            String emailBody = htmlSource.getRenderer().toString();            
+
+            String emailBody = getEmailBodyText(p);
+            if (StringUtilities.isHtml(emailBody)) {
+                Source htmlSource = new Source(getEmailBodyText(p));
+                Segment htmlSeg = new Segment(htmlSource, 0, htmlSource.length());
+                Renderer htmlRend = new Renderer(htmlSeg);
+                emailBody = htmlRend.toString();
+            }
+
             eml.setEmailBody(removeEmojiAndSymbolFromString(emailBody));
 
         } catch (MessagingException ex) {

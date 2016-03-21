@@ -10,6 +10,7 @@ import com.model.EmailMessageModel;
 import com.model.SystemEmailModel;
 import com.sql.EMail;
 import com.sun.mail.util.BASE64DecoderStream;
+import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
 import java.io.BufferedOutputStream;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.mail.Address;
@@ -39,6 +42,7 @@ import javax.mail.search.FlagTerm;
 import net.htmlparser.jericho.Renderer;
 import net.htmlparser.jericho.Segment;
 import net.htmlparser.jericho.Source;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -80,8 +84,8 @@ public class recieveEmail {
 
                     int emailID = EMail.InsertEmail(eml);
                     System.err.println("emailID: " + emailID);
-//                    saveAttachments(msg, msg, emailID);
-                    //Add attachments to DB
+                    saveAttachments(msg, msg, emailID);
+                    EMail.setEmailReadyToFile(emailID, 1);
                 }
             }
             fetchFolder.close(false);
@@ -289,43 +293,25 @@ public class recieveEmail {
   
     private static void saveAttachments(Part p, Message m, int emailID) {
         try {
-            String ct = p.getContentType();
-            String filename = p.getFileName();
-            if (filename != null && !filename.endsWith("vcf")) {
-                /*
-                 DOES NOT CAST one particular docx file properly
-                 java.lang.ClassCastException: com.sun.mail.imap.IMAPMessage cannot be cast to javax.mail.internet.MimeBodyPart
-                 */
-                try {
-                    ((MimeBodyPart) p).saveFile("C:\\" + filename.replace("/", "-"));
-                    //writeEmailAttachment(filename.replace("/", "-").replace(":", ""));
-                } catch (ClassCastException ex) {
-                    System.err.println("Attachment \"" + filename + "\" could not be saved");
-                }
-            } else if (p.isMimeType("IMAGE/*")) {
-                if (p.isMimeType("IMAGE/JPEG")) {
-                    try {
-                        String ext = p.getContentType().substring(p.getContentType().lastIndexOf('/') + 1);
-                        ext = ext.toLowerCase();
-                        filename = "image" + new Date().getTime() + "." + ext;
-                        //((MimeBodyPart)p).saveFile(global.emailPath + filename.replace("/", "-"));
-                        //save the image as an attachment
-                        saveFile(p, filename);
-                    } catch (ClassCastException ex) {
-                        System.err.println("Attachment \"" + filename + "\" could not be saved");
+            Multipart multiPart = (Multipart) m.getContent();
+            
+            for (int i = 0; i < multiPart.getCount(); i++) {
+                MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
+                if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || 
+                    Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
+                    String filename = part.getFileName();
+                    System.out.println(filename);
+                    if (filename != null && !filename.endsWith("vcf")) {
+                        if (FileService.isImageFormat(filename)) {
+                            saveImage(part, StringUtilities.properAttachmentName(filename, emailID, i));
+                        } else if ("docx".equals(FilenameUtils.getExtension(filename))){
+                        } else {
+                            saveOtherFileType(part, StringUtilities.properAttachmentName(filename, emailID, i));
+                        }
                     }
                 }
             }
-            if (p.isMimeType("multipart/*")) {
-                Multipart mp = (Multipart) p.getContent();
-                int pageCount = mp.getCount();
-                for (int i = 0; i < pageCount; i++) {
-                    saveAttachments(mp.getBodyPart(i), m, emailID);
-                }
-            } else if (p.isMimeType("message/rfc822")) {  //mail header
-                saveAttachments((Part) p.getContent(), m, emailID);
-            }
-        } catch (MessagingException | IOException ex) {
+        } catch (IOException | MessagingException ex) {
             System.err.println("CRASH");
         }
     }
@@ -350,10 +336,10 @@ public class recieveEmail {
         return utf8tweet;
     }
     
-    private static void saveFile(Part p, String filename) {
+    private static void saveImage(Part p, String filename) {
         DataOutputStream output = null;
         try {
-            output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File("C:\\" + filename))));
+            output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(Global.getEmailPath() + filename))));
             try (BASE64DecoderStream test = (BASE64DecoderStream) p.getContent()) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
@@ -373,6 +359,14 @@ public class recieveEmail {
             } catch (IOException ex) {
                 System.err.println("CRASH");
             }
+        }
+    }
+    
+    private static void saveOtherFileType(Part p, String filename) {
+        try {
+            ((MimeBodyPart) p).saveFile(Global.getEmailPath() + filename.replace("/", "-"));
+        } catch (IOException | MessagingException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved");
         }
     }
 }

@@ -6,6 +6,7 @@
 package com.util;
 
 import com.model.ActivityModel;
+import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -81,6 +82,16 @@ public class FileService {
                 + File.separatorChar + item.getCaseYear()
                 + File.separatorChar + NumberFormatService.FullCaseNumber(item)
                 + File.separatorChar + item.getFilePath();
+    }
+    
+    public static boolean isImageFormat(String image) {
+        return image.toLowerCase().endsWith(".jpg") || 
+                ((image.toLowerCase().endsWith(".tif") || 
+                image.toLowerCase().endsWith(".tiff")) && 
+                PDFBoxTools.TIFFCompression(image) == COMPRESSION_GROUP4) || 
+                image.toLowerCase().endsWith(".gif") || 
+                image.toLowerCase().endsWith(".bmp") || 
+                image.toLowerCase().endsWith(".png");
     }
 
 }

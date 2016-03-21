@@ -6,6 +6,7 @@
 package com.util;
 
 import java.util.regex.Pattern;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -39,6 +40,12 @@ public class StringUtilities {
             ret=htmlPattern.matcher(s).find();
         }
         return ret;
+    }
+        
+    public static String properAttachmentName(String filename, int emailID, int attachmentNumber) {
+        String base = FilenameUtils.removeExtension(filename);
+        String extension = FilenameUtils.getExtension(filename);
+        return emailID + "_" + base + "_" + attachmentNumber + "." + extension;
     }
 
 }

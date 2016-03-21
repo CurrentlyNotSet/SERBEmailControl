@@ -131,7 +131,7 @@ public class PDFBoxTools {
         return null;
     }
 
-    private static int TIFFCompression(String image) {
+    public static int TIFFCompression(String image) {
         // 1 = No compression
         // 2 = CCITT modified Huffman RLE
         // 32773 = PackBits compression, aka Macintosh RLE

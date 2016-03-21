@@ -24,6 +24,7 @@ public class EmailMessageModel {
     private String emailBCC;
     private String emailBody;
     private String emailBodyFileName;
+    private int readyToFile;
 
     public int getId() {
         return id;
@@ -111,6 +112,14 @@ public class EmailMessageModel {
 
     public void setEmailBodyFileName(String emailBodyFileName) {
         this.emailBodyFileName = emailBodyFileName;
+    }
+
+    public int getReadyToFile() {
+        return readyToFile;
+    }
+
+    public void setReadyToFile(int readyToFile) {
+        this.readyToFile = readyToFile;
     }
     
 }

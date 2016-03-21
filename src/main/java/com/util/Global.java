@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Global {
     
-    private static final boolean debug = true;
+    private static final boolean debug = false;
     private static boolean testEmail;
     private static final int sleep = 0;
     public static Thread emailThread, scansThread;

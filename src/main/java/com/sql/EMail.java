@@ -35,7 +35,8 @@ public class EMail {
                     + "emailCC, "
                     + "emailBCC, "
                     + "emailBody, "
-                    + "emailBodyFileName "
+                    + "emailBodyFileName, "
+                    + "readyToFile "
                     + ") VALUES ("
                     + "?, " //1
                     + "?, " //2
@@ -46,7 +47,8 @@ public class EMail {
                     + "?, " //7
                     + "?, " //8
                     + "?, " //9
-                    + "?)"; //10
+                    + "?, " //10
+                    + "0)"; // Ready to File False
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString   ( 1, eml.getSection());
             ps.setString   ( 2, eml.getEmailFrom());
@@ -72,4 +74,23 @@ public class EMail {
         return 0;
     }
     
+    
+    public static void setEmailReadyToFile(int emailID, int ready){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBConnection.connectToDB();
+            String sql = "UPDATE EMail SET readyToFile = ? WHERE emailID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, ready);
+            ps.setInt(2, emailID);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            SlackNotification.sendNotification(ex.toString());
+        } finally {
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(conn);
+        }
+        
+    }
 }

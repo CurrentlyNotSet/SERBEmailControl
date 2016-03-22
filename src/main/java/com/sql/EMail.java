@@ -75,15 +75,16 @@ public class EMail {
     }
     
     
-    public static void setEmailReadyToFile(int emailID, int ready){
+    public static void setEmailReadyToFile(EmailMessageModel eml){
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "UPDATE EMail SET readyToFile = ? WHERE emailID = ?";
+            String sql = "UPDATE EMail SET readyToFile = ?, emailBodyFileName = ? WHERE id = ?";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, ready);
-            ps.setInt(2, emailID);
+            ps.setInt   (1, eml.getReadyToFile());
+            ps.setString(2, eml.getEmailBodyFileName());
+            ps.setInt   (3, eml.getId());
             ps.executeUpdate();
         } catch (SQLException ex) {
             SlackNotification.sendNotification(ex.toString());

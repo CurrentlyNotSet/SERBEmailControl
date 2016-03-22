@@ -43,7 +43,7 @@ public class StringUtilities {
     }
         
     public static String properAttachmentName(String filename, int emailID, int attachmentNumber) {
-        String base = FilenameUtils.removeExtension(filename);
+        String base = FilenameUtils.removeExtension(filename).replace("/", "-").replace(":", "").replace("\"", "");
         String extension = FilenameUtils.getExtension(filename);
         return emailID + "_" + base + "_" + attachmentNumber + "." + extension;
     }

@@ -17,22 +17,20 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EmailAttachment {
     
-    public void insertEmailAttachment(int EmailID, String attachmentPath){
+    public static void insertEmailAttachment(int EmailID, String fileName){
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = DBConnection.connectToDB();
             String sql = "INSERT INTO EmailAttachment ("
-                    + "id, "
                     + "emailID, "
                     + "fileName "
                     + ") VALUES ("
-                    + "default, "
                     + "?, "
                     + "?)";
             ps = conn.prepareStatement(sql);
             ps.setInt   (1, EmailID);
-            ps.setString(2, attachmentPath);
+            ps.setString(2, fileName);
             ps.executeUpdate();
         } catch (SQLException ex) {
             SlackNotification.sendNotification(ex.toString());

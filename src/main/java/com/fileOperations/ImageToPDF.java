@@ -7,9 +7,11 @@ package com.fileOperations;
 
 import com.util.PDFBoxTools;
 import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -23,11 +25,10 @@ public class ImageToPDF {
 
     /**
      * create the second sample document from the PDF file format specification.
-     *
-     * @param file The file to write the PDF to.
-     * @param image The filename of the image to put in the PDF.
+     * @param folderPath
+     * @param imageFile
      */
-    public static void createPDFFromImage(String file, String image) {
+    public static String createPDFFromImage(String folderPath, String imageFile) {
         // the document
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
@@ -42,7 +43,7 @@ public class ImageToPDF {
             float startY = page.getMediaBox().getUpperRightY() - margin;
             
 
-            PDImageXObject pdImage = PDFBoxTools.getImage(doc, image);
+            PDImageXObject pdImage = PDFBoxTools.getImage(doc, folderPath + imageFile);
             if (pdImage != null) {
                 doc.addPage(page);
                 contentStream = new PDPageContentStream(doc, page);
@@ -53,10 +54,11 @@ public class ImageToPDF {
                 contentStream.drawImage(pdImage, startX, scaledDim.height + margin, scaledDim.width, scaledDim.height);
 
                 contentStream.close();
-                doc.save(file);
+                doc.save(folderPath + FilenameUtils.removeExtension(imageFile) + ".pdf");
             }
         } catch (IOException ex) {
             Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
         } finally {
             if (doc != null) {
                 try {
@@ -65,7 +67,10 @@ public class ImageToPDF {
                     Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            File image = new File(folderPath + imageFile);
+            image.delete();
         }
+        return FilenameUtils.removeExtension(imageFile) + ".pdf";
     }
 
 }

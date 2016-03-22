@@ -27,10 +27,10 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class EmailBodyToPDF {
 
-    public static EmailMessageModel createEmailBody(EmailMessageModel emailText, String emailTime) {
-        String filePath = Global.getEmailPath()+ emailText.getSection() 
+    public static EmailMessageModel createEmailBody(EmailMessageModel eml, String emailTime) {
+        String filePath = Global.getEmailPath()+ eml.getSection() 
                 + File.separatorChar ;
-        String fileName = emailTime + ".pdf";
+        String fileName = eml.getId() + "_" + emailTime + ".pdf";
         
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
@@ -60,13 +60,13 @@ public class EmailBodyToPDF {
             
             //Set Line Breaks
 //            List<String> sentDateContent = PDFBoxTools.setLineBreaks(Global.getMmddyyyyhhmmssa().format(emailText.getSentDate()), width, emailHeaderFontSize, bodyFont);
-            List<String> recievedDateContent = PDFBoxTools.setLineBreaks(Global.getMmddyyyyhhmmssa().format(emailText.getReceivedDate()), width, emailHeaderFontSize, bodyFont);
-            List<String> toContent = PDFBoxTools.setLineBreaks(emailText.getEmailTo(), width, emailHeaderFontSize, bodyFont);
-            List<String> fromContent = PDFBoxTools.setLineBreaks(emailText.getEmailFrom(), width, emailHeaderFontSize, bodyFont);
-            List<String> ccContent = PDFBoxTools.setLineBreaks(emailText.getEmailCC(), width, emailHeaderFontSize, bodyFont);
-            List<String> bccContent = PDFBoxTools.setLineBreaks(emailText.getEmailBCC(), width, emailHeaderFontSize, bodyFont);
-            List<String> subjectContent = PDFBoxTools.setLineBreaks(emailText.getEmailSubject(), width, emailHeaderFontSize, bodyFont);
-            List<String> bodyContent = PDFBoxTools.setLineBreaks(emailText.getEmailBody(), width, bodyFontSize, bodyFont);
+            List<String> recievedDateContent = PDFBoxTools.setLineBreaks(Global.getMmddyyyyhhmmssa().format(eml.getReceivedDate()), width, emailHeaderFontSize, bodyFont);
+            List<String> toContent = PDFBoxTools.setLineBreaks(eml.getEmailTo(), width, emailHeaderFontSize, bodyFont);
+            List<String> fromContent = PDFBoxTools.setLineBreaks(eml.getEmailFrom(), width, emailHeaderFontSize, bodyFont);
+            List<String> ccContent = PDFBoxTools.setLineBreaks(eml.getEmailCC(), width, emailHeaderFontSize, bodyFont);
+            List<String> bccContent = PDFBoxTools.setLineBreaks(eml.getEmailBCC(), width, emailHeaderFontSize, bodyFont);
+            List<String> subjectContent = PDFBoxTools.setLineBreaks(eml.getEmailSubject(), width, emailHeaderFontSize, bodyFont);
+            List<String> bodyContent = PDFBoxTools.setLineBreaks(eml.getEmailBody(), width, bodyFontSize, bodyFont);
 
             //Set Email Header
             contentStream.beginText();
@@ -104,7 +104,7 @@ public class EmailBodyToPDF {
 //            }
             
             //Set Date Received
-            if (emailText.getReceivedDate()!= null || !"".equals(emailText.getReceivedDate().toString().trim())) {
+            if (eml.getReceivedDate()!= null || !"".equals(eml.getReceivedDate().toString().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("Date Received: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -134,7 +134,7 @@ public class EmailBodyToPDF {
             contentStream.newLineAtOffset(0, -leadingBody);
             
             //Set From
-            if (!"".equals(emailText.getEmailFrom().trim())) {
+            if (!"".equals(eml.getEmailFrom().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("From: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -162,7 +162,7 @@ public class EmailBodyToPDF {
             }
             
             //Set To
-            if (!"".equals(emailText.getEmailTo().trim())) {
+            if (!"".equals(eml.getEmailTo().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("To: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -190,7 +190,7 @@ public class EmailBodyToPDF {
             }
             
             //Set CC
-            if (!"".equals(emailText.getEmailCC().trim())) {
+            if (!"".equals(eml.getEmailCC().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("CC: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -218,7 +218,7 @@ public class EmailBodyToPDF {
             }
             
             //Set BCC
-            if (!"".equals(emailText.getEmailBCC().trim())) {
+            if (!"".equals(eml.getEmailBCC().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
                 contentStream.showText("BCC: ");
                 contentStream.setFont(bodyFont, emailHeaderFontSize);
@@ -246,7 +246,7 @@ public class EmailBodyToPDF {
             }
             
             //Set Subject
-            if (!"".equals(emailText.getEmailSubject().trim())) {
+            if (!"".equals(eml.getEmailSubject().trim())) {
                 contentStream.newLineAtOffset(0, -leadingBody);
                 contentStream.newLineAtOffset(0, -leadingBody);
                 contentStream.setFont(bodyTitleFont, bodyFontSize);
@@ -274,7 +274,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingBody;
                 }
             }
-            if (!"".equals(emailText.getEmailBody().trim())) {
+            if (!"".equals(eml.getEmailBody().trim())) {
             // Set Email Body
             contentStream.newLineAtOffset(0, -leadingBody);
             contentStream.setFont(bodyTitleFont, bodyFontSize);
@@ -317,9 +317,9 @@ public class EmailBodyToPDF {
                     Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            emailText.setEmailBodyFileName(fileName);
+            eml.setEmailBodyFileName(fileName);
         }
-        return emailText;
+        return eml;
     }
     
 }

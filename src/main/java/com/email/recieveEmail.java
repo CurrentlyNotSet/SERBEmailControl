@@ -6,9 +6,12 @@
 package com.email;
 
 import com.fileOperations.EmailBodyToPDF;
+import com.fileOperations.ImageToPDF;
+import com.fileOperations.WordToPDF;
 import com.model.EmailMessageModel;
 import com.model.SystemEmailModel;
 import com.sql.EMail;
+import com.sql.EmailAttachment;
 import com.sun.mail.util.BASE64DecoderStream;
 import com.util.FileService;
 import com.util.Global;
@@ -22,8 +25,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.mail.Address;
@@ -53,11 +54,6 @@ public class recieveEmail {
     public static void fetchEmail(SystemEmailModel account) {
         Authenticator auth = setEmailAuthenticator(account);
         Properties properties = setEmailProperties(account);
-                
-        if (Global.isTestEmail()){
-            auth = setRemoteEmailAuthenticator(account);
-            properties = setRemoteEmailProperties(account);
-        }
         
         try {  
             Session session = Session.getInstance(properties, auth);
@@ -80,12 +76,11 @@ public class recieveEmail {
                     String emailTime = String.valueOf(new Date().getTime());
                     eml.setSection(account.getSection());
                     eml = saveEnvelope(msg, msg, eml);
+                    eml.setId(EMail.InsertEmail(eml));
                     eml = EmailBodyToPDF.createEmailBody(eml, emailTime);
-
-                    int emailID = EMail.InsertEmail(eml);
-                    System.err.println("emailID: " + emailID);
-                    saveAttachments(msg, msg, emailID);
-                    EMail.setEmailReadyToFile(emailID, 1);
+                    saveAttachments(msg, msg, eml);
+                    eml.setReadyToFile(1);
+                    EMail.setEmailReadyToFile(eml);
                 }
             }
             fetchFolder.close(false);
@@ -111,17 +106,6 @@ public class recieveEmail {
         };
         return auth;
     }
-
-    private static Authenticator setRemoteEmailAuthenticator(SystemEmailModel account) {
-        Authenticator auth = new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                        "em.ohio.gov\\" + account.getUsername(), account.getPassword());
-            }
-        };
-        return auth;
-    }
     
     private static Properties setEmailProperties(SystemEmailModel account) {
         Properties properties = new Properties();
@@ -140,30 +124,6 @@ public class recieveEmail {
                 properties.setProperty("mail.pop3s.host", account.getIncomingURL());
                 properties.put("mail.pop3s.port", String.valueOf(account.getIncomingPort()));
                 properties.put("mail.pop3s.starttls.enable", "true");                
-                break;
-            default:
-                break;
-        }
-        if (Global.isDebug() == true){
-            properties.setProperty("mail.debug", "true");
-        }
-        return properties;
-    }
-
-    private static Properties setRemoteEmailProperties(SystemEmailModel account) {
-        Properties properties = new Properties();
-        
-        properties.setProperty("mail.store.protocol", account.getIncomingProtocol());
-        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
-            case "imap":
-            case "imaps":
-                properties.setProperty("mail.imap.submitter", "serb.testdocket");
-                properties.setProperty("mail.imap.auth", "true");
-                properties.setProperty("mail.imap.host", "outlook.em.ohio.gov");
-                properties.put("mail.imap.port", "143");
-                properties.put("mail.imap.fetchsize", "965536");
-                properties.put("mail.imap.auth.mechanisms","NTLM");
-                properties.put("mail.imap.auth.ntlm.domain","outlook.em.ohio.gov");
                 break;
             default:
                 break;
@@ -291,7 +251,8 @@ public class recieveEmail {
         return "";
     }
   
-    private static void saveAttachments(Part p, Message m, int emailID) {
+    private static void saveAttachments(Part p, Message m, EmailMessageModel eml) {
+        String filePath = Global.getEmailPath() + eml.getSection() + File.separatorChar;
         try {
             Multipart multiPart = (Multipart) m.getContent();
             
@@ -302,11 +263,16 @@ public class recieveEmail {
                     String filename = part.getFileName();
                     System.out.println(filename);
                     if (filename != null && !filename.endsWith("vcf")) {
+                        String fileNameDB = "";
                         if (FileService.isImageFormat(filename)) {
-                            saveImage(part, StringUtilities.properAttachmentName(filename, emailID, i));
+                            fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
                         } else if ("docx".equals(FilenameUtils.getExtension(filename))){
+                            fileNameDB = saveDocx(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));          
                         } else {
-                            saveOtherFileType(part, StringUtilities.properAttachmentName(filename, emailID, i));
+                            fileNameDB = saveOtherFileType(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
+                        }
+                        if (!"".equals(fileNameDB)){
+                            EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
                         }
                     }
                 }
@@ -336,10 +302,10 @@ public class recieveEmail {
         return utf8tweet;
     }
     
-    private static void saveImage(Part p, String filename) {
+    private static String saveImage(Part p, String filePath, String filename) {
         DataOutputStream output = null;
         try {
-            output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(Global.getEmailPath() + filename))));
+            output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filePath + filename))));
             try (BASE64DecoderStream test = (BASE64DecoderStream) p.getContent()) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
@@ -348,7 +314,6 @@ public class recieveEmail {
                 }
             }
             output.close();
-            //writeEmailAttachment(filename.replace("/", "-").replace(":", "").replace("\"", ""));
         } catch (FileNotFoundException ex) {
             System.err.println("CRASH");
         } catch (IOException | MessagingException ex) {
@@ -360,13 +325,26 @@ public class recieveEmail {
                 System.err.println("CRASH");
             }
         }
+        return ImageToPDF.createPDFFromImage(filePath, filename);
     }
     
-    private static void saveOtherFileType(Part p, String filename) {
+    private static String saveDocx(Part p, String filePath, String filename){
         try {
-            ((MimeBodyPart) p).saveFile(Global.getEmailPath() + filename.replace("/", "-"));
+            ((MimeBodyPart) p).saveFile(filePath + filename);
+            return WordToPDF.createPDF(filePath, filename);
         } catch (IOException | MessagingException ex) {
             System.err.println("Attachment \"" + filename + "\" could not be saved");
         }
+        return "";
+    }
+    
+    private static String saveOtherFileType(Part p, String filePath, String filename) {
+        try {
+            ((MimeBodyPart) p).saveFile(filePath + filename);
+            return filename;
+        } catch (IOException | MessagingException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved");
+        }
+        return "";
     }
 }

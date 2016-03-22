@@ -259,10 +259,9 @@ public class recieveEmail {
             for (int i = 0; i < multiPart.getCount(); i++) {
                 MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
                 if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || 
-                    Part.INLINE.equalsIgnoreCase(part.getDisposition())) {
+                    Part.INLINE.equalsIgnoreCase(part.getDisposition())) {                    
                     String filename = part.getFileName();
-                    System.out.println(filename);
-                    if (filename != null && !filename.endsWith("vcf")) {
+                    if (FileService.isValidAttachment(filename)) {
                         String fileNameDB = "";
                         if (FileService.isImageFormat(filename)) {
                             fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));

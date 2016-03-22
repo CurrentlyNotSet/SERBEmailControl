@@ -12,16 +12,17 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author Andrew
  */
 public class FileService {
-    
+
     public static boolean setFolderPaths() {
         try {
-            switch(InetAddress.getLocalHost().getHostName()) {
+            switch (InetAddress.getLocalHost().getHostName()) {
                 case "Parkers-MacBook-Air.local":
                 case "Parkers-Air":
                     Global.setScanPath("/Users/parkerjohnston/Desktop/SERB/Scan/");
@@ -46,7 +47,7 @@ public class FileService {
                     Global.setActivityPath("G:\\SERB\\Activity\\");
                     return true;
             }
-            
+
         } catch (UnknownHostException ex) {
             SlackNotification.sendNotification(ex.getMessage());
             return false;
@@ -79,15 +80,22 @@ public class FileService {
                 + File.separatorChar + NumberFormatService.FullCaseNumber(item)
                 + File.separatorChar + item.getFilePath();
     }
-    
+
     public static boolean isImageFormat(String image) {
-        return image.toLowerCase().endsWith(".jpg") || 
-                ((image.toLowerCase().endsWith(".tif") || 
-                image.toLowerCase().endsWith(".tiff")) && 
-                PDFBoxTools.TIFFCompression(image) == COMPRESSION_GROUP4) || 
-                image.toLowerCase().endsWith(".gif") || 
-                image.toLowerCase().endsWith(".bmp") || 
-                image.toLowerCase().endsWith(".png");
+        return image.toLowerCase().endsWith(".jpg")
+                || ((image.toLowerCase().endsWith(".tif")
+                || image.toLowerCase().endsWith(".tiff"))
+                && PDFBoxTools.TIFFCompression(image) == COMPRESSION_GROUP4)
+                || image.toLowerCase().endsWith(".gif")
+                || image.toLowerCase().endsWith(".bmp")
+                || image.toLowerCase().endsWith(".png");
     }
 
+    public static boolean isValidAttachment(String file) {
+        if (file != null) {
+            String ext = FilenameUtils.getExtension(file);
+            return !Global.getFileBlackList().contains(ext);
+        }
+        return false;
+    }
 }

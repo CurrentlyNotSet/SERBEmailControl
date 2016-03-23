@@ -7,6 +7,7 @@ package com.email;
 
 import com.fileOperations.EmailBodyToPDF;
 import com.fileOperations.ImageToPDF;
+import com.fileOperations.TXTtoPDF;
 import com.fileOperations.WordToPDF;
 import com.model.EmailMessageModel;
 import com.model.SystemEmailModel;
@@ -267,6 +268,8 @@ public class recieveEmail {
                             fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
                         } else if ("docx".equals(FilenameUtils.getExtension(filename))){
                             fileNameDB = saveDocx(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));          
+                        } else if ("txt".equals(FilenameUtils.getExtension(filename))){
+                            fileNameDB = saveTXT(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));          
                         } else {
                             fileNameDB = saveOtherFileType(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
                         }
@@ -331,6 +334,16 @@ public class recieveEmail {
         try {
             ((MimeBodyPart) p).saveFile(filePath + filename);
             return WordToPDF.createPDF(filePath, filename);
+        } catch (IOException | MessagingException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved");
+        }
+        return "";
+    }
+    
+    private static String saveTXT(Part p, String filePath, String filename) {
+        try {
+            ((MimeBodyPart) p).saveFile(filePath + filename);
+            return TXTtoPDF.createPDF(filePath, filename);
         } catch (IOException | MessagingException ex) {
             System.err.println("Attachment \"" + filename + "\" could not be saved");
         }

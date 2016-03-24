@@ -5,14 +5,16 @@
  */
 package com;
 
-import com.calInvites.*;
-import com.email.recieveEmail;
+import com.email.RecieveEmail;
+import com.email.SendEmailCalInvite;
+import com.model.EmailOutInvitesModel;
 import com.model.SystemEmailModel;
-import com.outgoingEmail.*;
 import com.scans.ScansStamper;
+import com.sql.EmailOutInvites;
 import com.sql.SystemEmail;
 import com.util.FileService;
 import com.util.Global;
+import com.util.StringUtilities;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +52,7 @@ public class MainClass {
         };
         
         Global.emailThread.start();
-//        Global.scansThread.start();
+        Global.scansThread.start();
     }
 
     private void stampScansThread(){
@@ -81,6 +83,7 @@ public class MainClass {
                 try {
                     incomingEmails();
                     calInvites();
+                    notificationEmails();
                     outgoingEmail();
                     //Printout the sleep information
                     System.out.println("Sleeping for: " + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min");
@@ -98,48 +101,31 @@ public class MainClass {
     }
     
     private void incomingEmails() {
-        System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Started  Receiving Emails");
-        
+        System.out.println(StringUtilities.currentTime() + " - Started  Receiving Emails");
         for (SystemEmailModel account : Global.getSystemEmailParams()){
-            System.out.println("Recieving Email For: " + account.getEmailAddress());
-            recieveEmail.fetchEmail(account);
+            RecieveEmail.fetchEmail(account);
         }
-        
-        System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Finished Receiving Emails");
+        System.out.println(StringUtilities.currentTime() + " - Finished Receiving Emails");
     }
-    
+
     private void calInvites() {
-        System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Started  Sending Calendar Invites");
+        System.out.println(StringUtilities.currentTime() + " - Started  Sending Calendar Invites");
+        for (EmailOutInvitesModel email : EmailOutInvites.getQueuedEmailInvites()) {
+            SendEmailCalInvite.sendCalendarInvite(email);
+        }
+        System.out.println(StringUtilities.currentTime() + " - Finished Sending Calendar Invites");
+    }
+
+    private void notificationEmails() {
+        System.out.println(StringUtilities.currentTime() + " - Started  Sending Notification Emails");
         
-        //SERB Emails
-        MEDinvites.sendCalInvite();
-        REPinvites.sendCalInvite();
-        ORGinvites.sendCalInvite();
-        ULPinvites.sendCalInvite();
-        HearingsInvites.sendCalInvite();
-        
-        //PBR Emails
-        CMDSinvites.sendCalInvite();
-        CSCinvites.sendCalInvite();
-        
-        System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Finished Sending Calendar Invites");
+        System.out.println(StringUtilities.currentTime() + " - Finished Sending Notification Emails");
     }
     
     private void outgoingEmail() {
-        System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Started  Sending Emails");
-        
-        //SERB Emails
-        MEDoutgoingEmails.sendEmails();
-        REPoutgoingEmails.sendEmails();
-        ORGoutgoingEmails.sendEmails();
-        ULPoutgoingEmails.sendEmails();
-        HearingsOutgoingEmails.sendEmails();
-        
-        //PBR Emails
-        CMDSoutgoingEmails.sendEmails();
-        CSCoutgoingEmails.sendEmails();
-        
-        System.out.println(Global.getMmddyyyyhhmmssa().format(new Date()) + " - Finished Sending Emails");
+        System.out.println(StringUtilities.currentTime() + " - Started  Sending Emails");
+                
+        System.out.println(StringUtilities.currentTime() + " - Finished Sending Emails");
     }
     
 }

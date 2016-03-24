@@ -36,7 +36,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
@@ -50,11 +49,11 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Andrew
  */
-public class recieveEmail {
+public class RecieveEmail {
                 
     public static void fetchEmail(SystemEmailModel account) {
-        Authenticator auth = setEmailAuthenticator(account);
-        Properties properties = setEmailProperties(account);
+        Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
+        Properties properties = EmailProperties.setEmailInProperties(account);
         
         try {  
             Session session = Session.getInstance(properties, auth);
@@ -95,44 +94,6 @@ public class recieveEmail {
                         + " try again.");
             }
         }
-    }
-
-    private static Authenticator setEmailAuthenticator(SystemEmailModel account) {
-        Authenticator auth = new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                        account.getUsername(), account.getPassword());
-            }
-        };
-        return auth;
-    }
-    
-    private static Properties setEmailProperties(SystemEmailModel account) {
-        Properties properties = new Properties();
-        
-        properties.setProperty("mail.store.protocol", account.getIncomingProtocol());
-        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
-            case "imap":
-            case "imaps":
-                properties.setProperty("mail.imap.submitter", account.getUsername());
-                properties.setProperty("mail.imap.auth", "true");
-                properties.setProperty("mail.imap.host", account.getIncomingURL());
-                properties.put("mail.imap.port", String.valueOf(account.getIncomingPort()));
-                properties.put("mail.imap.fetchsize", "965536");
-                break;
-            case "pop":
-                properties.setProperty("mail.pop3s.host", account.getIncomingURL());
-                properties.put("mail.pop3s.port", String.valueOf(account.getIncomingPort()));
-                properties.put("mail.pop3s.starttls.enable", "true");                
-                break;
-            default:
-                break;
-        }
-        if (Global.isDebug() == true){
-            properties.setProperty("mail.debug", "true");
-        }
-        return properties;
     }
     
     private static EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {

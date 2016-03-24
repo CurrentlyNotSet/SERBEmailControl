@@ -23,6 +23,9 @@ public class Global {
     
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+    private static final SimpleDateFormat iCalendarDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmm'00'");
+    private static final SimpleDateFormat mmddyyyy = new SimpleDateFormat("MM/dd/yyyy");
+    private static final SimpleDateFormat hhmmssa = new SimpleDateFormat("HH:mm:ss a");
     
     //Folder Paths
     private static String scanPath;
@@ -92,9 +95,20 @@ public class Global {
         return mmddyyyyhhmmssa;
     }
 
+    public static SimpleDateFormat getiCalendarDateFormat() {
+        return iCalendarDateFormat;
+    }
+
     public static List<String> getFileBlackList() {
         return fileBlackList;
     }
 
-    
+    public static SimpleDateFormat getMmddyyyy() {
+        return mmddyyyy;
+    }
+
+    public static SimpleDateFormat getHhmmssa() {
+        return hhmmssa;
+    }
+
 }

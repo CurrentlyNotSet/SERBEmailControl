@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.email;
+
+import com.model.SystemEmailModel;
+import com.util.Global;
+import java.util.Properties;
+
+/**
+ *
+ * @author Andrew
+ */
+public class EmailProperties {
+    
+    public static Properties setEmailInProperties(SystemEmailModel account) {
+        Properties properties = new Properties();
+        
+        properties.setProperty("mail.store.protocol", account.getIncomingProtocol());
+        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
+            case "imap":
+            case "imaps":
+                properties.setProperty("mail.imap.submitter", account.getUsername());
+                properties.setProperty("mail.imap.auth", "true");
+                properties.setProperty("mail.imap.host", account.getIncomingURL());
+                properties.put("mail.imap.port", String.valueOf(account.getIncomingPort()));
+                properties.put("mail.imap.fetchsize", "965536");
+                break;
+            case "pop":
+                properties.setProperty("mail.pop3s.host", account.getIncomingURL());
+                properties.put("mail.pop3s.port", String.valueOf(account.getIncomingPort()));
+                properties.put("mail.pop3s.starttls.enable", "true");                
+                break;
+            default:
+                break;
+        }
+        if (Global.isDebug() == true){
+            properties.setProperty("mail.debug", "true");
+        }
+        return properties;
+    }
+    
+    public static Properties setEmailOutProperties(SystemEmailModel account) {
+        Properties properties = new Properties();
+        
+        properties.setProperty("mail.store.protocol", account.getOutgoingProtocol());
+        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
+            case "smtp":
+                properties.setProperty("mail.smtp.submitter", account.getUsername());
+                properties.setProperty("mail.smtp.host", account.getOutgoingURL());
+                properties.put("mail.smtp.port", String.valueOf(account.getOutgoingPort()));
+                properties.setProperty("mail.smtp.quitwait", "true");
+                break;
+            default:
+                break;
+        }
+        if (Global.isDebug() == true){
+            properties.setProperty("mail.debug", "true");
+        }
+        return properties;
+    }
+}

@@ -5,6 +5,7 @@
  */
 package com.util;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
 
@@ -46,6 +47,10 @@ public class StringUtilities {
         String base = FilenameUtils.removeExtension(filename).replace("/", "-").replace(":", "").replace("\"", "");
         String extension = FilenameUtils.getExtension(filename);
         return emailID + "_" + base + "_" + attachmentNumber + "." + extension;
+    }
+    
+    public static String currentTime(){
+        return Global.getMmddyyyyhhmmssa().format(new Date());
     }
 
 }

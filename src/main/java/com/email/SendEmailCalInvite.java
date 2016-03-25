@@ -74,11 +74,7 @@ public class SendEmailCalInvite {
             } catch (MessagingException ex) {
                 Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
             EmailOutInvites.deleteEmailEntry(eml.getId());
-            
-            
-            //Add activity with PDF??
         }
     }
     

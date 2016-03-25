@@ -27,7 +27,7 @@ public class DocketNotification {
         ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "SELECT * FROM EmailOutInvites";
+            String sql = "SELECT * FROM DocketNotifications";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -47,5 +47,24 @@ public class DocketNotification {
             DbUtils.closeQuietly(rs);
         }
         return list;
+    }
+    
+    public static void deleteEmailEntry(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBConnection.connectToDB();
+            String sql = "DELETE FROM DocketNotifications WHERE id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            SlackNotification.sendNotification(ex.toString());
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
+        }
     }
 }

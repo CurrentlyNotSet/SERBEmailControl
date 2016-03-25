@@ -7,6 +7,7 @@ package com.email;
 
 import com.model.DocketNotificationModel;
 import com.model.SystemEmailModel;
+import com.sql.DocketNotification;
 import com.util.Global;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -25,8 +26,9 @@ import javax.mail.internet.MimeMessage;
  * @author Andrew
  */
 public class SendEmailNotification {
-    public static void sendNotificationEmail(SystemEmailModel account, DocketNotificationModel eml) {
+    public static void sendNotificationEmail(DocketNotificationModel eml) {
         //Get Account
+        SystemEmailModel account = null;
         for (SystemEmailModel acc : Global.getSystemEmailParams()) {
             if (acc.getSection().equals(eml.getSection())) {
                 account = acc;
@@ -53,6 +55,8 @@ public class SendEmailNotification {
                 smessage.setSubject(subject);
                 smessage.setText(body);
                 Transport.send(smessage);
+                
+                DocketNotification.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
                 Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
             } catch (MessagingException ex) {

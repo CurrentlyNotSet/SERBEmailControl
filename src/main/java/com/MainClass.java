@@ -7,15 +7,17 @@ package com;
 
 import com.email.RecieveEmail;
 import com.email.SendEmailCalInvite;
+import com.email.SendEmailNotification;
+import com.model.DocketNotificationModel;
 import com.model.EmailOutInvitesModel;
 import com.model.SystemEmailModel;
 import com.scans.ScansStamper;
+import com.sql.DocketNotification;
 import com.sql.EmailOutInvites;
 import com.sql.SystemEmail;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -118,7 +120,9 @@ public class MainClass {
 
     private void notificationEmails() {
         System.out.println(StringUtilities.currentTime() + " - Started  Sending Notification Emails");
-        
+        for (DocketNotificationModel email : DocketNotification.getQueuedNotifications()) {
+            SendEmailNotification.sendNotificationEmail(email);
+        }
         System.out.println(StringUtilities.currentTime() + " - Finished Sending Notification Emails");
     }
     

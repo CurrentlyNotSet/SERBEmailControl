@@ -7,7 +7,6 @@ package com.util;
 
 import com.model.SystemEmailModel;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

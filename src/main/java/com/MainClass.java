@@ -6,13 +6,16 @@
 package com;
 
 import com.email.RecieveEmail;
+import com.email.SendEmail;
 import com.email.SendEmailCalInvite;
 import com.email.SendEmailNotification;
 import com.model.DocketNotificationModel;
 import com.model.EmailOutInvitesModel;
+import com.model.EmailOutModel;
 import com.model.SystemEmailModel;
 import com.scans.ScansStamper;
 import com.sql.DocketNotification;
+import com.sql.EmailOut;
 import com.sql.EmailOutInvites;
 import com.sql.SystemEmail;
 import com.util.FileService;
@@ -34,10 +37,6 @@ public class MainClass {
         }
     }
     
-    /**
-     * The thread for in indexing. Separating it out allows for the updating of 
-     * the AWT elements so we can duplicate the console text.
-     */
     private void threads() {
         Global.emailThread = new Thread() {
             @Override
@@ -52,7 +51,6 @@ public class MainClass {
                 stampScansThread();
             }
         };
-        
         Global.emailThread.start();
         Global.scansThread.start();
     }
@@ -101,10 +99,10 @@ public class MainClass {
             System.err.println("Thread Interrupted");
         }
     }
-    
+
     private void incomingEmails() {
         System.out.println(StringUtilities.currentTime() + " - Started  Receiving Emails");
-        for (SystemEmailModel account : Global.getSystemEmailParams()){
+        for (SystemEmailModel account : Global.getSystemEmailParams()) {
             RecieveEmail.fetchEmail(account);
         }
         System.out.println(StringUtilities.currentTime() + " - Finished Receiving Emails");
@@ -125,13 +123,13 @@ public class MainClass {
         }
         System.out.println(StringUtilities.currentTime() + " - Finished Sending Notification Emails");
     }
-    
+
     private void outgoingEmail() {
         System.out.println(StringUtilities.currentTime() + " - Started  Sending Emails");
-                
+        for (EmailOutModel email : EmailOut.getEmailOutQueue()) {
+            SendEmail.sendEmails(email);
+        }
         System.out.println(StringUtilities.currentTime() + " - Finished Sending Emails");
     }
-    
+
 }
-
-

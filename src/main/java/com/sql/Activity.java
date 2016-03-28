@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.dbutils.DbUtils;
@@ -39,7 +40,7 @@ public class Activity {
                 type.setCaseMonth(rs.getString("caseMonth"));
                 type.setCaseNumber(rs.getString("caseNumber"));
                 type.setDate(rs.getTimestamp("date"));
-                type.setFilePath(rs.getString("fileName"));
+                type.setFileName(rs.getString("fileName"));
                 list.add(type);
             }
         } catch (SQLException ex) {
@@ -69,4 +70,68 @@ public class Activity {
         }
     }
     
+    
+    public static int insertActivity(ActivityModel act){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBConnection.connectToDB();
+            String sql = "INSERT INTO Activity ("
+                    + "caseYear, "        //1
+                    + "caseType, "        //2
+                    + "caseMonth, "       //3
+                    + "caseNumber, "      //4
+                    + "userID, "          //5
+                    + "date, "            //6
+                    + "action, "          //7
+                    + "fileName, "        //8
+                    + "from, "            //9 
+                    + "to, "              //10
+                    + "type, "            //11
+                    + "comment, "         //12
+                    + "redacted, "        //13
+                    + "awaitingTimestamp "//14
+                    + ") VALUES ("
+                    + "?, " //1
+                    + "?, " //2
+                    + "?, " //3
+                    + "?, " //4
+                    + "?, " //5
+                    + "?, " //6
+                    + "?, " //7
+                    + "?, " //8
+                    + "?, " //9
+                    + "?, " //10
+                    + "?, " //11
+                    + "?, " //12
+                    + "?, " //13
+                    + "?)"; //14
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString   ( 1, act.getCaseYear());
+            ps.setString   ( 2, act.getCaseType());
+            ps.setString   ( 3, act.getCaseMonth());
+            ps.setString   ( 4, act.getCaseNumber());
+            ps.setString   ( 5, act.getUserID());
+            ps.setTimestamp( 6, act.getDate());
+            ps.setString   ( 7, act.getAction());
+            ps.setString   ( 8, act.getFileName());
+            ps.setString   ( 9, act.getFrom());
+            ps.setString   (10, act.getTo());
+            ps.setString   (11, act.getType());
+            ps.setString   (12, act.getComment());
+            ps.setInt      (13, act.getRedacted());
+            ps.setInt      (14, act.getAwaitingTimestamp());
+            ps.executeUpdate();
+            ResultSet newRow = ps.getGeneratedKeys();
+            if (newRow.next()){
+                return newRow.getInt(1);
+            }
+        } catch (SQLException ex) {
+            SlackNotification.sendNotification(ex.toString());
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+        }
+        return 0;
+    }
 }

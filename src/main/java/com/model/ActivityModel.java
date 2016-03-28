@@ -18,8 +18,16 @@ public class ActivityModel {
     private String caseType;
     private String caseMonth;
     private String caseNumber;
+    private String userID;
     private Timestamp date;
-    private String filePath;
+    private String action;
+    private String fileName;
+    private String from;
+    private String to;
+    private String type;
+    private String comment;
+    private int redacted;
+    private int awaitingTimestamp;
 
     public int getId() {
         return id;
@@ -69,13 +77,79 @@ public class ActivityModel {
         this.date = date;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public int getRedacted() {
+        return redacted;
+    }
+
+    public void setRedacted(int redacted) {
+        this.redacted = redacted;
+    }
+
+    public int getAwaitingTimestamp() {
+        return awaitingTimestamp;
+    }
+
+    public void setAwaitingTimestamp(int awaitingTimestamp) {
+        this.awaitingTimestamp = awaitingTimestamp;
+    }
+
+    
     
     
 }

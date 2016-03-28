@@ -5,11 +5,37 @@
  */
 package com.email;
 
+import com.fileOperations.EmailBodyToPDF;
+import com.model.ActivityModel;
+import com.model.EmailOutAttachmentModel;
+import com.model.EmailOutModel;
 import com.model.SystemEmailModel;
+import com.sql.Activity;
+import com.sql.EmailOut;
+import com.sql.EmailOutAttachment;
+import com.util.FileService;
+import com.util.Global;
+import com.util.NumberFormatService;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 /**
  *
@@ -17,13 +43,97 @@ import javax.mail.internet.MimeMessage;
  */
 public class SendEmail {
 
-    public static void sendEmails(SystemEmailModel account) {
-        Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
-        Properties properties = EmailProperties.setEmailOutProperties(account);
+    public static void sendEmails(EmailOutModel eml) {
+        SystemEmailModel account = null;
 
-        //NEED FOR LOOP WITH MESSAGES
-        Session session = Session.getInstance(properties, auth);
-        MimeMessage smessage = new MimeMessage(session);
+        //Get Account
+        for (SystemEmailModel acc : Global.getSystemEmailParams()) {
+            if (acc.getSection().equals(eml.getSection())) {
+                account = acc;
+                break;
+            }
+        }
+        if (account != null) {
+            //Get parts
+            String FromAddress = account.getEmailAddress();
+            String[] TOAddressess = eml.getTo().split(";");
+            String[] CCAddressess = eml.getCc().split(";");
+            String[] BCCAddressess = eml.getBcc().split(";");
+            String emailSubject = eml.getSubject();
+            String emailBody = eml.getBody();
+
+            //Set Email Parts
+            Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
+            Properties properties = EmailProperties.setEmailOutProperties(account);
+            Session session = Session.getInstance(properties, auth);
+            MimeMessage smessage = new MimeMessage(session);
+            Multipart multipart = new MimeMultipart();
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            
+            try {
+                smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
+                for (String To : TOAddressess) {
+                    smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                }
+                for (String CC : CCAddressess) {
+                    smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(CC));
+                }
+                for (String BCC : BCCAddressess) {
+                    smessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
+                }
+                smessage.setSubject(emailSubject);
+                smessage.setText(emailBody);
+                
+                List<EmailOutAttachmentModel> attachmentList = EmailOutAttachment.getAttachmentsByEmail(eml.getId());
+                
+                //get attachments
+                for (EmailOutAttachmentModel attachment : attachmentList){                    
+                    String fileName = FileService.getCaseFolderLocation(eml) + attachment.getFileName();
+                    DataSource source = new FileDataSource(fileName);
+                    messageBodyPart = new MimeBodyPart();
+                    messageBodyPart.setDataHandler(new DataHandler(source));
+                    messageBodyPart.setFileName(attachment.getFileName());
+                    multipart.addBodyPart(messageBodyPart);   
+                }
+                smessage.setContent(multipart);
+                Transport.send(smessage);
+                
+                //create email message body
+                Date emailSentTime = new Date();
+                String emailPDFname = EmailBodyToPDF.emailOutBody(eml, attachmentList, emailSentTime);
+                
+                //Add emailBody Activity
+                addEmailActivity(eml, emailPDFname, emailSentTime);
+                
+                //Delete Out entries
+                EmailOut.deleteEmailEntry(eml.getId());
+                EmailOutAttachment.deleteAttachmentsForEmail(eml.getId());
+            } catch (AddressException ex) {
+                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MessagingException ex) {
+                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+        
+    private static int addEmailActivity(EmailOutModel eml, String PDFname, Date emailSentTime) {
+        ActivityModel act = new ActivityModel();
+        act.setCaseYear(eml.getCaseYear());
+        act.setCaseType(eml.getCaseType());
+        act.setCaseMonth(eml.getCaseMonth());
+        act.setCaseNumber(NumberFormatService.FullCaseNumber(eml));
+        act.setUserID(String.valueOf(eml.getUserID()));
+        act.setDate((Timestamp) emailSentTime);
+        act.setAction("OUT - " + eml.getSubject());
+        act.setFileName(PDFname);
+        act.setFrom(eml.getFrom());
+        act.setTo(eml.getTo());
+        act.setType("");
+        act.setComment(eml.getBody());
+        act.setRedacted(0);
+        act.setAwaitingTimestamp(0);
+
+        return Activity.insertActivity(act);
     }
 
 }

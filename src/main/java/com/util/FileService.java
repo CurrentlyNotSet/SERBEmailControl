@@ -6,6 +6,7 @@
 package com.util;
 
 import com.model.ActivityModel;
+import com.model.EmailOutModel;
 import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,6 @@ public class FileService {
                     Global.setEmailPath("/Users/parkerjohnston/Desktop/SERB/Email/");
                     Global.setActivityPath("/Users/parkerjohnston/Desktop/SERB/Activity/");
                     return true;
-                //TODO: Add in other machines with the correct paths
                 case "Alienware15":
                 case "Sniper":
                     Global.setScanPath("C:\\SERB\\Scan\\");
@@ -78,7 +78,15 @@ public class FileService {
                 + File.separatorChar + item.getCaseType()
                 + File.separatorChar + item.getCaseYear()
                 + File.separatorChar + NumberFormatService.FullCaseNumber(item)
-                + File.separatorChar + item.getFilePath();
+                + File.separatorChar + item.getFileName();
+    }
+    
+    public static String getCaseFolderLocation(EmailOutModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + item.getCaseYear()
+                + File.separatorChar + NumberFormatService.FullCaseNumber(item)
+                + File.separatorChar;
     }
 
     public static boolean isImageFormat(String image) {

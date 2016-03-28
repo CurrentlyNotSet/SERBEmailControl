@@ -6,6 +6,7 @@
 package com.util;
 
 import com.model.ActivityModel;
+import com.model.EmailOutModel;
 
 /**
  *
@@ -14,6 +15,10 @@ import com.model.ActivityModel;
 public class NumberFormatService {
     
     public static String FullCaseNumber(ActivityModel caseNumber) {
+        return caseNumber.getCaseYear() + "-" + caseNumber.getCaseType() + "-" + caseNumber.getCaseMonth() + "-" + caseNumber.getCaseNumber();
+    }
+    
+    public static String FullCaseNumber(EmailOutModel caseNumber) {
         return caseNumber.getCaseYear() + "-" + caseNumber.getCaseType() + "-" + caseNumber.getCaseMonth() + "-" + caseNumber.getCaseNumber();
     }
     

@@ -69,12 +69,12 @@ public class SendEmailCalInvite {
                 multipart.addBodyPart(inviteBody);
                 smessage.setContent(multipart);
                 Transport.send(smessage);
+                EmailOutInvites.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
                 Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
             } catch (MessagingException ex) {
                 Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
             }
-            EmailOutInvites.deleteEmailEntry(eml.getId());
         }
     }
     

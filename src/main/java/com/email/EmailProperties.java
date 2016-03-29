@@ -46,7 +46,7 @@ public class EmailProperties {
         Properties properties = new Properties();
         
         properties.setProperty("mail.store.protocol", account.getOutgoingProtocol());
-        if (null != account.getIncomingProtocol())switch (account.getIncomingProtocol()) {
+        if (null != account.getOutgoingProtocol())switch (account.getOutgoingProtocol()) {
             case "smtp":
                 properties.setProperty("mail.smtp.submitter", account.getUsername());
                 properties.setProperty("mail.smtp.host", account.getOutgoingURL());

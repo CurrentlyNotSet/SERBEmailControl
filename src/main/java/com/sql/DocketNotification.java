@@ -35,8 +35,8 @@ public class DocketNotification {
                 item.setId(rs.getInt("id"));
                 item.setSection(rs.getString("Section"));
                 item.setSendTo(rs.getString("sendTo"));
-                item.setMessageSubject(rs.getString("messageSubject"));
-                item.setMessageBody(rs.getString("messageBody"));
+                item.setMessageSubject(rs.getString("emailSubject"));
+                item.setMessageBody(rs.getString("emailBody"));
                 list.add(item);
             }
         } catch (SQLException ex) {

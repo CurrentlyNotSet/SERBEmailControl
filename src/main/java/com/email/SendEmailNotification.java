@@ -43,18 +43,19 @@ public class SendEmailNotification {
 
             Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
             Properties properties = EmailProperties.setEmailOutProperties(account);
+            
             Session session = Session.getInstance(properties, auth);
-            MimeMessage smessage = new MimeMessage(session);
+            MimeMessage email = new MimeMessage(session);
 
             try {
                 for (String To : TOAddressess) {
-                    smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    email.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
                 }
                 
-                smessage.addFrom(new InternetAddress[]{new InternetAddress(FROMaddress)});
-                smessage.setSubject(subject);
-                smessage.setText(body);
-                Transport.send(smessage);
+                email.setFrom(new InternetAddress(FROMaddress));
+                email.setSubject(subject);
+                email.setText(body);
+                Transport.send(email);
                 
                 DocketNotification.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {

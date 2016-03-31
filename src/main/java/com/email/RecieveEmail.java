@@ -50,6 +50,8 @@ import org.apache.commons.io.FilenameUtils;
  * @author Andrew
  */
 public class RecieveEmail {
+    
+    private static int attachmentCount;
                 
     public static void fetchEmail(SystemEmailModel account) {
         Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
@@ -72,6 +74,7 @@ public class RecieveEmail {
             fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
+                    attachmentCount = 0;
                     EmailMessageModel eml = new EmailMessageModel();
                     String emailTime = String.valueOf(new Date().getTime());
                     eml.setSection(account.getSection());
@@ -214,37 +217,51 @@ public class RecieveEmail {
     }
   
     private static void saveAttachments(Part p, Message m, EmailMessageModel eml) {
-        String filePath = Global.getEmailPath() + eml.getSection() + File.separatorChar;
         try {
-            Multipart multiPart = (Multipart) m.getContent();
-            
-            for (int i = 0; i < multiPart.getCount(); i++) {
-                MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
-                if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()) || 
-                    Part.INLINE.equalsIgnoreCase(part.getDisposition())) {                    
-                    String filename = part.getFileName();
-                    if (FileService.isValidAttachment(filename)) {
-                        String fileNameDB = "";
-                        if (FileService.isImageFormat(filename)) {
-                            fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-                        } else if ("docx".equals(FilenameUtils.getExtension(filename))){
-                            fileNameDB = saveDocx(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));          
-                        } else if ("txt".equals(FilenameUtils.getExtension(filename))){
-                            fileNameDB = saveTXT(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));          
-                        } else {
-                            fileNameDB = saveOtherFileType(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-                        }
-                        if (!"".equals(fileNameDB)){
-                            EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
-                        }
-                    }
+            String filename = p.getFileName();
+            if (filename != null && !filename.endsWith("vcf")) {
+                try {
+                    saveFile(p, filename, eml);
+                } catch (ClassCastException ex) {
+                    System.err.println("CRASH");
                 }
+            } else if (p.isMimeType("IMAGE/*")) {
+                saveFile(p, filename, eml);
+            }
+            if (p.isMimeType("multipart/*")) {
+                Multipart mp = (Multipart) p.getContent();
+                int pageCount = mp.getCount();
+                for (int i = 0; i < pageCount; i++) {
+                    saveAttachments(mp.getBodyPart(i), m, eml);
+                }
+            } else if (p.isMimeType("message/rfc822")) {
+                saveAttachments((Part) p.getContent(), m, eml);
             }
         } catch (IOException | MessagingException ex) {
             System.err.println("CRASH");
         }
     }
-    
+
+    private static void saveFile(Part part, String filename, EmailMessageModel eml) {
+        int i = attachmentCount++;
+        String filePath = Global.getEmailPath() + eml.getSection() + File.separatorChar;
+        if (FileService.isValidAttachment(filename)) {
+            String fileNameDB = "";
+            if (FileService.isImageFormat(filename)) {
+                fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
+            } else if ("docx".equals(FilenameUtils.getExtension(filename))) {
+                fileNameDB = saveDocx(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
+            } else if ("txt".equals(FilenameUtils.getExtension(filename))) {
+                fileNameDB = saveTXT(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
+            } else {
+                fileNameDB = saveOtherFileType(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
+            }
+            if (!"".equals(fileNameDB)) {
+                EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
+            }
+        }
+    }
+
     private static String removeEmojiAndSymbolFromString(String content) {
         String utf8tweet = "";
         try {

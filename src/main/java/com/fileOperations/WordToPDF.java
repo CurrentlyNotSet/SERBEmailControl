@@ -5,7 +5,6 @@
  */
 package com.fileOperations;
 
-import com.util.Global;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,7 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.xwpf.converter.core.XWPFConverterException;
- 
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;

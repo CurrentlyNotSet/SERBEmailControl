@@ -39,24 +39,19 @@ public class ImageToPDF {
             PDPage page = new PDPage();
             float margin = 72;
             float pageWidth = page.getMediaBox().getWidth() - 2 * margin;
-            float pageHeight = page.getMediaBox().getWidth() - 2 * margin;
-            
-            
+            float pageHeight = page.getMediaBox().getHeight() - 2 * margin;
 
             PDImageXObject pdImage = PDFBoxTools.getImage(doc, folderPath + imageFile);
             if (pdImage != null) {
                 Dimension pageSize = new Dimension((int) pageWidth, (int) pageHeight);
                 Dimension imageSize = new Dimension(pdImage.getWidth(), pdImage.getHeight());
+                Dimension scaledDim = PDFBoxTools.getScaledDimension(imageSize, pageSize);
+                float startX = page.getMediaBox().getLowerLeftX() + margin;
+                float startY = page.getMediaBox().getUpperRightY() - margin - scaledDim.height;
                 
                 doc.addPage(page);
                 contentStream = new PDPageContentStream(doc, page);
-
-                Dimension scaledDim = PDFBoxTools.getScaledDimension(imageSize,pageSize);
-                float startX = page.getMediaBox().getLowerLeftX() + margin;
-                float startY = scaledDim.height - 3 * margin;
-                
                 contentStream.drawImage(pdImage, startX, startY, scaledDim.width, scaledDim.height);
-
                 contentStream.close();
                 doc.save(folderPath + FilenameUtils.removeExtension(imageFile) + ".pdf");
             }

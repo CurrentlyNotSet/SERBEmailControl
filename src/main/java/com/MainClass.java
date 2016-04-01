@@ -22,7 +22,6 @@ import com.sql.SystemEmail;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class MainClass {
     
     public void setDefaults() {
-        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){
+        if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){            
             threads(); 
         } else {
             System.err.println("unable to resolve network connections");

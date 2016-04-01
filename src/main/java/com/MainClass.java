@@ -9,6 +9,7 @@ import com.email.RecieveEmail;
 import com.email.SendEmail;
 import com.email.SendEmailCalInvite;
 import com.email.SendEmailNotification;
+import com.fileOperations.ImageToPDF;
 import com.model.DocketNotificationModel;
 import com.model.EmailOutInvitesModel;
 import com.model.EmailOutModel;
@@ -21,6 +22,7 @@ import com.sql.SystemEmail;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**

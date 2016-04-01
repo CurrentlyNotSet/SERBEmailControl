@@ -5,46 +5,39 @@
  */
 package com.fileOperations;
 
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
+import com.util.JacobCOMBridge;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.poi.xwpf.converter.core.XWPFConverterException;
-import org.apache.poi.xwpf.converter.pdf.PdfConverter;
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
  *
  * @author Andrew
  */
 public class WordToPDF {
-    
+       
     public static String createPDF(String filePath, String fileName) {
-        File docxFile = new File(filePath + fileName);
-        File pdfFile = new File(filePath + FilenameUtils.removeExtension(fileName) + ".pdf");
-        
-        try { 
-            // 1) Load DOCX into XWPFDocument
-            InputStream is = new FileInputStream(docxFile);
-            XWPFDocument document = new XWPFDocument(is);
- 
-            // 2) Prepare Pdf options
-            PdfOptions options = PdfOptions.create();
- 
-            // 3) Convert XWPFDocument to Pdf
-            OutputStream out = new FileOutputStream(pdfFile);
-            PdfConverter.getInstance().convert(document, out, options);
-            
-            // 4) Delete the Original .docx
-            docxFile.delete();
-             
-        } catch (IOException | XWPFConverterException e) {
-            e.printStackTrace();
+        ActiveXComponent eolWord = null;
+        String docxFile = filePath + fileName;
+        String pdfFile = filePath + FilenameUtils.removeExtension(fileName) + ".pdf";
+        try {
+            eolWord = JacobCOMBridge.setWordActive(true, false, eolWord);
+            Dispatch Documents = eolWord.getProperty("Documents").toDispatch();
+            Dispatch.call(Documents, "Open", docxFile).toDispatch();
+            Dispatch WordBasic = Dispatch.call(eolWord, "WordBasic").getDispatch();
+            Dispatch.call(WordBasic, "FileSaveAs", pdfFile, new Variant(17));
+            Dispatch.call(Documents, "Close", new Variant(false));
+            Thread.sleep(250);
+            JacobCOMBridge.setWordActive(false, false, eolWord);
+            File oldDoc = new File(docxFile);
+            oldDoc.delete();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+            return "";
         }
-        return FilenameUtils.getName(pdfFile.toString());
+        return FilenameUtils.getName(pdfFile);
     }
+    
 }

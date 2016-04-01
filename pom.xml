@@ -62,6 +62,15 @@
             <artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
             <version>1.0.5</version>
         </dependency>
+        
+        
+        <dependency>
+          <groupId>local.net.sf.jacob-project</groupId>
+          <artifactId>jacob</artifactId>
+          <version>1.18</version>
+        </dependency>
+        
+        
     </dependencies>
     <repositories>    
         <repository>

@@ -246,12 +246,13 @@ public class RecieveEmail {
         int i = attachmentCount++;
         String filePath = Global.getEmailPath() + eml.getSection() + File.separatorChar;
         if (FileService.isValidAttachment(filename)) {
+            String extension = FilenameUtils.getExtension(filename);
             String fileNameDB = "";
             if (FileService.isImageFormat(filename)) {
                 fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-            } else if ("docx".equals(FilenameUtils.getExtension(filename))) {
+            } else if ("docx".equals(extension) || "doc".equals(extension)) {
                 fileNameDB = saveDocx(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-            } else if ("txt".equals(FilenameUtils.getExtension(filename))) {
+            } else if ("txt".equals(extension)) {
                 fileNameDB = saveTXT(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
             } else {
                 fileNameDB = saveOtherFileType(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));

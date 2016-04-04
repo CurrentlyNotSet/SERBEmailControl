@@ -13,15 +13,10 @@ import com.model.EmailMessageModel;
 import com.model.SystemEmailModel;
 import com.sql.EMail;
 import com.sql.EmailAttachment;
-import com.sun.mail.util.BASE64DecoderStream;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -40,7 +35,6 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.search.FlagTerm;
-import jdk.nashorn.internal.objects.NativeRegExp;
 import net.htmlparser.jericho.Renderer;
 import net.htmlparser.jericho.Segment;
 import net.htmlparser.jericho.Source;
@@ -248,18 +242,19 @@ public class RecieveEmail {
         String filePath = Global.getEmailPath() + eml.getSection() + File.separatorChar;
         if (FileService.isValidAttachment(filename)) {
             String extension = FilenameUtils.getExtension(filename);
-            String fileNameDB = "";
-            if (FileService.isImageFormat(filename)) {
-                fileNameDB = saveImage(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-            } else if ("docx".equals(extension) || "doc".equals(extension)) {
-                fileNameDB = saveDocx(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-            } else if ("txt".equals(extension)) {
-                fileNameDB = saveTXT(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-            } else {
-                fileNameDB = saveOtherFileType(part, filePath, StringUtilities.properAttachmentName(filename, eml.getId(), i));
-            }
-            if (!"".equals(fileNameDB)) {
-                EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
+            String fileNameDB = StringUtilities.properAttachmentName(filename, eml.getId(), i);
+
+            if (saveAttachment(part, filePath, fileNameDB)) {
+                if (FileService.isImageFormat(filename)) {
+                    fileNameDB = ImageToPDF.createPDFFromImage(filePath, fileNameDB);
+                } else if ("docx".equals(extension) || "doc".equals(extension)) {
+                    fileNameDB = WordToPDF.createPDF(filePath, fileNameDB);
+                } else if ("txt".equals(extension)) {
+                    fileNameDB = TXTtoPDF.createPDF(filePath, fileNameDB);
+                }
+                if (!"".equals(fileNameDB)) {
+                    EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
+                }
             }
         }
     }
@@ -284,47 +279,15 @@ public class RecieveEmail {
         return utf8tweet;
     }
     
-    private static String saveImage(Part p, String filePath, String filename) {
-        File image = null;
-        String attachmentName = "";
+    
+    private static boolean saveAttachment(Part p, String filePath, String filename) {
         try {
-            image = new File(filePath + filename);
             ((MimeBodyPart) p).saveFile(filePath + filename);
-             attachmentName = ImageToPDF.createPDFFromImage(filePath, filename);
+            return true;
         } catch (IOException | MessagingException ex) {
             System.err.println("Attachment \"" + filename + "\" could not be saved");
+            return false;
         }
-        System.out.println("Image Deleted? -> " + image.delete() + " " + filename);
-        return attachmentName;
     }
     
-    private static String saveDocx(Part p, String filePath, String filename){
-        try {
-            ((MimeBodyPart) p).saveFile(filePath + filename);
-            return WordToPDF.createPDF(filePath, filename);
-        } catch (IOException | MessagingException ex) {
-            System.err.println("Attachment \"" + filename + "\" could not be saved");
-        }
-        return "";
-    }
-    
-    private static String saveTXT(Part p, String filePath, String filename) {
-        try {
-            ((MimeBodyPart) p).saveFile(filePath + filename);
-            return TXTtoPDF.createPDF(filePath, filename);
-        } catch (IOException | MessagingException ex) {
-            System.err.println("Attachment \"" + filename + "\" could not be saved");
-        }
-        return "";
-    }
-    
-    private static String saveOtherFileType(Part p, String filePath, String filename) {
-        try {
-            ((MimeBodyPart) p).saveFile(filePath + filename);
-            return filename;
-        } catch (IOException | MessagingException ex) {
-            System.err.println("Attachment \"" + filename + "\" could not be saved");
-        }
-        return "";
-    }
 }

@@ -33,9 +33,10 @@ public class ImageToPDF {
 
     /**
      * create the second sample document from the PDF file format specification.
+     *
      * @param folderPath
      * @param imageFileName
-     * @return 
+     * @return
      */
     public static String createPDFFromImage(String folderPath, String imageFileName) {
         String pdfFile = FilenameUtils.removeExtension(imageFileName) + ".pdf";
@@ -48,7 +49,7 @@ public class ImageToPDF {
         // the document
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
-        
+
         try {
             doc = new PDDocument();
             PDPage page = new PDPage();
@@ -71,14 +72,14 @@ public class ImageToPDF {
                 bim = ImageIO.read(imageFile);
                 pdImage = LosslessFactory.createFromImage(doc, bim);
             }
-                        
+
             if (pdImage != null) {
                 Dimension pageSize = new Dimension((int) pageWidth, (int) pageHeight);
                 Dimension imageSize = new Dimension(pdImage.getWidth(), pdImage.getHeight());
                 Dimension scaledDim = PDFBoxTools.getScaledDimension(imageSize, pageSize);
                 float startX = page.getMediaBox().getLowerLeftX() + margin;
                 float startY = page.getMediaBox().getUpperRightY() - margin - scaledDim.height;
-                
+
                 doc.addPage(page);
                 contentStream = new PDPageContentStream(doc, page);
                 contentStream.drawImage(pdImage, startX, startY, scaledDim.width, scaledDim.height);
@@ -92,17 +93,25 @@ public class ImageToPDF {
             if (doc != null) {
                 try {
                     doc.close();
-                    if (fileStream != null){
-                        fileStream.close();
-                    }
-                    if (bim != null){
-                        bim.flush();
-                    }
-                    
+
                 } catch (IOException ex) {
                     Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
                     return "";
                 }
+            }
+            if (fileStream != null) {
+                try {
+                    fileStream.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    return "";
+                }
+            }
+            if (bim != null) {
+                bim.flush();
+            }
+            if (imageFile != null) {
+                imageFile.delete();
             }
         }
         return pdfFile;

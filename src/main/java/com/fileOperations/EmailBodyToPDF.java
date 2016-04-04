@@ -31,11 +31,19 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class EmailBodyToPDF {
 
-    public static EmailMessageModel createEmailBody(EmailMessageModel eml, String emailTime) {
+    public static EmailMessageModel createEmailBody(EmailMessageModel eml, String emailTime, List<String> attachmentList) {
         String filePath = Global.getEmailPath()+ eml.getSection() 
                 + File.separatorChar ;
         String fileName = eml.getId() + "_00_" + emailTime + ".pdf";
-        
+        String attachments = "";
+        for (String attachment : attachmentList){
+            if ("".equals(attachments)) {
+                attachments += attachment;
+            } else {
+                attachments += attachment + "; ";
+            }
+        }
+                
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
         
@@ -69,6 +77,7 @@ public class EmailBodyToPDF {
             List<String> fromContent = PDFBoxTools.setLineBreaks(eml.getEmailFrom(), width, emailHeaderFontSize, bodyFont);
             List<String> ccContent = PDFBoxTools.setLineBreaks(eml.getEmailCC(), width, emailHeaderFontSize, bodyFont);
             List<String> bccContent = PDFBoxTools.setLineBreaks(eml.getEmailBCC(), width, emailHeaderFontSize, bodyFont);
+            List<String> attachmentContent = PDFBoxTools.setLineBreaks(attachments, width, emailHeaderFontSize, bodyFont);
             List<String> subjectContent = PDFBoxTools.setLineBreaks(eml.getEmailSubject(), width, emailHeaderFontSize, bodyFont);
             List<String> bodyContent = PDFBoxTools.setLineBreaks(eml.getEmailBody(), width, bodyFontSize, bodyFont);
 
@@ -229,6 +238,34 @@ public class EmailBodyToPDF {
                 contentStream.newLineAtOffset(0, -leadingEmailHeader);
                 textYlocation += leadingEmailHeader;
                 for (String line : bccContent) {
+                    if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingEmailHeader)) {
+                        contentStream.endText();
+                        contentStream.close();
+                        textYlocation = 0;
+
+                        page = new PDPage();
+                        doc.addPage(page);
+                        contentStream = new PDPageContentStream(doc, page, true, true, false);
+
+                        contentStream.beginText();
+                        contentStream.setFont(bodyFont, emailHeaderFontSize);
+                        contentStream.setNonStrokingColor(Color.BLACK);
+                        contentStream.newLineAtOffset(startX, startY);
+                    }
+                    contentStream.showText(line);
+                    contentStream.newLineAtOffset(0, -leadingEmailHeader);
+                    textYlocation += leadingEmailHeader;
+                }
+            }
+            
+            //Set AttachmentList
+            if (!"".equals(attachments.trim())) {
+                contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
+                contentStream.showText("Attachments: ");
+                contentStream.setFont(bodyFont, emailHeaderFontSize);
+                contentStream.newLineAtOffset(0, -leadingEmailHeader);
+                textYlocation += leadingEmailHeader;
+                for (String line : attachmentContent) {
                     if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingEmailHeader)) {
                         contentStream.endText();
                         contentStream.close();

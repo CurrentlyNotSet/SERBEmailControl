@@ -19,7 +19,9 @@ import com.util.StringUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +49,7 @@ import org.apache.commons.io.FilenameUtils;
 public class RecieveEmail {
     
     private static int attachmentCount;
+    private static List<String> attachmentList;
                 
     public static void fetchEmail(SystemEmailModel account) {
         Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
@@ -70,13 +73,14 @@ public class RecieveEmail {
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     attachmentCount = 1;
+                    attachmentList = new ArrayList<>();
                     EmailMessageModel eml = new EmailMessageModel();
                     String emailTime = String.valueOf(new Date().getTime());
                     eml.setSection(account.getSection());
                     eml = saveEnvelope(msg, msg, eml);
                     eml.setId(EMail.InsertEmail(eml));
-                    eml = EmailBodyToPDF.createEmailBody(eml, emailTime);
                     saveAttachments(msg, msg, eml);
+                    eml = EmailBodyToPDF.createEmailBody(eml, emailTime, attachmentList);
                     eml.setReadyToFile(1);
                     EMail.setEmailReadyToFile(eml);
                 }
@@ -253,6 +257,7 @@ public class RecieveEmail {
                     fileNameDB = TXTtoPDF.createPDF(filePath, fileNameDB);
                 }
                 if (!"".equals(fileNameDB)) {
+                    attachmentList.add(fileNameDB);
                     EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
                 }
             }

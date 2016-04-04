@@ -40,6 +40,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.search.FlagTerm;
+import jdk.nashorn.internal.objects.NativeRegExp;
 import net.htmlparser.jericho.Renderer;
 import net.htmlparser.jericho.Segment;
 import net.htmlparser.jericho.Source;
@@ -286,13 +287,20 @@ public class RecieveEmail {
     private static String saveImage(Part p, String filePath, String filename) {
         DataOutputStream output = null;
         try {
-            output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filePath + filename))));
-            try (BASE64DecoderStream test = (BASE64DecoderStream) p.getContent()) {
+            File image = new File(filePath + filename);
+            FileOutputStream fileStream = new FileOutputStream(image);
+            BufferedOutputStream bufferedStream = new BufferedOutputStream(fileStream);
+            
+            output = new DataOutputStream(bufferedStream);
+            try (BASE64DecoderStream decoder = (BASE64DecoderStream) p.getContent()) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                while ((bytesRead = test.read(buffer)) != -1) {
+                while ((bytesRead = decoder.read(buffer)) != -1) {
                     output.write(buffer, 0, bytesRead);
                 }
+                decoder.close();
+                fileStream.close();
+                bufferedStream.close();
             }
             output.close();
         } catch (FileNotFoundException ex) {

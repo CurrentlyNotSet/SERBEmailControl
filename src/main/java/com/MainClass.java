@@ -9,7 +9,6 @@ import com.email.RecieveEmail;
 import com.email.SendEmail;
 import com.email.SendEmailCalInvite;
 import com.email.SendEmailNotification;
-import com.fileOperations.ImageToPDF;
 import com.model.DocketNotificationModel;
 import com.model.EmailOutInvitesModel;
 import com.model.EmailOutModel;
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainClass {
     
-    public void setDefaults() {
+    public void setDefaults() {        
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){            
             threads(); 
         } else {

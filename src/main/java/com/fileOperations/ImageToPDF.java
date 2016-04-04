@@ -30,6 +30,8 @@ public class ImageToPDF {
      * @return 
      */
     public static String createPDFFromImage(String folderPath, String imageFile) {
+        String pdfFile = FilenameUtils.removeExtension(imageFile) + ".pdf";
+
         // the document
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
@@ -53,7 +55,7 @@ public class ImageToPDF {
                 contentStream = new PDPageContentStream(doc, page);
                 contentStream.drawImage(pdImage, startX, startY, scaledDim.width, scaledDim.height);
                 contentStream.close();
-                doc.save(folderPath + FilenameUtils.removeExtension(imageFile) + ".pdf");
+                doc.save(folderPath + pdfFile);
             }
         } catch (IOException ex) {
             Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,7 +69,7 @@ public class ImageToPDF {
                 }
             }
         }
-        return FilenameUtils.removeExtension(imageFile) + ".pdf";
+        return pdfFile;
     }
 
 }

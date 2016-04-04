@@ -107,29 +107,6 @@ public class PDFBoxTools {
 
         return new Dimension(new_width, new_height);
     }
-    
-    public static PDImageXObject getImage(PDDocument doc, String image) {
-        try {
-            if (image.toLowerCase().endsWith(".jpg")) {
-                return JPEGFactory.createFromStream(doc, new FileInputStream(image));
-            } else if ((image.toLowerCase().endsWith(".tif")
-                    || image.toLowerCase().endsWith(".tiff"))
-                    && TIFFCompression(image) == COMPRESSION_GROUP4) {
-                return CCITTFactory.createFromFile(doc, new File(image));
-            } else if (image.toLowerCase().endsWith(".gif")
-                    || image.toLowerCase().endsWith(".bmp")
-                    || image.toLowerCase().endsWith(".png")) {
-                BufferedImage bim = ImageIO.read(new File(image));
-                return LosslessFactory.createFromImage(doc, bim);
-            } else {
-                System.out.println("Image type not supported: " + image);
-                return null;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(PDFBoxTools.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
 
     public static int TIFFCompression(String image) {
         // 1 = No compression

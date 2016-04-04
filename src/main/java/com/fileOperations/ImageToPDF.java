@@ -5,16 +5,24 @@
  */
 package com.fileOperations;
 
+import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import com.util.PDFBoxTools;
+import static com.util.PDFBoxTools.TIFFCompression;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 /**
@@ -26,11 +34,16 @@ public class ImageToPDF {
     /**
      * create the second sample document from the PDF file format specification.
      * @param folderPath
-     * @param imageFile
+     * @param imageFileName
      * @return 
      */
-    public static String createPDFFromImage(String folderPath, String imageFile) {
-        String pdfFile = FilenameUtils.removeExtension(imageFile) + ".pdf";
+    public static String createPDFFromImage(String folderPath, String imageFileName) {
+        String pdfFile = FilenameUtils.removeExtension(imageFileName) + ".pdf";
+        String image = folderPath + imageFileName;
+        PDImageXObject pdImage = null;
+        File imageFile = null;
+        FileInputStream fileStream = null;
+        BufferedImage bim = null;
 
         // the document
         PDDocument doc = null;
@@ -43,7 +56,22 @@ public class ImageToPDF {
             float pageWidth = page.getMediaBox().getWidth() - 2 * margin;
             float pageHeight = page.getMediaBox().getHeight() - 2 * margin;
 
-            PDImageXObject pdImage = PDFBoxTools.getImage(doc, folderPath + imageFile);
+            if (image.toLowerCase().endsWith(".jpg")) {
+                fileStream = new FileInputStream(image);
+                pdImage = JPEGFactory.createFromStream(doc, fileStream);
+            } else if ((image.toLowerCase().endsWith(".tif")
+                    || image.toLowerCase().endsWith(".tiff"))
+                    && TIFFCompression(image) == COMPRESSION_GROUP4) {
+                imageFile = new File(image);
+                pdImage = CCITTFactory.createFromFile(doc, imageFile);
+            } else if (image.toLowerCase().endsWith(".gif")
+                    || image.toLowerCase().endsWith(".bmp")
+                    || image.toLowerCase().endsWith(".png")) {
+                imageFile = new File(image);
+                bim = ImageIO.read(imageFile);
+                pdImage = LosslessFactory.createFromImage(doc, bim);
+            }
+                        
             if (pdImage != null) {
                 Dimension pageSize = new Dimension((int) pageWidth, (int) pageHeight);
                 Dimension imageSize = new Dimension(pdImage.getWidth(), pdImage.getHeight());
@@ -64,8 +92,16 @@ public class ImageToPDF {
             if (doc != null) {
                 try {
                     doc.close();
+                    if (fileStream != null){
+                        fileStream.close();
+                    }
+                    if (bim != null){
+                        bim.flush();
+                    }
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    return "";
                 }
             }
         }

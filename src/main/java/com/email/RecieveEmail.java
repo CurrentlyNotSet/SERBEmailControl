@@ -75,7 +75,7 @@ public class RecieveEmail {
             fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
-                    attachmentCount = 0;
+                    attachmentCount = 1;
                     EmailMessageModel eml = new EmailMessageModel();
                     String emailTime = String.valueOf(new Date().getTime());
                     eml.setSection(account.getSection());
@@ -285,36 +285,17 @@ public class RecieveEmail {
     }
     
     private static String saveImage(Part p, String filePath, String filename) {
-        DataOutputStream output = null;
+        File image = null;
+        String attachmentName = "";
         try {
-            File image = new File(filePath + filename);
-            FileOutputStream fileStream = new FileOutputStream(image);
-            BufferedOutputStream bufferedStream = new BufferedOutputStream(fileStream);
-            
-            output = new DataOutputStream(bufferedStream);
-            try (BASE64DecoderStream decoder = (BASE64DecoderStream) p.getContent()) {
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = decoder.read(buffer)) != -1) {
-                    output.write(buffer, 0, bytesRead);
-                }
-                decoder.close();
-                fileStream.close();
-                bufferedStream.close();
-            }
-            output.close();
-        } catch (FileNotFoundException ex) {
-            System.err.println("CRASH");
+            image = new File(filePath + filename);
+            ((MimeBodyPart) p).saveFile(filePath + filename);
+             attachmentName = ImageToPDF.createPDFFromImage(filePath, filename);
         } catch (IOException | MessagingException ex) {
-            System.err.println("CRASH");
-        } finally {
-            try {
-                output.close();
-            } catch (IOException ex) {
-                System.err.println("CRASH");
-            }
+            System.err.println("Attachment \"" + filename + "\" could not be saved");
         }
-        return ImageToPDF.createPDFFromImage(filePath, filename);
+        System.out.println("Image Deleted? -> " + image.delete() + " " + filename);
+        return attachmentName;
     }
     
     private static String saveDocx(Part p, String filePath, String filename){

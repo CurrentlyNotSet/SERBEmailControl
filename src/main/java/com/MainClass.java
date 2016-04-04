@@ -31,7 +31,7 @@ public class MainClass {
     
     public void setDefaults() {        
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()){            
-            threads(); 
+            threads();
         } else {
             System.err.println("unable to resolve network connections");
         }

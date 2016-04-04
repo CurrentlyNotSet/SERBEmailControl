@@ -34,7 +34,7 @@ public class EmailBodyToPDF {
     public static EmailMessageModel createEmailBody(EmailMessageModel eml, String emailTime) {
         String filePath = Global.getEmailPath()+ eml.getSection() 
                 + File.separatorChar ;
-        String fileName = eml.getId() + "_" + emailTime + ".pdf";
+        String fileName = eml.getId() + "_00_" + emailTime + ".pdf";
         
         PDDocument doc = null;
         PDPageContentStream contentStream = null;

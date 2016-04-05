@@ -8,6 +8,7 @@ package com.email;
 import com.model.EmailOutInvitesModel;
 import com.model.SystemEmailModel;
 import com.sql.EmailOutInvites;
+import com.util.ExceptionHandler;
 import com.util.Global;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -76,9 +77,9 @@ public class SendEmailCalInvite {
                 Transport.send(smessage);
                 EmailOutInvites.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
-                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
             } catch (MessagingException ex) {
-                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
             }
         }
     }
@@ -98,7 +99,7 @@ public class SendEmailCalInvite {
                     + "\n\n\n";
             descriptionPart.setContent(content, "text/html; charset=utf-8");
         } catch (MessagingException ex) {
-            Logger.getLogger(SendEmailCalInvite.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         }
         return descriptionPart;
     }
@@ -136,7 +137,7 @@ public class SendEmailCalInvite {
             calendarPart.addHeader("Content-Class", "urn:content-classes:calendarmessage");
             calendarPart.setContent(calendarContent, "text/calendar;method=CANCEL");
         } catch (MessagingException ex) {
-            Logger.getLogger(SendEmailCalInvite.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         }
         return calendarPart;
     }

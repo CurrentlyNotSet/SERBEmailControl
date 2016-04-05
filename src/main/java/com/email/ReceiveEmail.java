@@ -271,8 +271,8 @@ public class ReceiveEmail {
         try {
             byte[] utf8Bytes = content.getBytes("UTF-8");
             utf8tweet = new String(utf8Bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            System.err.println("CRASH");
+        } catch (UnsupportedEncodingException ex) {
+            ExceptionHandler.Handle(ex);
         }
         Pattern unicodeOutliers = Pattern.compile(
                 "[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",
@@ -293,6 +293,7 @@ public class ReceiveEmail {
             return true;
         } catch (IOException | MessagingException ex) {
             System.err.println("Attachment \"" + filename + "\" could not be saved");
+            ExceptionHandler.Handle(ex);
             return false;
         }
     }

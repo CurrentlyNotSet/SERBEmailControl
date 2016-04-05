@@ -61,8 +61,9 @@ public class FileService {
             try {
                 FileUtils.touch(PDFfile);
                 return true;
-            } catch (IOException e) {
+            } catch (IOException ex) {
                 System.out.println("file in use: " + PDFfile);
+                ExceptionHandler.Handle(ex);
                 return false;
             }
         } else if (PDFfile.exists() == false) {

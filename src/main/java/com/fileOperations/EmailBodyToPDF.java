@@ -39,7 +39,7 @@ public class EmailBodyToPDF {
             if ("".equals(attachments)) {
                 attachments += attachment;
             } else {
-                attachments += attachment + "; ";
+                attachments += "; " + attachment;
             }
         }
                 

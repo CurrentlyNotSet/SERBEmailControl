@@ -15,6 +15,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.setProperty("java.net.preferIPv4Stack" , "true");
         MainClass bc = new MainClass();
         bc.setDefaults();
     }

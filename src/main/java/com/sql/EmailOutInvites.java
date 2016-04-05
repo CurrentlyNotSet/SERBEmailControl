@@ -38,7 +38,7 @@ public class EmailOutInvites {
                 item.setToAddress(rs.getString("TOaddress"));
                 item.setCcAddress(rs.getString("CCaddress"));
                 item.setEmailBody(rs.getString("emailBody"));
-                item.setCaseNumber(rs.getString("caseNumger"));
+                item.setCaseNumber(rs.getString("caseNumber"));
                 item.setHearingType(rs.getString("hearingType"));
                 item.setHearingRoomAbv(rs.getString("hearingRoomAbv"));
                 item.setHearingDescription(rs.getString("hearingDescription"));

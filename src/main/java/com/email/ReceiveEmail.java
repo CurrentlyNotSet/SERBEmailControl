@@ -13,6 +13,7 @@ import com.model.EmailMessageModel;
 import com.model.SystemEmailModel;
 import com.sql.EMail;
 import com.sql.EmailAttachment;
+import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
@@ -89,12 +90,13 @@ public class ReceiveEmail {
             store.close();
 
         } catch (Exception ex) {
-            if (ex != null) {
+            if (ex != null) {                
                 System.out.println("Unable to connect to email Server for: " 
                         + account.getEmailAddress()
                         + "\nPlease ensure you are connected to the network and"
                         + " try again.");
             }
+            ExceptionHandler.Handle(ex);
         }
     }
     
@@ -167,11 +169,11 @@ public class ReceiveEmail {
             eml.setEmailBody(removeEmojiAndSymbolFromString(emailBody));
 
         } catch (MessagingException ex) {
-            System.err.println("CRASH");
+            ExceptionHandler.Handle(ex);
         }
         return eml;
     }
-    
+
     private static String getEmailBodyText(Part p) {
         try {
             if (p.isMimeType("text/*")) {
@@ -210,7 +212,7 @@ public class ReceiveEmail {
             }
             return null;
         } catch (MessagingException | IOException ex) {
-            System.err.println("CRASH");
+            ExceptionHandler.Handle(ex);
         }
         return "";
     }
@@ -237,7 +239,7 @@ public class ReceiveEmail {
                 saveAttachments((Part) p.getContent(), m, eml);
             }
         } catch (IOException | MessagingException ex) {
-            System.err.println("CRASH");
+            ExceptionHandler.Handle(ex);
         }
     }
 

@@ -8,8 +8,6 @@ package com.util;
 import in.ashwanthkumar.slack.webhook.Slack;
 import in.ashwanthkumar.slack.webhook.SlackMessage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 //TODO: Update file to Slack (DB Backup)
 
@@ -27,7 +25,7 @@ public class SlackNotification {
                     .displayName(SlackInfo.getSlackUser())
                     .push(new SlackMessage(message));
         } catch (IOException ex) {
-            Logger.getLogger(SlackNotification.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         }
     }
     
@@ -41,7 +39,7 @@ public class SlackNotification {
 //                .displayName(SlackInfo.getSlackUser())
 //                .push(new SlackAttachment(filePath));
 //        } catch (IOException ex) {
-//            Logger.getLogger(SlackNotification.class.getName()).log(Level.SEVERE, null, ex);
+//            ExceptionHandler.Handle(ex);
 //        }
 //    }
     

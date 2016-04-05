@@ -6,7 +6,7 @@
 package com.sql;
 
 import com.model.EmailMessageModel;
-import com.util.SlackNotification;
+import com.util.ExceptionHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,7 +66,7 @@ public class EMail {
                 return newRow.getInt(1);
             }
         } catch (SQLException ex) {
-            SlackNotification.sendNotification(ex.toString());
+            ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
@@ -87,11 +87,11 @@ public class EMail {
             ps.setInt   (3, eml.getId());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            SlackNotification.sendNotification(ex.toString());
+            ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(conn);
-        }
-        
+        }        
     }
+    
 }

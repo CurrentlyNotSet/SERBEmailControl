@@ -8,6 +8,7 @@ package com.fileOperations;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import com.util.ExceptionHandler;
 import com.util.JacobCOMBridge;
 import java.io.File;
 import org.apache.commons.io.FilenameUtils;
@@ -34,7 +35,7 @@ public class WordToPDF {
             File oldDoc = new File(docxFile);
             oldDoc.delete();
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            ExceptionHandler.Handle(ex);
             return "";
         }
         return FilenameUtils.getName(pdfFile);

@@ -8,6 +8,7 @@ package com.fileOperations;
 import com.model.EmailMessageModel;
 import com.model.EmailOutAttachmentModel;
 import com.model.EmailOutModel;
+import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.PDFBoxTools;
@@ -16,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -349,13 +348,13 @@ public class EmailBodyToPDF {
             contentStream.close();
             doc.save(filePath + fileName);
         } catch (IOException ex) {
-            Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         } finally {
             if (doc != null) {
                 try {
                     doc.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    ExceptionHandler.Handle(ex);
                 }
             }
             eml.setEmailBodyFileName(fileName);
@@ -648,13 +647,13 @@ public class EmailBodyToPDF {
             contentStream.close();
             doc.save(filePath + fileName);
         } catch (IOException ex) {
-            Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         } finally {
             if (doc != null) {
                 try {
                     doc.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    ExceptionHandler.Handle(ex);
                 }
             }
         }

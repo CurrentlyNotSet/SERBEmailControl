@@ -13,6 +13,7 @@ import com.model.SystemEmailModel;
 import com.sql.Activity;
 import com.sql.EmailOut;
 import com.sql.EmailOutAttachment;
+import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.NumberFormatService;
@@ -20,8 +21,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -36,6 +35,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
@@ -69,53 +69,59 @@ public class SendEmail {
             MimeMessage smessage = new MimeMessage(session);
             Multipart multipart = new MimeMultipart();
             MimeBodyPart messageBodyPart = new MimeBodyPart();
-            
+
             try {
                 smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
                 for (String To : TOAddressess) {
-                    smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    if (EmailValidator.getInstance().isValid(To)) {
+                        smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    }
                 }
                 for (String CC : CCAddressess) {
-                    smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(CC));
+                    if (EmailValidator.getInstance().isValid(CC)) {
+                        smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(CC));
+                    }
                 }
                 for (String BCC : BCCAddressess) {
-                    smessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
+                    if (EmailValidator.getInstance().isValid(BCC)) {
+                        smessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
+                    }
                 }
                 smessage.setSubject(emailSubject);
                 smessage.setText(emailBody);
-                
+
                 List<EmailOutAttachmentModel> attachmentList = EmailOutAttachment.getAttachmentsByEmail(eml.getId());
-                
+
                 //get attachments
-                for (EmailOutAttachmentModel attachment : attachmentList){                    
+                for (EmailOutAttachmentModel attachment : attachmentList) {
                     String fileName = FileService.getCaseFolderLocation(eml) + attachment.getFileName();
                     DataSource source = new FileDataSource(fileName);
                     messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(attachment.getFileName());
-                    multipart.addBodyPart(messageBodyPart);   
+                    multipart.addBodyPart(messageBodyPart);
                 }
                 smessage.setContent(multipart);
                 Transport.send(smessage);
-                
+
                 //create email message body
                 Date emailSentTime = new Date();
                 String emailPDFname = EmailBodyToPDF.emailOutBody(eml, attachmentList, emailSentTime);
-                
+
                 //Add emailBody Activity
                 addEmailActivity(eml, emailPDFname, emailSentTime);
-                
+
                 //Delete Out entries
                 EmailOut.deleteEmailEntry(eml.getId());
                 EmailOutAttachment.deleteAttachmentsForEmail(eml.getId());
             } catch (AddressException ex) {
-                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
             } catch (MessagingException ex) {
-                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
             }
         }
     }
-        
+
     private static int addEmailActivity(EmailOutModel eml, String PDFname, Date emailSentTime) {
         ActivityModel act = new ActivityModel();
         act.setCaseYear(eml.getCaseYear());

@@ -6,7 +6,7 @@
 package com.sql;
 
 import com.model.EmailOutAttachmentModel;
-import com.util.SlackNotification;
+import com.util.ExceptionHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,7 +39,7 @@ public class EmailOutAttachment {
                 list.add(item);
             }
         } catch (SQLException ex) {
-            SlackNotification.sendNotification(ex.toString());
+            ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
@@ -59,7 +59,7 @@ public class EmailOutAttachment {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            SlackNotification.sendNotification(ex.toString());
+            ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);

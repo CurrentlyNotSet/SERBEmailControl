@@ -24,6 +24,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
@@ -59,10 +60,14 @@ public class SendEmailCalInvite {
             try {
                 smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
                 for (String To : TOAddressess) {
-                    smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    if (EmailValidator.getInstance().isValid(To)){
+                        smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    }
                 }
                 for (String Cc : CCAddressess) {
-                    smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(Cc));
+                    if (EmailValidator.getInstance().isValid(Cc)){
+                        smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(Cc));
+                    }
                 }
                 smessage.setSubject(emailSubject);
                 multipart.addBodyPart(emailBody);

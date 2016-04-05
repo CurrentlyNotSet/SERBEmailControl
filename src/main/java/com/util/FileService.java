@@ -49,7 +49,7 @@ public class FileService {
             }
 
         } catch (UnknownHostException ex) {
-            SlackNotification.sendNotification(ex.getMessage());
+            ExceptionHandler.Handle(ex);
             return false;
         }
     }

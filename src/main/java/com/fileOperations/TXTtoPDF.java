@@ -5,6 +5,7 @@
  */
 package com.fileOperations;
 
+import com.util.ExceptionHandler;
 import com.util.PDFBoxTools;
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -12,8 +13,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -48,15 +47,15 @@ public class TXTtoPDF {
             while ((sCurrentLine = br.readLine()) != null) {
                 textBody += sCurrentLine + System.getProperty("line.separator");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ExceptionHandler.Handle(ex);
         } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                ExceptionHandler.Handle(ex);
             }
         }
         return textBody;
@@ -122,13 +121,13 @@ public class TXTtoPDF {
             contentStream.close();
             doc.save(pdfFile);
         } catch (IOException ex) {
-            Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         } finally {
             if (doc != null) {
                 try {
                     doc.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(EmailBodyToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    ExceptionHandler.Handle(ex);
                 }
             }
         }

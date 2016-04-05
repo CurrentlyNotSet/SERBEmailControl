@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -63,7 +61,7 @@ public class PDFBoxTools {
                         lastSpace = spaceIndex;
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(PDFBoxTools.class.getName()).log(Level.SEVERE, null, ex);
+                    ExceptionHandler.Handle(ex);
                 }
             }
         }

@@ -16,18 +16,17 @@ import org.apache.commons.io.FilenameUtils;
 public class StringUtilities {
 
     // adapted from post by Phil Haack and modified to match better
-    private final static String tagStart=
-        "\\<\\w+((\\s+\\w+(\\s*\\=\\s*(?:\".*?\"|'.*?'|[^'\"\\>\\s]+))?)+\\s*|\\s*)\\>";
-    private final static String tagEnd=
-        "\\</\\w+\\>";
-    private final static String tagSelfClosing=
-        "\\<\\w+((\\s+\\w+(\\s*\\=\\s*(?:\".*?\"|'.*?'|[^'\"\\>\\s]+))?)+\\s*|\\s*)/\\>";
-    private final static String htmlEntity=
-        "&[a-zA-Z][a-zA-Z0-9]+;";
-    private final static Pattern htmlPattern=Pattern.compile(
-      "("+tagStart+".*"+tagEnd+")|("+tagSelfClosing+")|("+htmlEntity+")",
-      Pattern.DOTALL
-    );
+    private final static String tagStart
+            = "\\<\\w+((\\s+\\w+(\\s*\\=\\s*(?:\".*?\"|'.*?'|[^'\"\\>\\s]+))?)+\\s*|\\s*)\\>";
+    private final static String tagEnd
+            = "\\</\\w+\\>";
+    private final static String tagSelfClosing
+            = "\\<\\w+((\\s+\\w+(\\s*\\=\\s*(?:\".*?\"|'.*?'|[^'\"\\>\\s]+))?)+\\s*|\\s*)/\\>";
+    private final static String htmlEntity
+            = "&[a-zA-Z][a-zA-Z0-9]+;";
+    private final static Pattern htmlPattern = Pattern.compile(
+            "(" + tagStart + ".*" + tagEnd + ")|(" + tagSelfClosing + ")|(" + htmlEntity + ")",
+            Pattern.DOTALL);
 
     /**
      * Will return true if s contains HTML markup tags or entities.
@@ -56,5 +55,4 @@ public class StringUtilities {
     public static String currentTime(){
         return Global.getMmddyyyyhhmmssa().format(new Date());
     }
-
 }

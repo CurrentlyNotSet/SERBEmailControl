@@ -8,10 +8,9 @@ package com.email;
 import com.model.DocketNotificationModel;
 import com.model.SystemEmailModel;
 import com.sql.DocketNotification;
+import com.util.ExceptionHandler;
 import com.util.Global;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,6 +19,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
@@ -49,7 +49,9 @@ public class SendEmailNotification {
 
             try {
                 for (String To : TOAddressess) {
-                    email.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    if (EmailValidator.getInstance().isValid(To)){
+                        email.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                    }
                 }
                 
                 email.setFrom(new InternetAddress(FROMaddress));
@@ -59,9 +61,9 @@ public class SendEmailNotification {
                 
                 DocketNotification.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
-                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
             } catch (MessagingException ex) {
-                Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
             }
         }
     }

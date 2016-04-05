@@ -6,8 +6,8 @@
 package com.sql;
 
 import com.model.SystemEmailModel;
+import com.util.ExceptionHandler;
 import com.util.Global;
-import com.util.SlackNotification;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,7 +52,7 @@ public class SystemEmail {
             }
             Global.setSystemEmailParams(systemEmailList);
         } catch (SQLException ex) {
-            SlackNotification.sendNotification(ex.toString());
+            ExceptionHandler.Handle(ex);
             return false;
         } finally {
             DbUtils.closeQuietly(conn);

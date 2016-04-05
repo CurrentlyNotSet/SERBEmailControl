@@ -5,13 +5,12 @@
  */
 package com.fileOperations;
 
+import com.util.ExceptionHandler;
 import com.util.PDFBoxTools;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -57,13 +56,13 @@ public class StampPDF {
 
             doc.save(file);
         } catch (IOException ex) {
-            Logger.getLogger(StampPDF.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
         } finally {
             if (doc != null) {
                 try {
                     doc.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(StampPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    ExceptionHandler.Handle(ex);
                 }
             }
         }

@@ -46,7 +46,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Andrew
  */
-public class RecieveEmail {
+public class ReceiveEmail {
     
     private static int attachmentCount;
     private static List<String> attachmentList;

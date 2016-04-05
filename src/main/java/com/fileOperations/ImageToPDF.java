@@ -6,6 +6,7 @@
 package com.fileOperations;
 
 import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
+import com.util.ExceptionHandler;
 import com.util.PDFBoxTools;
 import static com.util.PDFBoxTools.TIFFCompression;
 import java.awt.Dimension;
@@ -13,8 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -96,7 +95,7 @@ public class ImageToPDF {
                 doc.save(folderPath + pdfFile);
             }
         } catch (IOException ex) {
-            Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            ExceptionHandler.Handle(ex);
             return "";
         } finally {
             if (doc != null) {
@@ -104,7 +103,7 @@ public class ImageToPDF {
                     doc.close();
 
                 } catch (IOException ex) {
-                    Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                    ExceptionHandler.Handle(ex);
                     return "";
                 }
             }
@@ -113,7 +112,7 @@ public class ImageToPDF {
             try {
                 fileStream.close();
             } catch (IOException ex) {
-                Logger.getLogger(ImageToPDF.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.Handle(ex);
                 return "";
             }
         }

@@ -41,7 +41,7 @@ public class JacobCOMBridge {
             LibraryLoader.loadJacobLibrary();
             return true;
         } catch (UnsatisfiedLinkError e) {
-            e.printStackTrace();
+            SlackNotification.sendNotification(e.toString());
             return false;
         }
     }

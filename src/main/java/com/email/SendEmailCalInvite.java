@@ -89,7 +89,8 @@ public class SendEmailCalInvite {
             String content = "There has been a " + eml.getHearingDescription()
                     + " scheduled for " + eml.getCaseNumber()
                     + " on " + Global.getMmddyyyy().format(eml.getHearingStartTime())
-                    + " at " + Global.getHhmmssa().format(eml.getHearingStartTime());
+                    + " at " + Global.getHhmmssa().format(eml.getHearingStartTime()) 
+                    + "\n\n\n";
             descriptionPart.setContent(content, "text/html; charset=utf-8");
         } catch (MessagingException ex) {
             Logger.getLogger(SendEmailCalInvite.class.getName()).log(Level.SEVERE, null, ex);

@@ -85,8 +85,8 @@ public class Activity {
                     + "date, "            //6
                     + "action, "          //7
                     + "fileName, "        //8
-                    + "from, "            //9 
-                    + "to, "              //10
+                    + "[from], "          //9 
+                    + "[to], "            //10
                     + "type, "            //11
                     + "comment, "         //12
                     + "redacted, "        //13

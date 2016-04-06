@@ -130,7 +130,7 @@ public class SendEmail {
         act.setCaseYear(eml.getCaseYear());
         act.setCaseType(eml.getCaseType());
         act.setCaseMonth(eml.getCaseMonth());
-        act.setCaseNumber(NumberFormatService.FullCaseNumber(eml));
+        act.setCaseNumber(eml.getCaseNumber());
         act.setUserID(String.valueOf(eml.getUserID()));
         act.setDate(new Timestamp(emailSentTime.getTime()));
         act.setAction("OUT - " + eml.getSubject());

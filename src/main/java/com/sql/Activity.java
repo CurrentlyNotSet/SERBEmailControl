@@ -13,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -123,8 +121,7 @@ public class Activity {
             ps.setInt      (14, act.getAwaitingTimestamp());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(Activity.class.getName()).log(Level.SEVERE, null, ex);
-//            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);

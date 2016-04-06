@@ -11,8 +11,6 @@ import com.sql.EmailOutInvites;
 import com.util.ExceptionHandler;
 import com.util.Global;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;

@@ -18,12 +18,12 @@ public class Global {
     
     //Operational Parameters
     private static final boolean debug = false;
-    private static final int sleep = 0;
+    private static final int sleep = 0; //milliseconds
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
     private static final String auditTimeFrame = "year";
     private static final String auditTimeAmount = "1";
-    private static final int hourOfPurge = 2;
+    private static final int hourOfPurge = 2; //24hr clock
     
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");

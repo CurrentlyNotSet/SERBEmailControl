@@ -29,18 +29,4 @@ public class SlackNotification {
         }
     }
     
-    
-//    public static void sendAttachement(String filePath) {
-//        
-//        try {
-//            new Slack(SlackInfo.getSlackHook())
-//                .icon(SlackInfo.getSlackIcon()) // Ref - http://www.emoji-cheat-sheet.com/
-//                .sendToChannel(SlackInfo.getSlackChannel())
-//                .displayName(SlackInfo.getSlackUser())
-//                .push(new SlackAttachment(filePath));
-//        } catch (IOException ex) {
-//            ExceptionHandler.Handle(ex);
-//        }
-//    }
-    
 }

@@ -22,13 +22,4 @@ public class NumberFormatService {
         return caseNumber.getCaseYear() + "-" + caseNumber.getCaseType() + "-" + caseNumber.getCaseMonth() + "-" + caseNumber.getCaseNumber();
     }
     
-    public static ActivityModel parseFullCaseNumber(String fullCaseNumber) {
-        ActivityModel caseNumber = new ActivityModel();
-        String[] parsedCaseNumber = fullCaseNumber.split("-");
-        caseNumber.setCaseYear(parsedCaseNumber[0]);
-        caseNumber.setCaseType(parsedCaseNumber[1]);
-        caseNumber.setCaseMonth(parsedCaseNumber[2]);
-        caseNumber.setCaseNumber(parsedCaseNumber[3]);
-        return caseNumber;   
-    }
 }

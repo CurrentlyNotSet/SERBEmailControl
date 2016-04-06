@@ -26,6 +26,7 @@ import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -38,8 +39,7 @@ public class MainClass {
 
     public void setDefaults() {
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()) {
-            outgoingEmail();
-            //threads();
+            threads();
         } else {
             System.err.println("unable to resolve network connections");
         }
@@ -52,12 +52,11 @@ public class MainClass {
         today.set(Calendar.HOUR_OF_DAY, Global.getHourOfPurge());
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);
-        long oneDay = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS); // 60*60*24*100 = 8640000m
+        long oneDay = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
+        long halfHour = TimeUnit.MILLISECONDS.convert(30, TimeUnit.MINUTES);
 
         // every night at 2am you run your task
         Timer timer = new Timer();
-         
-        
         
         emailThread = new Thread() {
             @Override
@@ -75,18 +74,25 @@ public class MainClass {
         
         //Run Tasks
         timer.schedule(new databaseCleanupTask(), today.getTime(), oneDay);
+        timer.schedule(new refreshEmailAccounts(), new Date(), halfHour);
         emailThread.start();
         scansThread.start();
     }
 
     
     private static class databaseCleanupTask extends TimerTask {
-
         @Override
         public void run() {
             Audit.removeOldAudits();
             SECExceptions.removeOldExceptions();
         }
+    }
+    
+    private static class refreshEmailAccounts extends TimerTask {
+        @Override
+        public void run() {
+            SystemEmail.loadEmailConnectionInformation();
+        } 
     }
     
     private void stampScansThread() {

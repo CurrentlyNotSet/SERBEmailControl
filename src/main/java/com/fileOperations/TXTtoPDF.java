@@ -17,6 +17,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -77,7 +78,7 @@ public class TXTtoPDF {
             doc = new PDDocument();
             PDPage page = new PDPage();
             doc.addPage(page);
-            contentStream = new PDPageContentStream(doc, page, true, true, false);
+            contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, false);
             PDRectangle mediabox = page.getMediaBox();
             float margin = 72;
             float width = mediabox.getWidth() - 2 * margin;

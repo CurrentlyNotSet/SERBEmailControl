@@ -106,7 +106,7 @@ public class SendEmail {
 
                 //create email message body
                 Date emailSentTime = new Date();
-                String emailPDFname = EmailBodyToPDF.emailOutBody(eml, attachmentList, emailSentTime);
+                String emailPDFname = EmailBodyToPDF.createEmailOutBody(eml, attachmentList, emailSentTime);
 
                 //Add emailBody Activity
                 addEmailActivity(eml, emailPDFname, emailSentTime);

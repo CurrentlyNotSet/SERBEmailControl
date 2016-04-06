@@ -81,7 +81,7 @@ public class ReceiveEmail {
                     eml = saveEnvelope(msg, msg, eml);
                     eml.setId(EMail.InsertEmail(eml));
                     saveAttachments(msg, msg, eml);
-                    eml = EmailBodyToPDF.createEmailBody(eml, emailTime, attachmentList);
+                    eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
                     eml.setReadyToFile(1);
                     EMail.setEmailReadyToFile(eml);
                 }

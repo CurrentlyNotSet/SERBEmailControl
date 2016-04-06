@@ -14,15 +14,20 @@ import com.model.EmailOutInvitesModel;
 import com.model.EmailOutModel;
 import com.model.SystemEmailModel;
 import com.scans.ScansStamper;
+import com.sql.Audit;
 import com.sql.DocketNotification;
 import com.sql.EmailOut;
 import com.sql.EmailOutInvites;
+import com.sql.SECExceptions;
 import com.sql.ServerEmailControl;
 import com.sql.SystemEmail;
 import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,31 +38,56 @@ public class MainClass {
 
     public void setDefaults() {
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()) {
-            incomingEmails();
-            //threads();
+            threads();
         } else {
             System.err.println("unable to resolve network connections");
         }
     }
 
     private void threads() {
-        Global.emailThread = new Thread() {
+        Thread emailThread, scansThread;
+                
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, Global.getHourOfPurge());
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        long oneDay = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS); // 60*60*24*100 = 8640000m
+
+        // every night at 2am you run your task
+        Timer timer = new Timer();
+         
+        
+        
+        emailThread = new Thread() {
             @Override
             public void run() {
                 emailThreads();
             }
         };
 
-        Global.scansThread = new Thread() {
+        scansThread = new Thread() {
             @Override
             public void run() {
                 stampScansThread();
             }
         };
-        Global.emailThread.start();
-        Global.scansThread.start();
+        
+        //Run Tasks
+        timer.schedule(new databaseCleanupTask(), today.getTime(), oneDay);
+        emailThread.start();
+        scansThread.start();
     }
 
+    
+    private static class databaseCleanupTask extends TimerTask {
+
+        @Override
+        public void run() {
+            Audit.removeOldAudits();
+            SECExceptions.removeOldExceptions();
+        }
+    }
+    
     private void stampScansThread() {
         try {
             Thread.sleep(1000);
@@ -81,7 +111,7 @@ public class MainClass {
         }
     }
 
-    public void emailThreads() {
+    private void emailThreads() {
         try {
             Thread.sleep(1000);
             while (true) {

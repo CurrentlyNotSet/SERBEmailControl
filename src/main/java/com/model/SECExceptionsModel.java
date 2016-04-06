@@ -16,7 +16,6 @@ public class SECExceptionsModel {
     private String className;
     private String methodName;
     private String exceptionType;
-    private String exceptionNumber;
     private String exceptionDescription;
     private Timestamp timeOccurred;
 
@@ -50,14 +49,6 @@ public class SECExceptionsModel {
 
     public void setExceptionType(String exceptionType) {
         this.exceptionType = exceptionType;
-    }
-
-    public String getExceptionNumber() {
-        return exceptionNumber;
-    }
-
-    public void setExceptionNumber(String exceptionNumber) {
-        this.exceptionNumber = exceptionNumber;
     }
 
     public String getExceptionDescription() {

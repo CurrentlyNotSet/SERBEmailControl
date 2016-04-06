@@ -7,6 +7,7 @@ package com.sql;
 
 import com.model.SECExceptionsModel;
 import com.util.ExceptionHandler;
+import com.util.Global;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,30 +28,44 @@ public class SECExceptions {
                     + "className, "
                     + "methodName, "
                     + "exceptionType, "
-                    + "exceptionNumber, "
-                    + "exceptionDescription, "
+                    + "exceptionDescrption, "
                     + "timeOccurred "
                     + ") VALUES ("
                     + "?, "
                     + "?, "
                     + "?, "
                     + "?, "
-                    + "?, "
-                    + "GETUTCDATE())";
+                    + "GETDATE())";
             ps = conn.prepareStatement(sql);
-            ps.setString   (1, item.getClassName());
-            ps.setString   (2, item.getMethodName());
-            ps.setString   (3, item.getExceptionType());
-            ps.setString   (4, item.getExceptionNumber());
-            ps.setString   (5, item.getExceptionDescription());
+            ps.setString(1, item.getClassName());
+            ps.setString(2, item.getMethodName());
+            ps.setString(3, item.getExceptionType());
+            ps.setString(4, item.getExceptionDescription());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            ExceptionHandler.Handle(ex);
+            System.out.println(ex.toString());
         } finally {
             DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(conn);
         }
     }
-    
+        
+    public static void removeOldExceptions(){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBConnection.connectToDB();
+            String sql = "DELETE FROM SECExceptions WHERE "
+                    + "timeOccurred < dateadd(" + Global.getExceptionTimeFrame() 
+                    + ",-" + Global.getExceptionTimeAmount() + ", getdate())";
+            ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            ExceptionHandler.Handle(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+        }
+    }
     
 }

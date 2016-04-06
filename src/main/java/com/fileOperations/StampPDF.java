@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
@@ -41,7 +42,7 @@ public class StampPDF {
 
                 PDPage page = (PDPage) doc.getPages().get(i);
 
-                contentStream = new PDPageContentStream(doc, page, true, true, true);
+                contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, true);
                 page.getResources().getFontNames(); 
 
                 contentStream.beginText();

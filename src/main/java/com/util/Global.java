@@ -16,9 +16,14 @@ import java.util.List;
  */
 public class Global {
     
+    //Operational Parameters
     private static final boolean debug = false;
     private static final int sleep = 0;
-    public static Thread emailThread, scansThread;
+    private static final String exceptionTimeFrame = "month";
+    private static final String exceptionTimeAmount = "1";
+    private static final String auditTimeFrame = "year";
+    private static final String auditTimeAmount = "1";
+    private static final int hourOfPurge = 2;
     
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
@@ -108,6 +113,26 @@ public class Global {
 
     public static SimpleDateFormat getHhmmssa() {
         return hhmmssa;
+    }
+
+    public static String getExceptionTimeFrame() {
+        return exceptionTimeFrame;
+    }
+
+    public static String getAuditTimeFrame() {
+        return auditTimeFrame;
+    }
+
+    public static int getHourOfPurge() {
+        return hourOfPurge;
+    }
+
+    public static String getExceptionTimeAmount() {
+        return exceptionTimeAmount;
+    }
+
+    public static String getAuditTimeAmount() {
+        return auditTimeAmount;
     }
 
 }

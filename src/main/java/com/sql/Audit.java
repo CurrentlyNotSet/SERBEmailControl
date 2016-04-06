@@ -6,6 +6,7 @@
 package com.sql;
 
 import com.util.ExceptionHandler;
+import com.util.Global;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,22 +16,24 @@ import org.apache.commons.dbutils.DbUtils;
  *
  * @author Andrew
  */
-public class ServerEmailControl {
+public class Audit {
     
-    
-    public static void updateCompletionTime(String column){
+    public static void removeOldAudits(){
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "UPDATE ServerEmailControl SET " + column + " = GETDATE() WHERE id = 1";
+            String sql = "DELETE FROM Audit WHERE "
+                    + "date < dateadd(" + Global.getAuditTimeFrame() 
+                    + ", -" + Global.getAuditTimeAmount() + ", getdate())";
             ps = conn.prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException ex) {
             ExceptionHandler.Handle(ex);
         } finally {
-            DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(conn);
-        }        
+            DbUtils.closeQuietly(ps);
+        }
     }
+    
 }

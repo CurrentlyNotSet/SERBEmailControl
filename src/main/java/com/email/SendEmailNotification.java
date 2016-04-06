@@ -37,7 +37,7 @@ public class SendEmailNotification {
         }
         if (account != null) {
             String FROMaddress = account.getEmailAddress();
-            String[] TOAddressess = eml.getSendTo().split(";");
+            String[] TOAddressess = ((eml.getSendTo() == null) ? "".split(";") : eml.getSendTo().split(";"));
             String subject = eml.getMessageSubject();
             String body = eml.getMessageBody();
 

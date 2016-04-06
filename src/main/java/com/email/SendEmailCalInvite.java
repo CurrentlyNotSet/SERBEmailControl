@@ -46,8 +46,8 @@ public class SendEmailCalInvite {
         if (account != null) {
             //Get parts
             String FromAddress = account.getEmailAddress();
-            String[] TOAddressess = eml.getToAddress().split(";");
-            String[] CCAddressess = eml.getCcAddress().split(";");
+            String[] TOAddressess = ((eml.getToAddress()== null) ? "".split(";") : eml.getToAddress().split(";"));
+            String[] CCAddressess = ((eml.getCcAddress()== null) ? "".split(";") : eml.getCcAddress().split(";"));
             String emailSubject = Subject(eml);
             BodyPart emailBody = body(eml);
             BodyPart inviteBody = invite(eml, account, emailSubject);

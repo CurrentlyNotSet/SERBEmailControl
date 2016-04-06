@@ -11,9 +11,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -70,8 +71,7 @@ public class Activity {
         }
     }
     
-    
-    public static int insertActivity(ActivityModel act){
+    public static void insertActivity(ActivityModel act){
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -106,7 +106,7 @@ public class Activity {
                     + "?, " //12
                     + "?, " //13
                     + "?)"; //14
-            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps = conn.prepareStatement(sql);
             ps.setString   ( 1, act.getCaseYear());
             ps.setString   ( 2, act.getCaseType());
             ps.setString   ( 3, act.getCaseMonth());
@@ -122,16 +122,12 @@ public class Activity {
             ps.setInt      (13, act.getRedacted());
             ps.setInt      (14, act.getAwaitingTimestamp());
             ps.executeUpdate();
-            ResultSet newRow = ps.getGeneratedKeys();
-            if (newRow.next()){
-                return newRow.getInt(1);
-            }
         } catch (SQLException ex) {
-            ExceptionHandler.Handle(ex);
+            Logger.getLogger(Activity.class.getName()).log(Level.SEVERE, null, ex);
+//            ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
         }
-        return 0;
     }
 }

@@ -56,9 +56,9 @@ public class SendEmail {
         if (account != null) {
             //Get parts
             String FromAddress = account.getEmailAddress();
-            String[] TOAddressess = eml.getTo().split(";");
-            String[] CCAddressess = eml.getCc().split(";");
-            String[] BCCAddressess = eml.getBcc().split(";");
+            String[] TOAddressess = ((eml.getTo() == null) ? "".split(";") : eml.getTo().split(";"));
+            String[] CCAddressess = ((eml.getCc() == null) ? "".split(";") : eml.getCc().split(";"));
+            String[] BCCAddressess = ((eml.getBcc()== null) ? "".split(";") : eml.getBcc().split(";"));
             String emailSubject = eml.getSubject();
             String emailBody = eml.getBody();
 
@@ -68,7 +68,7 @@ public class SendEmail {
             Session session = Session.getInstance(properties, auth);
             MimeMessage smessage = new MimeMessage(session);
             Multipart multipart = new MimeMultipart();
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            
 
             try {
                 smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
@@ -88,7 +88,10 @@ public class SendEmail {
                     }
                 }
                 smessage.setSubject(emailSubject);
-                smessage.setText(emailBody);
+                
+                MimeBodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent(emailBody, "text/html");      
+                multipart.addBodyPart(messageBodyPart);
 
                 List<EmailOutAttachmentModel> attachmentList = EmailOutAttachment.getAttachmentsByEmail(eml.getId());
 
@@ -122,14 +125,14 @@ public class SendEmail {
         }
     }
 
-    private static int addEmailActivity(EmailOutModel eml, String PDFname, Date emailSentTime) {
+    private static void addEmailActivity(EmailOutModel eml, String PDFname, Date emailSentTime) {
         ActivityModel act = new ActivityModel();
         act.setCaseYear(eml.getCaseYear());
         act.setCaseType(eml.getCaseType());
         act.setCaseMonth(eml.getCaseMonth());
         act.setCaseNumber(NumberFormatService.FullCaseNumber(eml));
         act.setUserID(String.valueOf(eml.getUserID()));
-        act.setDate((Timestamp) emailSentTime);
+        act.setDate(new Timestamp(emailSentTime.getTime()));
         act.setAction("OUT - " + eml.getSubject());
         act.setFileName(PDFname);
         act.setFrom(eml.getFrom());
@@ -139,7 +142,7 @@ public class SendEmail {
         act.setRedacted(0);
         act.setAwaitingTimestamp(0);
 
-        return Activity.insertActivity(act);
+        Activity.insertActivity(act);
     }
 
 }

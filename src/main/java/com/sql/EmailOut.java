@@ -20,6 +20,7 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class EmailOut {
+    
     public static List<EmailOutModel> getEmailOutQueue() {
         List<EmailOutModel> list = new ArrayList();
         Connection conn = null;

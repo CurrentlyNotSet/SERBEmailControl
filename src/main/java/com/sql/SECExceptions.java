@@ -19,7 +19,7 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class SECExceptions {
     
-    public static void insertException(SECExceptionsModel item){
+    public static boolean insertException(SECExceptionsModel item){
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -44,10 +44,12 @@ public class SECExceptions {
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.toString());
+            return true;
         } finally {
             DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(conn);
         }
+        return false;
     }
         
     public static void removeOldExceptions(){

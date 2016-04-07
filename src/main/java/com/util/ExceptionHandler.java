@@ -14,8 +14,7 @@ import java.util.logging.Logger;
  * @author Andrew
  */
 public class ExceptionHandler {
-    
-    
+        
     public static void Handle(Exception ex) {
         SECExceptionsModel item = new SECExceptionsModel();
         item.setClassName(Thread.currentThread().getStackTrace()[2].getClassName());
@@ -27,9 +26,10 @@ public class ExceptionHandler {
         Logger.getLogger(ex.getMessage());
         
         //Send to the Server
-        SECExceptions.insertException(item);
+        if (SECExceptions.insertException(item)){  
+            //true = failed out || send to Slack instead
+            SlackNotification.sendNotification(ex.toString());
+        }
     }
     
-    
-        
 }

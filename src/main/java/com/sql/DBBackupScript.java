@@ -6,6 +6,7 @@
 package com.sql;
 
 import com.util.ExceptionHandler;
+import com.util.Global;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,21 +16,23 @@ import org.apache.commons.dbutils.DbUtils;
  *
  * @author Andrew
  */
-public class ServerEmailControl {
+public class DBBackupScript {
     
-    public static void updateCompletionTime(String column){
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = DBConnection.connectToDB();
-            String sql = "UPDATE ServerEmailControl SET " + column + " = GETDATE() WHERE id = 1";
+    public static void backupDB(String databaseName){
+            Connection conn = null;
+            PreparedStatement ps = null;
+        try {    
+            conn = DBConnection.connectToDBforBackup();
+            String sql = "BACKUP DATABASE " + databaseName 
+                    + " TO DISK = '" + Global.getDatabaseBackupPath() + "' ";
             ps = conn.prepareStatement(sql);
-            ps.executeUpdate();
+            ps.execute();
         } catch (SQLException ex) {
             ExceptionHandler.Handle(ex);
         } finally {
             DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(conn);
-        }        
+        }
     }
+    
 }

@@ -20,6 +20,7 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class EmailOutAttachment {
+    
     public static List<EmailOutAttachmentModel> getAttachmentsByEmail(int emailID) {
         List<EmailOutAttachmentModel> list = new ArrayList();
         Connection conn = null;
@@ -51,7 +52,6 @@ public class EmailOutAttachment {
     public static void deleteAttachmentsForEmail(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
             String sql = "DELETE FROM EmailOutAttachment WHERE emailOutID = ?";
@@ -63,7 +63,6 @@ public class EmailOutAttachment {
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
-            DbUtils.closeQuietly(rs);
         }
     }
 }

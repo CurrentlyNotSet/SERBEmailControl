@@ -59,7 +59,6 @@ public class EmailOutInvites {
     public static void deleteEmailEntry(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
             String sql = "DELETE FROM EmailOutInvites WHERE id = ?";
@@ -71,7 +70,6 @@ public class EmailOutInvites {
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
-            DbUtils.closeQuietly(rs);
         }
     }
     

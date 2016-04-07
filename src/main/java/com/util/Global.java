@@ -23,7 +23,8 @@ public class Global {
     private static final String exceptionTimeAmount = "1";
     private static final String auditTimeFrame = "year";
     private static final String auditTimeAmount = "1";
-    private static final int hourOfPurge = 2; //24hr clock
+    private static final int hourOfPurge = 1; //24hr clock
+    private static final int hourOfDBBackup = 1; //24hr clock
     
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
@@ -35,6 +36,11 @@ public class Global {
     private static String scanPath;
     private static String emailPath;
     private static String activityPath;
+    
+    //MSSQL Backup Information
+    private static final String databaseBackupPath = "c:\\backupPath";
+    private static final List<String> backupDatabases = Arrays.asList(
+            "SERB", "SERB-DEMO");
     
     //System Email
     private static List<SystemEmailModel> systemEmailParams;
@@ -133,6 +139,18 @@ public class Global {
 
     public static String getAuditTimeAmount() {
         return auditTimeAmount;
+    }
+
+    public static List<String> getBackupDatabases() {
+        return backupDatabases;
+    }
+
+    public static String getDatabaseBackupPath() {
+        return databaseBackupPath;
+    }
+
+    public static int getHourOfDBBackup() {
+        return hourOfDBBackup;
     }
 
 }

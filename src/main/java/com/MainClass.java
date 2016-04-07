@@ -15,6 +15,7 @@ import com.model.EmailOutModel;
 import com.model.SystemEmailModel;
 import com.scans.ScansStamper;
 import com.sql.Audit;
+import com.sql.DBBackupScript;
 import com.sql.DocketNotification;
 import com.sql.EmailOut;
 import com.sql.EmailOutInvites;
@@ -25,7 +26,7 @@ import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
-import java.util.Calendar;
+import com.util.TimerSettings;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,11 +48,7 @@ public class MainClass {
 
     private void threads() {
         Thread emailThread, scansThread;
-                
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, Global.getHourOfPurge());
-        today.set(Calendar.MINUTE, 0);
-        today.set(Calendar.SECOND, 0);
+        
         long oneDay = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
         long halfHour = TimeUnit.MILLISECONDS.convert(30, TimeUnit.MINUTES);
 
@@ -73,8 +70,9 @@ public class MainClass {
         };
         
         //Run Tasks
-        timer.schedule(new databaseCleanupTask(), today.getTime(), oneDay);
+        timer.schedule(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
         timer.schedule(new refreshEmailAccounts(), new Date(), halfHour);
+        timer.schedule(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
         scansThread.start();
     }
@@ -93,6 +91,16 @@ public class MainClass {
         public void run() {
             SystemEmail.loadEmailConnectionInformation();
         } 
+    }
+    
+    private static class databaseBackups extends TimerTask {
+
+        @Override
+        public void run() {
+            for (String databaseName : Global.getBackupDatabases()) {
+                DBBackupScript.backupDB(databaseName);
+            }
+        }
     }
     
     private void stampScansThread() {

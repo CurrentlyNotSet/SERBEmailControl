@@ -20,6 +20,7 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class DocketNotification {
+    
     public static List<DocketNotificationModel> getQueuedNotifications() {
         List<DocketNotificationModel> list = new ArrayList();
         Connection conn = null;
@@ -52,7 +53,6 @@ public class DocketNotification {
     public static void deleteEmailEntry(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
             String sql = "DELETE FROM DocketNotifications WHERE id = ?";
@@ -64,7 +64,6 @@ public class DocketNotification {
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);
-            DbUtils.closeQuietly(rs);
         }
     }
 }

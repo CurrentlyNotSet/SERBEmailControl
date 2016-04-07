@@ -72,8 +72,7 @@ public class EMail {
             DbUtils.closeQuietly(ps);
         }
         return 0;
-    }
-    
+    }    
     
     public static void setEmailReadyToFile(EmailMessageModel eml){
         Connection conn = null;

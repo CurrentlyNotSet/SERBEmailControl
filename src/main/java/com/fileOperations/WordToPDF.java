@@ -25,13 +25,16 @@ public class WordToPDF {
         String pdfFile = filePath + FilenameUtils.removeExtension(fileName) + ".pdf";
         try {
             eolWord = JacobCOMBridge.setWordActive(true, false, eolWord);
-            Dispatch Documents = eolWord.getProperty("Documents").toDispatch();
-            Dispatch.call(Documents, "Open", docxFile).toDispatch();
+            Dispatch document = eolWord.getProperty("Documents").toDispatch();
+            Dispatch.call(document, "Open", docxFile).toDispatch();
             Dispatch WordBasic = Dispatch.call(eolWord, "WordBasic").getDispatch();
             Dispatch.call(WordBasic, "FileSaveAs", pdfFile, new Variant(17));
-            Dispatch.call(Documents, "Close", new Variant(false));
+            Dispatch.call(document, "Close", new Variant(false));
             Thread.sleep(250);
             JacobCOMBridge.setWordActive(false, false, eolWord);
+            Dispatch.call(document, "Close", new Variant(false));
+            Dispatch.call(eolWord, "Quit");
+            eolWord.safeRelease();
             File oldDoc = new File(docxFile);
             oldDoc.delete();
         } catch (InterruptedException ex) {

@@ -18,7 +18,14 @@ public class JacobCOMBridge {
 
     public static ActiveXComponent setWordActive(boolean active, boolean visible, ActiveXComponent eolWord) {
         final String libFile = "amd64".equals(System.getProperty("os.arch")) ? "jacob-1.18-x64.dll" : "jacob-1.18-x86.dll";
-        final String dllPath = new File(libFile).getAbsolutePath();        
+        String dllPath = "";
+        File dll = new File(libFile);
+        if (dll.exists()) {
+            dllPath = dll.getAbsolutePath();
+        } else {
+            dllPath = System.getenv("WINDIR") + "\\system32\\" + libFile;
+        }
+        
         if (loadLibrary(dllPath)) {
             if (active) {
                 if (eolWord == null) {

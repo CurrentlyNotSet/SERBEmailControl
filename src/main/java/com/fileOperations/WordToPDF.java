@@ -18,30 +18,34 @@ import org.apache.commons.io.FilenameUtils;
  * @author Andrew
  */
 public class WordToPDF {
-       
+
     public static String createPDF(String filePath, String fileName) {
         ActiveXComponent eolWord = null;
         String docxFile = filePath + fileName;
         String pdfFile = filePath + FilenameUtils.removeExtension(fileName) + ".pdf";
-        try {
-            eolWord = JacobCOMBridge.setWordActive(true, false, eolWord);
-            Dispatch document = eolWord.getProperty("Documents").toDispatch();
-            Dispatch.call(document, "Open", docxFile).toDispatch();
-            Dispatch WordBasic = Dispatch.call(eolWord, "WordBasic").getDispatch();
-            Dispatch.call(WordBasic, "FileSaveAs", pdfFile, new Variant(17));
-            Dispatch.call(document, "Close", new Variant(false));
-            Thread.sleep(250);
-            JacobCOMBridge.setWordActive(false, false, eolWord);
-            Dispatch.call(document, "Close", new Variant(false));
-            Dispatch.call(eolWord, "Quit");
-            eolWord.safeRelease();
-            File oldDoc = new File(docxFile);
-            oldDoc.delete();
-        } catch (InterruptedException ex) {
-            ExceptionHandler.Handle(ex);
-            return "";
+
+        eolWord = JacobCOMBridge.setWordActive(true, false, eolWord);
+        if (eolWord != null) {
+            try {
+                Dispatch document = eolWord.getProperty("Documents").toDispatch();
+                Dispatch.call(document, "Open", docxFile).toDispatch();
+                Dispatch WordBasic = Dispatch.call(eolWord, "WordBasic").getDispatch();
+                Dispatch.call(WordBasic, "FileSaveAs", pdfFile, new Variant(17));
+                Dispatch.call(document, "Close", new Variant(false));
+                Thread.sleep(250);
+                JacobCOMBridge.setWordActive(false, false, eolWord);
+                Dispatch.call(document, "Close", new Variant(false));
+                Dispatch.call(eolWord, "Quit");
+                eolWord.safeRelease();
+                File oldDoc = new File(docxFile);
+                oldDoc.delete();
+                return FilenameUtils.getName(pdfFile);
+            } catch (InterruptedException ex) {
+                ExceptionHandler.Handle(ex);
+                return "";
+            }
         }
-        return FilenameUtils.getName(pdfFile);
+        return "";
     }
-    
+
 }

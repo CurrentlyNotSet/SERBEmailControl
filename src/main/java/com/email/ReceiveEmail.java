@@ -10,12 +10,15 @@ import com.fileOperations.ImageToPDF;
 import com.fileOperations.TXTtoPDF;
 import com.fileOperations.WordToPDF;
 import com.model.EmailMessageModel;
+import com.model.SECExceptionsModel;
 import com.model.SystemEmailModel;
 import com.sql.EMail;
 import com.sql.EmailAttachment;
+import com.sql.SECExceptions;
 import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
+import com.util.SlackNotification;
 import com.util.StringUtilities;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.mail.Address;
@@ -48,15 +52,15 @@ import org.apache.commons.io.FilenameUtils;
  * @author Andrew
  */
 public class ReceiveEmail {
-    
+
     private static int attachmentCount;
     private static List<String> attachmentList;
-                
+
     public static void fetchEmail(SystemEmailModel account) {
         Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
         Properties properties = EmailProperties.setEmailInProperties(account);
-        
-        try {  
+
+        try {
             Session session = Session.getInstance(properties, auth);
             Store store = session.getStore();
             store.connect(account.getIncomingURL(), account.getIncomingPort(), account.getUsername(), account.getPassword());
@@ -64,7 +68,7 @@ public class ReceiveEmail {
             if (!"".equals(account.getIncomingFolder().trim())){
                 fetchFolder = store.getFolder("INBOX");
             }
-            
+
             fetchFolder.open(Folder.READ_WRITE);
             Flags seen = new Flags(Flags.Flag.SEEN);
             FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
@@ -90,8 +94,8 @@ public class ReceiveEmail {
             store.close();
 
         } catch (Exception ex) {
-            if (ex != null) {                
-                System.out.println("Unable to connect to email Server for: " 
+            if (ex != null) {
+                System.out.println("Unable to connect to email Server for: "
                         + account.getEmailAddress()
                         + "\nPlease ensure you are connected to the network and"
                         + " try again.");
@@ -99,12 +103,12 @@ public class ReceiveEmail {
             ExceptionHandler.Handle(ex);
         }
     }
-    
+
     private static EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
         String to = "";
         String cc = "";
         String bcc = "";
-        
+
         try {
             Address[] address;
             //From
@@ -114,7 +118,7 @@ public class ReceiveEmail {
                 }
             }
             //to
-            if ((address = m.getRecipients(Message.RecipientType.TO)) != null) {        
+            if ((address = m.getRecipients(Message.RecipientType.TO)) != null) {
                 for (int j = 0; j < address.length; j++) {
                     if (j == 0) {
                         to = address[j].toString();
@@ -126,7 +130,7 @@ public class ReceiveEmail {
             eml.setEmailTo(removeEmojiAndSymbolFromString(to));
             //CC
             if ((address = m.getRecipients(Message.RecipientType.CC)) != null) {
-                
+
                 for (int j = 0; j < address.length; j++) {
                     if (j == 0) {
                         cc = address[j].toString();
@@ -180,7 +184,7 @@ public class ReceiveEmail {
                 String s = (String) p.getContent();
                 return s;
             }
-            
+
             if (p.isMimeType("multipart/alternative")) {
                 // prefer html text over plain text
                 Multipart mp = (Multipart) p.getContent();
@@ -216,7 +220,7 @@ public class ReceiveEmail {
         }
         return "";
     }
-  
+
     private static void saveAttachments(Part p, Message m, EmailMessageModel eml) {
         try {
             String filename = p.getFileName();
@@ -261,6 +265,21 @@ public class ReceiveEmail {
                 if (!"".equals(fileNameDB)) {
                     attachmentList.add(fileNameDB);
                     EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
+                } else {
+                    SECExceptionsModel item = new SECExceptionsModel();
+                    item.setClassName("com.email.ReceiveEmail");
+                    item.setMethodName("saveFile");
+                    item.setExceptionType("AttachmentNotSaved");
+                    item.setExceptionDescription("Conversion Error: " + fileNameDB + "Could not be saved to the Database");
+
+                    //Print out to commandline
+                    Logger.getLogger("Conversion Error: " + fileNameDB + "Could not be saved to the Database");
+
+                    //Send to the Server
+                    if (SECExceptions.insertException(item)) {
+                        //true = failed out || send to Slack instead
+                        SlackNotification.sendNotification("Conversion Error: " + fileNameDB + "Could not be saved to the Database");
+                    }
                 }
             }
         }
@@ -285,8 +304,7 @@ public class ReceiveEmail {
 
         return utf8tweet;
     }
-    
-    
+
     private static boolean saveAttachment(Part p, String filePath, String filename) {
         try {
             ((MimeBodyPart) p).saveFile(filePath + filename);
@@ -297,5 +315,5 @@ public class ReceiveEmail {
             return false;
         }
     }
-    
+
 }

@@ -22,23 +22,21 @@ public class DBConnection {
         while (true) {
             try {
                 Class.forName(DBCInfo.getDBdriver());
-                conn = DriverManager.getConnection(DBCInfo.getDBurl() + DBCInfo.getDBname() , DBCInfo.getDBusername(), DBCInfo.getDBpassword());
+                conn = DriverManager.getConnection(DBCInfo.getDBurl() + DBCInfo.getDBname(), DBCInfo.getDBusername(), DBCInfo.getDBpassword());
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
                 System.out.println();
                 if (nbAttempts == 2) {
-                    System.out.println("<html><center>Unable to connect to server.<br><br>"
-                            + "Please verify network connection and press OK to try again.</center></html>");
-                            }
+                    System.out.println("/nUnable to connect to server. Trying again shortly./n");
+                }
                 try {
                     Thread.sleep(3000);
                 } catch (Exception exi) {
                     System.err.println(exi.getMessage());
                 }
                 if (nbAttempts == 3) {
-                    System.out.println("<html><center>Unable to connect to server.<br><br>"
-                            + "Information could not be saved. The system will now exit.</center></html>");
+                    System.out.println("/nUnable to connect to server. The system will now exit./n");
                     System.exit(0);
                 }
             }
@@ -58,17 +56,15 @@ public class DBConnection {
                 nbAttempts++;
                 System.out.println();
                 if (nbAttempts == 2) {
-                    System.out.println("<html><center>Unable to connect to server.<br><br>"
-                            + "Please verify network connection and press OK to try again.</center></html>");
-                            }
+                    System.out.println("/nUnable to connect to server. Trying again shortly./n");
+                }
                 try {
                     Thread.sleep(3000);
                 } catch (Exception exi) {
                     System.err.println(exi.getMessage());
                 }
                 if (nbAttempts == 3) {
-                    System.out.println("<html><center>Unable to connect to server.<br><br>"
-                            + "Information could not be saved. The system will now exit.</center></html>");
+                    System.out.println("/nUnable to connect to server. The system will now exit./n");
                     System.exit(0);
                 }
             }

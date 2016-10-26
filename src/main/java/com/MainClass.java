@@ -70,9 +70,9 @@ public class MainClass {
         };
         
         //Run Tasks
-        timer.schedule(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
-        timer.schedule(new refreshEmailAccounts(), new Date(), halfHour);
-        timer.schedule(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
+//        timer.schedule(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
+//        timer.schedule(new refreshEmailAccounts(), new Date(), halfHour);
+//        timer.schedule(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
         scansThread.start();
     }
@@ -110,7 +110,8 @@ public class MainClass {
                 try {
                     stampScans();
                     //Printout the sleep information
-                    System.out.println("Sleeping for: " + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min");
+                    System.out.println("Stamp Thread - Sleeping for: " 
+                            + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min \n");
 
                     //Sleep the thread based on the INI file variable.
                     Thread.sleep(Global.getSleep());
@@ -137,7 +138,8 @@ public class MainClass {
                     outgoingEmail();
                     SystemEmail.loadEmailConnectionInformation();
                     //Printout the sleep information
-                    System.out.println("Sleeping for: " + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min");
+                    System.out.println("Email Thread - Sleeping for: " 
+                            + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min \n");
 
                     //Sleep the thread based on the INI file variable.
                     Thread.sleep(Global.getSleep());
@@ -154,45 +156,55 @@ public class MainClass {
     }
 
     private void stampScans() {
-        System.out.println(StringUtilities.currentTime() + " - Started  Stamping Scans");
+        long lStartTime = System.currentTimeMillis();
         ScansStamper.stampScans();
-        System.out.println(StringUtilities.currentTime() + " - Finished Stamping Scans");
+        long lEndTime = System.currentTimeMillis();        
+        System.out.println(StringUtilities.currentTime() 
+                + " - Finished Stamping Scans (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("stampScans");
     }
 
     private void incomingEmails() {
-        System.out.println(StringUtilities.currentTime() + " - Started  Receiving Emails");
+        long lStartTime = System.currentTimeMillis();
         for (SystemEmailModel account : Global.getSystemEmailParams()) {
             ReceiveEmail.fetchEmail(account);
         }
-        System.out.println(StringUtilities.currentTime() + " - Finished Receiving Emails");
+        long lEndTime = System.currentTimeMillis();
+        System.out.println(StringUtilities.currentTime() 
+                + " - Finished Receiving Emails (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("incomingEmail");
     }
 
     private void calInvites() {
-        System.out.println(StringUtilities.currentTime() + " - Started  Sending Calendar Invites");
+        long lStartTime = System.currentTimeMillis();
         for (EmailOutInvitesModel email : EmailOutInvites.getQueuedEmailInvites()) {
             SendEmailCalInvite.sendCalendarInvite(email);
         }
-        System.out.println(StringUtilities.currentTime() + " - Finished Sending Calendar Invites");
+        long lEndTime = System.currentTimeMillis();
+        System.out.println(StringUtilities.currentTime() 
+                + " - Finished Sending Calendar Invites (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("calInvites");
     }
 
     private void notificationEmails() {
-        System.out.println(StringUtilities.currentTime() + " - Started  Sending Notification Emails");
+        long lStartTime = System.currentTimeMillis();
         for (DocketNotificationModel email : DocketNotification.getQueuedNotifications()) {
             SendEmailNotification.sendNotificationEmail(email);
         }
-        System.out.println(StringUtilities.currentTime() + " - Finished Sending Notification Emails");
+        long lEndTime = System.currentTimeMillis();
+        System.out.println(StringUtilities.currentTime() 
+                + " - Finished Sending Notification Emails (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("notificationEmail");
     }
 
     private void outgoingEmail() {
-        System.out.println(StringUtilities.currentTime() + " - Started  Sending Emails");
+        long lStartTime = System.currentTimeMillis();
         for (EmailOutModel email : EmailOut.getEmailOutQueue()) {
             SendEmail.sendEmails(email);
         }
-        System.out.println(StringUtilities.currentTime() + " - Finished Sending Emails");
+        long lEndTime = System.currentTimeMillis();
+        System.out.println(StringUtilities.currentTime() 
+                + " - Finished Sending Emails (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("outgoingEmail");
     }
 

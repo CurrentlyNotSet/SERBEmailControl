@@ -18,7 +18,7 @@ public class Global {
     
     //Operational Parameters
     private static final boolean debug = false;
-    private static final int sleep = 0; //milliseconds
+    private static final int sleep = 300000; //milliseconds  (5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
     private static final String auditTimeFrame = "year";

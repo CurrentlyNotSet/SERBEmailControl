@@ -34,7 +34,6 @@ public class WordToPDF {
                 Dispatch.call(document, "Close", new Variant(false));
                 Thread.sleep(250);
                 JacobCOMBridge.setWordActive(false, false, eolWord);
-                Dispatch.call(document, "Close", new Variant(false));
                 Dispatch.call(eolWord, "Quit");
                 eolWord.safeRelease();
                 File oldDoc = new File(docxFile);

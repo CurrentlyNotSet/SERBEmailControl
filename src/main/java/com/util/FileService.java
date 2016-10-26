@@ -36,11 +36,11 @@ public class FileService {
                     Global.setEmailPath("C:\\SERB\\Email\\");
                     Global.setActivityPath("C:\\SERB\\Activity\\");
                     return true;
-                case "CS12-SRB-ES1":
-                    Global.setScanPath("C:\\SERB\\Scan\\");
-                    Global.setEmailPath("C:\\SERB\\Email\\");
-                    Global.setActivityPath("C:\\SERB\\Activity\\");
-                    return true;
+//                case "CS12-SRB-ES1":  //OUR SERB Machine
+//                    Global.setScanPath("C:\\SERB\\Scan\\");
+//                    Global.setEmailPath("C:\\SERB\\Email\\");
+//                    Global.setActivityPath("C:\\SERB\\Activity\\");
+//                    return true;
                 default:
                     Global.setScanPath("G:\\SERB\\Scan\\");
                     Global.setEmailPath("G:\\SERB\\Email\\");

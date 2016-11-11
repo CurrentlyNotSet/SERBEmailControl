@@ -26,8 +26,6 @@ import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
-import com.util.TimerSettings;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;

@@ -34,14 +34,14 @@ public class EmailOutInvites {
             while (rs.next()) {
                 EmailOutInvitesModel item = new EmailOutInvitesModel();
                 item.setId(rs.getInt("id"));
-                item.setSection(rs.getString("Section"));
-                item.setToAddress(rs.getString("TOaddress"));
-                item.setCcAddress(rs.getString("CCaddress"));
-                item.setEmailBody(rs.getString("emailBody"));
-                item.setCaseNumber(rs.getString("caseNumber"));
-                item.setHearingType(rs.getString("hearingType"));
-                item.setHearingRoomAbv(rs.getString("hearingRoomAbv"));
-                item.setHearingDescription(rs.getString("hearingDescription"));
+                item.setSection(rs.getString("Section") == null ? "" : rs.getString("Section"));
+                item.setToAddress(rs.getString("TOaddress") == null ? "" : rs.getString("TOaddress"));
+                item.setCcAddress(rs.getString("CCaddress") == null ? "" : rs.getString("CCaddress"));
+                item.setEmailBody(rs.getString("emailBody") == null ? "" : rs.getString("emailBody"));
+                item.setCaseNumber(rs.getString("caseNumber") == null ? "" : rs.getString("caseNumber"));
+                item.setHearingType(rs.getString("hearingType") == null ? "" : rs.getString("hearingType"));
+                item.setHearingRoomAbv(rs.getString("hearingRoomAbv") == null ? "" : rs.getString("hearingRoomAbv"));
+                item.setHearingDescription(rs.getString("hearingDescription") == null ? "" : rs.getString("hearingDescription"));
                 item.setHearingStartTime(rs.getTimestamp("hearingStartTime"));
                 item.setHearingEndTime(rs.getTimestamp("hearingEndTime"));
                 list.add(item);

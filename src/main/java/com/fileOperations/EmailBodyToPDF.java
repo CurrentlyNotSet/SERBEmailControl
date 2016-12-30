@@ -51,13 +51,13 @@ public class EmailBodyToPDF {
         emlPDF.setFileName(fileName);
         emlPDF.setSentDate("");
         emlPDF.setReceiveDate(Global.getMmddyyyyhhmmssa().format(eml.getReceivedDate()));
-        emlPDF.setTo(eml.getEmailTo());
-        emlPDF.setFrom(eml.getEmailFrom());
-        emlPDF.setCc(eml.getEmailCC());
-        emlPDF.setBcc(eml.getEmailBCC());
+        emlPDF.setTo(eml.getEmailTo() == null ? "" : eml.getEmailTo());
+        emlPDF.setFrom(eml.getEmailFrom() == null ? "" : eml.getEmailFrom());
+        emlPDF.setCc(eml.getEmailCC() == null ? "" : eml.getEmailCC());
+        emlPDF.setBcc(eml.getEmailBCC() == null ? "" : eml.getEmailBCC());
         emlPDF.setAttachments(attachList);
-        emlPDF.setSubject(eml.getEmailSubject());
-        emlPDF.setBody(eml.getEmailBody());
+        emlPDF.setSubject(eml.getEmailSubject() == null ? "" : eml.getEmailSubject());
+        emlPDF.setBody(eml.getEmailBody() == null ? "" : eml.getEmailBody());
         
         createEmailBody(emlPDF);
         return eml;
@@ -81,13 +81,13 @@ public class EmailBodyToPDF {
         emlPDF.setFileName(fileName);
         emlPDF.setSentDate(Global.getMmddyyyyhhmmssa().format(emailSentTime));
         emlPDF.setReceiveDate("");
-        emlPDF.setTo(eml.getTo());
-        emlPDF.setFrom(eml.getFrom());
-        emlPDF.setCc(eml.getCc());
-        emlPDF.setBcc(eml.getBcc());
+        emlPDF.setTo(eml.getTo() == null ? "" : eml.getTo());
+        emlPDF.setFrom(eml.getFrom() == null ? "" : eml.getFrom());
+        emlPDF.setCc(eml.getCc() == null ? "" : eml.getCc());
+        emlPDF.setBcc(eml.getBcc() == null ? "" : eml.getBcc());
         emlPDF.setAttachments(attachList);
-        emlPDF.setSubject(eml.getSubject());
-        emlPDF.setBody(eml.getBody());
+        emlPDF.setSubject(eml.getSubject() == null ? "" : eml.getSubject());
+        emlPDF.setBody(eml.getBody() == null ? "" : eml.getBody());
         
         createEmailBody(emlPDF);
         return fileName;

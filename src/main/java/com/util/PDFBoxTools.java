@@ -28,6 +28,7 @@ public class PDFBoxTools {
     
     public static List<String> setLineBreaks(String origText, float width, float fontSize, PDFont pdfFont) {
         List<String> lines = new ArrayList<>();
+        origText = (origText == null ? "" : origText);
 
         origText = origText.replaceAll(System.getProperty("line.separator"), System.getProperty("line.separator") + " ");
         String[] splitText = origText.split(System.getProperty("line.separator"));

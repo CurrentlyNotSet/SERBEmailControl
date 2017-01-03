@@ -12,6 +12,7 @@ import com.fileOperations.WordToPDF;
 import com.model.ActivityModel;
 import com.model.EmailOutAttachmentModel;
 import com.model.EmailOutModel;
+import com.model.SECExceptionsModel;
 import com.model.SystemEmailModel;
 import com.sql.Activity;
 import com.sql.EmailOut;
@@ -27,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -56,7 +55,7 @@ public class SendEmail {
 
     public static void sendEmails(EmailOutModel eml) {
         SystemEmailModel account = null;
-        
+
         //Get Account
         for (SystemEmailModel acc : Global.getSystemEmailParams()) {
             if (acc.getSection().equals(eml.getSection())) {
@@ -64,167 +63,186 @@ public class SendEmail {
                 break;
             }
         }
-        
+
         //Account Exists?
         if (account != null) {
             //Case Location
             String casePath = FileService.getCaseFolderLocation(eml);
-            
+
             //Attachment List
+            boolean allFilesExists = true;
             List<EmailOutAttachmentModel> attachmentList = EmailOutAttachment.getAttachmentsByEmail(eml.getId());
 
-            //Set up Initial Merge Utility
-            PDFMergerUtility ut = new PDFMergerUtility();
-
-            //List ConversionPDFs To Delete Later
-            List<String> tempPDFList = new ArrayList<>();
-                        
-            //create email message body
-            Date emailSentTime = new Date();
-            String emailPDFname = EmailBodyToPDF.createEmailOutBody(eml, attachmentList, emailSentTime);
-
-            //Add Email Body To PDF Merge
-            try {
-                ut.addSource(casePath + emailPDFname);
-                tempPDFList.add(casePath + emailPDFname);
-            } catch (FileNotFoundException ex) {
-                ExceptionHandler.Handle(ex);
-            }
-                       
-            //Get parts
-            String FromAddress = account.getEmailAddress();
-            String[] TOAddressess = ((eml.getTo() == null) ? "".split(";") : eml.getTo().split(";"));
-            String[] CCAddressess = ((eml.getCc() == null) ? "".split(";") : eml.getCc().split(";"));
-            String[] BCCAddressess = ((eml.getBcc()== null) ? "".split(";") : eml.getBcc().split(";"));
-            String emailSubject = eml.getSubject();
-            String emailBody = eml.getBody();
-
-            //Set Email Parts
-            Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
-            Properties properties = EmailProperties.setEmailOutProperties(account);
-            Session session = Session.getInstance(properties, auth);
-            MimeMessage smessage = new MimeMessage(session);
-            Multipart multipart = new MimeMultipart();
+            for (EmailOutAttachmentModel attach : attachmentList){
+                File attachment = new File(casePath + attach.getFileName());
+                boolean exists = attachment.exists();
+                if (exists == false){
+                    allFilesExists = false;
+                    break;
+                }
+            }            
             
-            //Add Parts to Email Message
-            try {
-                smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
-                for (String To : TOAddressess) {
-                    if (EmailValidator.getInstance().isValid(To)) {
-                        smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
-                    }
-                }
-                for (String CC : CCAddressess) {
-                    if (EmailValidator.getInstance().isValid(CC)) {
-                        smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(CC));
-                    }
-                }
-                for (String BCC : BCCAddressess) {
-                    if (EmailValidator.getInstance().isValid(BCC)) {
-                        smessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
-                    }
-                }
-                smessage.setSubject(emailSubject);
-                
-                MimeBodyPart messageBodyPart = new MimeBodyPart();
-                messageBodyPart.setContent(emailBody, "text/html");      
-                multipart.addBodyPart(messageBodyPart);
-                
-                //get attachments
-                for (EmailOutAttachmentModel attachment : attachmentList) {
-                    String fileName = attachment.getFileName();
-                    String extension = FilenameUtils.getExtension(fileName);
+            if (allFilesExists) {
+                //Set up Initial Merge Utility
+                PDFMergerUtility ut = new PDFMergerUtility();
 
-                    //Convert attachments to PDF
-                    
-                    //If Image
-                    if (FileService.isImageFormat(fileName)) {
-                        fileName = ImageToPDF.createPDFFromImage(casePath, fileName);
+                //List ConversionPDFs To Delete Later
+                List<String> tempPDFList = new ArrayList<>();
 
-                        //Add Attachment To PDF Merge
-                        try {
-                            ut.addSource(casePath + fileName);
-                            tempPDFList.add(casePath + fileName);
-                        } catch (FileNotFoundException ex) {
-                            ExceptionHandler.Handle(ex);
-                        }
+                //create email message body
+                Date emailSentTime = new Date();
+                String emailPDFname = EmailBodyToPDF.createEmailOutBody(eml, attachmentList, emailSentTime);
 
-                    //If Word Doc
-                    } else if (extension.equals("docx") || extension.equals("doc")) {
-                        fileName = WordToPDF.createPDF(casePath, fileName);
-
-                        //Add Attachment To PDF Merge
-                        try {
-                            ut.addSource(casePath + fileName);
-                            tempPDFList.add(casePath + fileName);
-                        } catch (FileNotFoundException ex) {
-                            ExceptionHandler.Handle(ex);
-                        }
-                        
-                    //If Text File
-                    } else if ("txt".equals(extension)) {
-                        fileName = TXTtoPDF.createPDF(casePath, fileName);
-
-                        //Add Attachment To PDF Merge
-                        try {
-                            ut.addSource(casePath + fileName);
-                            tempPDFList.add(casePath + fileName);
-                        } catch (FileNotFoundException ex) {
-                            ExceptionHandler.Handle(ex);
-                        }
-
-                    //If PDF
-                    } else if (FilenameUtils.getExtension(fileName).equals(".pdf")) {
-
-                        //Add Attachment To PDF Merge
-                        try {
-                            ut.addSource(casePath + fileName);
-                        } catch (FileNotFoundException ex) {
-                            ExceptionHandler.Handle(ex);
-                        }
-                    }
-                    
-                    DataSource source = new FileDataSource(fileName);
-                    messageBodyPart = new MimeBodyPart();
-                    messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(fileName);
-                    multipart.addBodyPart(messageBodyPart);
-                }
-                smessage.setContent(multipart);
-                
-                //Send Message
-                Transport.send(smessage);
-                
-                //DocumentFileName
-                String savedDoc = String.valueOf(new Date().getTime()) + "_" + eml.getSubject() + ".pdf";
-
-                //Set Merge File Destination
-                ut.setDestinationFileName(casePath + savedDoc);
-
-                //Try to Merge
+                //Add Email Body To PDF Merge
                 try {
-                    ut.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly());
-                } catch (IOException ex) {
+                    ut.addSource(casePath + emailPDFname);
+                    tempPDFList.add(casePath + emailPDFname);
+                } catch (FileNotFoundException ex) {
                     ExceptionHandler.Handle(ex);
                 }
-                
-                //Add emailBody Activity
-                addEmailActivity(eml, savedDoc, emailSentTime);
 
-                //Delete Out entries
-                EmailOut.deleteEmailEntry(eml.getId());
-                EmailOutAttachment.deleteAttachmentsForEmail(eml.getId());
+                //Get parts
+                String FromAddress = account.getEmailAddress();
+                String[] TOAddressess = ((eml.getTo() == null) ? "".split(";") : eml.getTo().split(";"));
+                String[] CCAddressess = ((eml.getCc() == null) ? "".split(";") : eml.getCc().split(";"));
+                String[] BCCAddressess = ((eml.getBcc() == null) ? "".split(";") : eml.getBcc().split(";"));
+                String emailSubject = eml.getSubject();
+                String emailBody = eml.getBody();
 
-                //Clean up temp PDFs
-                for (String tempPDF : tempPDFList) {
-                    new File(tempPDF).delete();
+                //Set Email Parts
+                Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
+                Properties properties = EmailProperties.setEmailOutProperties(account);
+                Session session = Session.getInstance(properties, auth);
+                MimeMessage smessage = new MimeMessage(session);
+                Multipart multipart = new MimeMultipart();
+
+                //Add Parts to Email Message
+                try {
+                    smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
+                    for (String To : TOAddressess) {
+                        if (EmailValidator.getInstance().isValid(To)) {
+                            smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                        }
+                    }
+                    for (String CC : CCAddressess) {
+                        if (EmailValidator.getInstance().isValid(CC)) {
+                            smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(CC));
+                        }
+                    }
+                    for (String BCC : BCCAddressess) {
+                        if (EmailValidator.getInstance().isValid(BCC)) {
+                            smessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
+                        }
+                    }
+                    smessage.setSubject(emailSubject);
+
+                    MimeBodyPart messageBodyPart = new MimeBodyPart();
+                    messageBodyPart.setContent(emailBody, "text/html");
+                    multipart.addBodyPart(messageBodyPart);
+
+                    //get attachments
+                    for (EmailOutAttachmentModel attachment : attachmentList) {
+                        String fileName = attachment.getFileName();
+                        String extension = FilenameUtils.getExtension(fileName);
+
+                        //Convert attachments to PDF
+                        //If Image
+                        if (FileService.isImageFormat(fileName)) {
+                            fileName = ImageToPDF.createPDFFromImage(casePath, fileName);
+
+                            //Add Attachment To PDF Merge
+                            try {
+                                ut.addSource(casePath + fileName);
+                                tempPDFList.add(casePath + fileName);
+                            } catch (FileNotFoundException ex) {
+                                ExceptionHandler.Handle(ex);
+                            }
+
+                            //If Word Doc
+                        } else if (extension.equals("docx") || extension.equals("doc")) {
+                            fileName = WordToPDF.createPDF(casePath, fileName);
+
+                            //Add Attachment To PDF Merge
+                            try {
+                                ut.addSource(casePath + fileName);
+                                tempPDFList.add(casePath + fileName);
+                            } catch (FileNotFoundException ex) {
+                                ExceptionHandler.Handle(ex);
+                            }
+
+                            //If Text File
+                        } else if ("txt".equals(extension)) {
+                            fileName = TXTtoPDF.createPDF(casePath, fileName);
+
+                            //Add Attachment To PDF Merge
+                            try {
+                                ut.addSource(casePath + fileName);
+                                tempPDFList.add(casePath + fileName);
+                            } catch (FileNotFoundException ex) {
+                                ExceptionHandler.Handle(ex);
+                            }
+
+                            //If PDF
+                        } else if (FilenameUtils.getExtension(fileName).equals(".pdf")) {
+
+                            //Add Attachment To PDF Merge
+                            try {
+                                ut.addSource(casePath + fileName);
+                            } catch (FileNotFoundException ex) {
+                                ExceptionHandler.Handle(ex);
+                            }
+                        }
+
+                        DataSource source = new FileDataSource(fileName);
+                        messageBodyPart = new MimeBodyPart();
+                        messageBodyPart.setDataHandler(new DataHandler(source));
+                        messageBodyPart.setFileName(fileName);
+                        multipart.addBodyPart(messageBodyPart);
+                    }
+                    smessage.setContent(multipart);
+
+                    //Send Message
+                    Transport.send(smessage);
+
+                    //DocumentFileName
+                    String savedDoc = String.valueOf(new Date().getTime()) + "_" + eml.getSubject() + ".pdf";
+
+                    //Set Merge File Destination
+                    ut.setDestinationFileName(casePath + savedDoc);
+
+                    //Try to Merge
+                    try {
+                        ut.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly());
+                    } catch (IOException ex) {
+                        ExceptionHandler.Handle(ex);
+                    }
+
+                    //Add emailBody Activity
+                    addEmailActivity(eml, savedDoc, emailSentTime);
+
+                    //Delete Out entries
+                    EmailOut.deleteEmailEntry(eml.getId());
+                    EmailOutAttachment.deleteAttachmentsForEmail(eml.getId());
+
+                    //Clean up temp PDFs
+                    for (String tempPDF : tempPDFList) {
+                        new File(tempPDF).delete();
+                    }
+
+                } catch (AddressException ex) {
+                    ExceptionHandler.Handle(ex);
+                } catch (MessagingException ex) {
+                    ExceptionHandler.Handle(ex);
                 }
-
-            } catch (AddressException ex) {
-                ExceptionHandler.Handle(ex);
-            } catch (MessagingException ex) {
-                ExceptionHandler.Handle(ex);
             }
+            
+            SECExceptionsModel item = new SECExceptionsModel();
+            item.setClassName("SendEmail");
+            item.setMethodName("sendEmails");
+            item.setExceptionType("AttachementMissing");
+            item.setExceptionDescription("Can't Send Email, File Missing for EmailID: " + eml.getId());
+            
+            ExceptionHandler.HandleNoException(item);
         }
     }
 

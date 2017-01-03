@@ -32,4 +32,17 @@ public class ExceptionHandler {
         }
     }
     
+    public static void HandleNoException(SECExceptionsModel item) {
+        
+        
+        //Print out to commandline
+        Logger.getLogger(item.getExceptionDescription());
+        
+        //Send to the Server
+        if (SECExceptions.insertException(item)){  
+            //true = failed out || send to Slack instead
+            SlackNotification.sendNotification(item.getExceptionDescription());
+        }
+    }
+    
 }

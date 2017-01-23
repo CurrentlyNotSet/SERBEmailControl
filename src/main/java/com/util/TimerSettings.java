@@ -29,4 +29,12 @@ public class TimerSettings {
         date.set(Calendar.SECOND, 0);
         return date.getTime();
     }
+    
+    public static Date errorEmailTime(){
+        Calendar date = Calendar.getInstance();
+        date.set(Calendar.HOUR_OF_DAY, Global.getHourOfErrorEmail());
+        date.set(Calendar.MINUTE, 2);
+        date.set(Calendar.SECOND, 0);
+        return date.getTime();
+    }
 }

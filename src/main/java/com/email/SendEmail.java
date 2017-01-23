@@ -202,7 +202,9 @@ public class SendEmail {
                     smessage.setContent(multipart);
 
                     //Send Message
-                    Transport.send(smessage);
+                    if (Global.isBlockEmailOut()) {
+                        Transport.send(smessage);
+                    }
 
                     //DocumentFileName
                     String savedDoc = String.valueOf(new Date().getTime()) + "_" + eml.getSubject() + ".pdf";

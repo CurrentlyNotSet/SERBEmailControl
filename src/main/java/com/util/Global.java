@@ -18,6 +18,7 @@ public class Global {
     
     //Operational Parameters
     private static final boolean debug = false;
+    private static final boolean blockEmailOut = false;
     private static final int sleep = 300000; //milliseconds  (5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
@@ -25,6 +26,7 @@ public class Global {
     private static final String auditTimeAmount = "1";
     private static final int hourOfPurge = 1; //24hr clock
     private static final int hourOfDBBackup = 1; //24hr clock
+    private static final int hourOfErrorEmail = 17; //24hr clock
     
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
@@ -153,4 +155,12 @@ public class Global {
         return hourOfDBBackup;
     }
 
+    public static int getHourOfErrorEmail() {
+        return hourOfErrorEmail;
+    }
+
+    public static boolean isBlockEmailOut() {
+        return blockEmailOut;
+    }
+    
 }

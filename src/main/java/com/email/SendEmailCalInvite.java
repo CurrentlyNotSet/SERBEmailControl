@@ -72,7 +72,9 @@ public class SendEmailCalInvite {
                 multipart.addBodyPart(emailBody);
                 multipart.addBodyPart(inviteBody);
                 smessage.setContent(multipart);
-                Transport.send(smessage);
+                if (Global.isBlockEmailOut()) {
+                        Transport.send(smessage);
+                    }
                 EmailOutInvites.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
                 ExceptionHandler.Handle(ex);

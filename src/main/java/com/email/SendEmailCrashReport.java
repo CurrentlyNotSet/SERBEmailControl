@@ -5,11 +5,14 @@
  */
 package com.email;
 
-import com.model.DocketNotificationModel;
 import com.model.SystemEmailModel;
-import com.sql.DocketNotification;
+import com.model.SystemErrorModel;
+import com.sql.SystemError;
+import com.sql.SystemErrorEmailList;
 import com.util.ExceptionHandler;
 import com.util.Global;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -23,25 +26,27 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
- * @author Andrew
+ * @author User
  */
-public class SendEmailNotification {
+public class SendEmailCrashReport {
     
-    public static void sendNotificationEmail(DocketNotificationModel eml) {
+    public static void sendCrashEmail() {
         //Get Account
         SystemEmailModel account = null;
         for (SystemEmailModel acc : Global.getSystemEmailParams()) {
-            if (acc.getSection().equals(eml.getSection())) {
+            if (acc.getSection().equals("Error")) {
                 account = acc;
                 break;
             }
         }
+        
         if (account != null) {
             String FROMaddress = account.getEmailAddress();
-            String[] TOAddressess = ((eml.getSendTo() == null) ? "".split(";") : eml.getSendTo().split(";"));
-            String subject = eml.getMessageSubject();
-            String body = eml.getMessageBody();
-
+            List<String> TOAddresses = SystemErrorEmailList.getActiveEmailAddresses();
+            String[] BCCAddressess = ("Andrew.Schmidt@XLNSystems.com; Anthony.Perk@XLNSystems.com".split(";"));
+            String subject = "SERB 3.0 Application Daily Error Report for " + Global.getMmddyyyy().format(Calendar.getInstance().getTime());
+            String body = buildBody();
+            
             Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
             Properties properties = EmailProperties.setEmailOutProperties(account);
             
@@ -49,9 +54,15 @@ public class SendEmailNotification {
             MimeMessage email = new MimeMessage(session);
 
             try {
-                for (String To : TOAddressess) {
-                    if (EmailValidator.getInstance().isValid(To)){
-                        email.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
+                for (String TO : TOAddresses) {
+                    if (EmailValidator.getInstance().isValid(TO)){
+                        email.addRecipient(Message.RecipientType.TO, new InternetAddress(TO));
+                    }
+                }
+                
+                for (String BCC : BCCAddressess) {
+                    if (EmailValidator.getInstance().isValid(BCC)){
+                        email.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
                     }
                 }
                 
@@ -61,14 +72,29 @@ public class SendEmailNotification {
                 if (Global.isBlockEmailOut()) {
                     Transport.send(email);
                 }
-                
-                DocketNotification.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
                 ExceptionHandler.Handle(ex);
             } catch (MessagingException ex) {
                 ExceptionHandler.Handle(ex);
             }
         }
+    }
+    
+    private static String buildBody() {
+        String body = "No Errors have been thrown in the Application today";
+
+        List<SystemErrorModel> errorList = SystemError.getErrorCounts();
+
+        if (errorList.size() > 0) {
+            body = "These errors have been logged by the system today. /n/n";
+
+            for (SystemErrorModel item : errorList) {
+                body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "/n";
+            }
+        }
+        body += "/n - This is a system generated message.";
+        return body;
+
     }
     
 }

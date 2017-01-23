@@ -8,6 +8,7 @@ package com;
 import com.email.ReceiveEmail;
 import com.email.SendEmail;
 import com.email.SendEmailCalInvite;
+import com.email.SendEmailCrashReport;
 import com.email.SendEmailNotification;
 import com.model.DocketNotificationModel;
 import com.model.EmailOutInvitesModel;
@@ -26,6 +27,7 @@ import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
+import com.util.TimerSettings;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -71,10 +73,17 @@ public class MainClass {
 //        timer.schedule(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
 //        timer.schedule(new refreshEmailAccounts(), new Date(), halfHour);
 //        timer.schedule(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
+        timer.schedule(new dailyCrashNotifyEmail(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
         scansThread.start();
     }
 
+    private static class dailyCrashNotifyEmail extends TimerTask {
+        @Override
+        public void run() {
+            SendEmailCrashReport.sendCrashEmail();
+        } 
+    }
     
     private static class databaseCleanupTask extends TimerTask {
         @Override
@@ -92,7 +101,6 @@ public class MainClass {
     }
     
     private static class databaseBackups extends TimerTask {
-
         @Override
         public void run() {
             for (String databaseName : Global.getBackupDatabases()) {

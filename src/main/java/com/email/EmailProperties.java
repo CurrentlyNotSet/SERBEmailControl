@@ -36,7 +36,7 @@ public class EmailProperties {
             default:
                 break;
         }
-        if (Global.isDebug() == true){
+        if (Global.isDebug()){
             properties.setProperty("mail.debug", "true");
         }
         return properties;
@@ -56,7 +56,7 @@ public class EmailProperties {
             default:
                 break;
         }
-        if (Global.isDebug() == true){
+        if (Global.isDebug()){
             properties.setProperty("mail.debug", "true");
         }
         return properties;

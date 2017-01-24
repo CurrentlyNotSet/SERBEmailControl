@@ -22,7 +22,8 @@ public class ServerEmailControl {
         PreparedStatement ps = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "UPDATE ServerEmailControl SET " + column + " = GETDATE() WHERE id = 1";
+            String sql = "UPDATE ServerEmailControl SET " + column + " = GETDATE() WHERE "
+                    + "id = (SELECT TOP 1 id FROM ServerEmailControl)";
             ps = conn.prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException ex) {

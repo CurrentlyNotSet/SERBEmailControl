@@ -5,6 +5,7 @@
  */
 package com.util;
 
+import com.model.CaseTypeModel;
 import com.model.SystemEmailModel;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class Global {
     
     //Operational Parameters
     private static final boolean debug = false;
-    private static final boolean blockEmailOut = false;
+    private static final boolean okToSendEmail = false;
     private static final int sleep = 300000; //milliseconds  (5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
@@ -47,6 +48,9 @@ public class Global {
     //System Email
     private static List<SystemEmailModel> systemEmailParams;
 
+    //CaseTypes
+    private static List<CaseTypeModel> caseTypeList;
+    
     //Attachment FileType Blacklist
     private static final List<String> fileBlackList = Arrays.asList(
             ".??_", ".?Q?", ".?Z?", ".7z", ".a", ".ace", ".afa", ".alz", 
@@ -101,6 +105,14 @@ public class Global {
 
     public static void setSystemEmailParams(List<SystemEmailModel> systemEmailParams) {
         Global.systemEmailParams = systemEmailParams;
+    }
+
+    public static List<CaseTypeModel> getCaseTypeList() {
+        return caseTypeList;
+    }
+
+    public static void setCaseTypeList(List<CaseTypeModel> caseTypeList) {
+        Global.caseTypeList = caseTypeList;
     }
     
     public static SimpleDateFormat getMmddyyyyhhmmssa() {
@@ -159,8 +171,8 @@ public class Global {
         return hourOfErrorEmail;
     }
 
-    public static boolean isBlockEmailOut() {
-        return blockEmailOut;
+    public static boolean isOkToSendEmail() {
+        return okToSendEmail;
     }
     
 }

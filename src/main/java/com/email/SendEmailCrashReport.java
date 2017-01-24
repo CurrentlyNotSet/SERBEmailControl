@@ -69,7 +69,7 @@ public class SendEmailCrashReport {
                 email.setFrom(new InternetAddress(FROMaddress));
                 email.setSubject(subject);
                 email.setText(body);
-                if (Global.isBlockEmailOut()) {
+                if (Global.isOkToSendEmail()) {
                     Transport.send(email);
                 }
             } catch (AddressException ex) {
@@ -94,7 +94,6 @@ public class SendEmailCrashReport {
         }
         body += "/n - This is a system generated message.";
         return body;
-
     }
     
 }

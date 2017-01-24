@@ -6,6 +6,7 @@
 package com.util;
 
 import com.model.ActivityModel;
+import com.model.CaseTypeModel;
 import com.model.EmailOutModel;
 
 /**
@@ -13,13 +14,28 @@ import com.model.EmailOutModel;
  * @author Andrew
  */
 public class NumberFormatService {
-    
+
     public static String FullCaseNumber(ActivityModel caseNumber) {
-        return caseNumber.getCaseYear() + "-" + caseNumber.getCaseType() + "-" + caseNumber.getCaseMonth() + "-" + caseNumber.getCaseNumber();
+        return caseNumber.getCaseYear() + "-" 
+                + caseNumber.getCaseType() + "-" 
+                + caseNumber.getCaseMonth() + "-" 
+                + caseNumber.getCaseNumber();
     }
-    
+
     public static String FullCaseNumber(EmailOutModel caseNumber) {
-        return caseNumber.getCaseYear() + "-" + caseNumber.getCaseType() + "-" + caseNumber.getCaseMonth() + "-" + caseNumber.getCaseNumber();
+        return caseNumber.getCaseYear() + "-" 
+                + caseNumber.getCaseType() + "-" 
+                + caseNumber.getCaseMonth() + "-" 
+                + caseNumber.getCaseNumber();
+    }
+
+    public static String getSection(String caseType) {
+        for (CaseTypeModel item : Global.getCaseTypeList()) {
+            if (item.getCaseType().equalsIgnoreCase(caseType)) {
+                return item.getSection();
+            }
+        }
+        return caseType;
     }
     
 }

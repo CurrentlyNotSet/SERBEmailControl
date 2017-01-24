@@ -21,7 +21,8 @@ public class ScansStamper {
         List<ActivityModel> list = Activity.getFilesToStamp();
         
         for (ActivityModel item: list){
-            String path = FileService.getCaseFolderLocation(item);
+            String path = (item.getCaseType().equals("CSC") || item.getCaseType().equals("ORG")) 
+                    ? FileService.getCaseFolderORGCSCFileLocation(item) : FileService.getCaseFolderFileLocation(item);
             System.out.println(item.getId() + ": " + path);
             
             if (FileService.testFileLock(path)){

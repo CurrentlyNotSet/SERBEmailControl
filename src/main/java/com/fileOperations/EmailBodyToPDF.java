@@ -64,7 +64,8 @@ public class EmailBodyToPDF {
     }
     
     public static String createEmailOutBody(EmailOutModel eml, List<EmailOutAttachmentModel> attachmentList, Date emailSentTime) {
-        String filePath = FileService.getCaseFolderLocation(eml);
+        String filePath = (eml.getCaseType().equals("CSC") || eml.getCaseType().equals("ORG")) 
+                ? FileService.getCaseFolderORGCSCLocation(eml) : FileService.getCaseFolderLocation(eml);
         String fileName = String.valueOf(emailSentTime.getTime()) + ".pdf";
         String attachList = "";
         

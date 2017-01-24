@@ -16,6 +16,7 @@ import com.model.EmailOutModel;
 import com.model.SystemEmailModel;
 import com.scans.ScansStamper;
 import com.sql.Audit;
+import com.sql.CaseType;
 import com.sql.DBBackupScript;
 import com.sql.DocketNotification;
 import com.sql.EmailOut;
@@ -40,6 +41,7 @@ public class MainClass {
 
     public void setDefaults() {
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()) {
+            Global.setCaseTypeList(CaseType.getCaseTypes());
             threads();
         } else {
             System.err.println("unable to resolve network connections");

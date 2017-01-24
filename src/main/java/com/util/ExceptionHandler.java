@@ -33,8 +33,6 @@ public class ExceptionHandler {
     }
     
     public static void HandleNoException(SECExceptionsModel item) {
-        
-        
         //Print out to commandline
         Logger.getLogger(item.getExceptionDescription());
         

@@ -74,9 +74,9 @@ public class FileService {
         return false;
     }
 
-    public static String getCaseFolderLocation(ActivityModel item) {
+    public static String getCaseFolderFileLocation(ActivityModel item) {
         return Global.getActivityPath()
-                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + NumberFormatService.getSection(item.getCaseType())
                 + File.separatorChar + item.getCaseYear()
                 + File.separatorChar + NumberFormatService.FullCaseNumber(item)
                 + File.separatorChar + item.getFileName();
@@ -84,12 +84,26 @@ public class FileService {
     
     public static String getCaseFolderLocation(EmailOutModel item) {
         return Global.getActivityPath()
-                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + NumberFormatService.getSection(item.getCaseType())
                 + File.separatorChar + item.getCaseYear()
                 + File.separatorChar + NumberFormatService.FullCaseNumber(item)
                 + File.separatorChar;
     }
 
+    public static String getCaseFolderORGCSCFileLocation(ActivityModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + item.getCaseNumber()
+                + File.separatorChar + item.getFileName();
+    }
+    
+    public static String getCaseFolderORGCSCLocation(EmailOutModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + item.getCaseNumber()
+                + File.separatorChar;
+    }
+    
     public static boolean isImageFormat(String image) {
         return image.toLowerCase().endsWith(".jpg")
                 || ((image.toLowerCase().endsWith(".tif")

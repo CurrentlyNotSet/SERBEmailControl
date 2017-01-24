@@ -67,7 +67,8 @@ public class SendEmail {
         //Account Exists?
         if (account != null) {
             //Case Location
-            String casePath = FileService.getCaseFolderLocation(eml);
+            String casePath = (eml.getCaseType().equals("CSC") || eml.getCaseType().equals("ORG")) 
+                    ? FileService.getCaseFolderORGCSCLocation(eml) : FileService.getCaseFolderLocation(eml);
 
             //Attachment List
             boolean allFilesExists = true;
@@ -202,7 +203,7 @@ public class SendEmail {
                     smessage.setContent(multipart);
 
                     //Send Message
-                    if (Global.isBlockEmailOut()) {
+                    if (Global.isOkToSendEmail()) {
                         Transport.send(smessage);
                     }
 

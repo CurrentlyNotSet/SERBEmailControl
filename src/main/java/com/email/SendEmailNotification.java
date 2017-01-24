@@ -58,7 +58,7 @@ public class SendEmailNotification {
                 email.setFrom(new InternetAddress(FROMaddress));
                 email.setSubject(subject);
                 email.setText(body);
-                if (Global.isBlockEmailOut()) {
+                if (Global.isOkToSendEmail()) {
                     Transport.send(email);
                 }
                 

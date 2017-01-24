@@ -93,7 +93,7 @@ public class ReceiveEmail {
             fetchFolder.close(false);
             store.close();
 
-        } catch (Exception ex) {
+        } catch (MessagingException ex) {
             if (ex != null) {
                 System.out.println("Unable to connect to email Server for: "
                         + account.getEmailAddress()

@@ -81,7 +81,8 @@ public class SECExceptions {
         ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "SELECT COUNT(*) AS num FROM SECExceptions WHERE exceptionDescrption = ?";
+            String sql = "SELECT COUNT(*) AS num FROM SECExceptions WHERE "
+                    + "timeOccurred >= CAST(CURRENT_TIMESTAMP AS DATE) AND exceptionDescrption = ?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, description);
             

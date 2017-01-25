@@ -33,14 +33,25 @@ public class ExceptionHandler {
     }
     
     public static void HandleNoException(SECExceptionsModel item) {
-        //Print out to commandline
-        Logger.getLogger(item.getExceptionDescription());
-        
-        //Send to the Server
-        if (SECExceptions.insertException(item)){  
-            //true = failed out || send to Slack instead
-            SlackNotification.sendNotification(item.getExceptionDescription());
+        boolean insert = true;
+        if (item.getExceptionDescription().startsWith("Can't Send Email, File Missing for EmailID:")
+                && SECExceptions.getExistingException(item.getExceptionDescription()) > 0) {
+            insert = false;
+        } else if (item.getExceptionDescription().startsWith("Can't Stamp Scan, ")
+                && SECExceptions.getExistingException(item.getExceptionDescription()) > 0) {
+            insert = false;
+        }
+
+        if (insert) {
+            //Print out to commandline
+            Logger.getLogger(item.getExceptionDescription());
+
+            //Send to the Server
+            if (SECExceptions.insertException(item)) {
+                //true = failed out, send to Slack instead
+                SlackNotification.sendNotification(item.getExceptionDescription());
+            }
         }
     }
-    
+
 }

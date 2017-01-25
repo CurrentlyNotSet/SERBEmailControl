@@ -23,7 +23,6 @@ public class ScansStamper {
         for (ActivityModel item: list){
             String path = (item.getCaseType().equals("CSC") || item.getCaseType().equals("ORG")) 
                     ? FileService.getCaseFolderORGCSCFileLocation(item) : FileService.getCaseFolderFileLocation(item);
-            System.out.println(item.getId() + ": " + path);
             
             if (FileService.testFileLock(path)){
                 StampPDF.stampDocument(path, item.getDate());

@@ -242,7 +242,7 @@ public class SendEmail {
             SECExceptionsModel item = new SECExceptionsModel();
             item.setClassName("SendEmail");
             item.setMethodName("sendEmails");
-            item.setExceptionType("AttachementMissing");
+            item.setExceptionType("FileMissing");
             item.setExceptionDescription("Can't Send Email, File Missing for EmailID: " + eml.getId());
             
             ExceptionHandler.HandleNoException(item);
@@ -257,7 +257,7 @@ public class SendEmail {
         act.setCaseNumber(eml.getCaseNumber());
         act.setUserID(String.valueOf(eml.getUserID()));
         act.setDate(new Timestamp(emailSentTime.getTime()));
-        act.setAction("OUT - " + eml.getSubject());
+        act.setAction(Global.isOkToSendEmail() ? "OUT - " + eml.getSubject() : "OUT (Not Actually Sent) - " + eml.getSubject());
         act.setFileName(PDFname);
         act.setFrom(eml.getFrom());
         act.setTo(eml.getTo());

@@ -7,6 +7,7 @@ package com.email;
 
 import com.model.SystemEmailModel;
 import com.model.SystemErrorModel;
+import com.sql.SECExceptions;
 import com.sql.SystemError;
 import com.sql.SystemErrorEmailList;
 import com.util.ExceptionHandler;
@@ -69,9 +70,7 @@ public class SendEmailCrashReport {
                 email.setFrom(new InternetAddress(FROMaddress));
                 email.setSubject(subject);
                 email.setText(body);
-                if (Global.isOkToSendEmail()) {
-                    Transport.send(email);
-                }
+                Transport.send(email);
             } catch (AddressException ex) {
                 ExceptionHandler.Handle(ex);
             } catch (MessagingException ex) {
@@ -81,17 +80,33 @@ public class SendEmailCrashReport {
     }
     
     private static String buildBody() {
-        String body = "No Errors have been thrown in the Application today";
+        String body = "";
 
         List<SystemErrorModel> errorList = SystemError.getErrorCounts();
-
+        List<SystemErrorModel> emailErrorList = SECExceptions.getErrorCounts();
+        
         if (errorList.size() > 0) {
             body = "These errors have been logged by the system today. /n/n";
 
             for (SystemErrorModel item : errorList) {
                 body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "/n";
             }
+        } else {
+            body = "No Errors have been thrown in the Application today.";
         }
+        
+        body += "/n/n";
+        
+        if (emailErrorList.size() > 0) {
+            body = "These errors have been logged by the email server today. /n/n";
+
+            for (SystemErrorModel item : emailErrorList) {
+                body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "/n";
+            }
+        } else {
+            body = "No Errors have been thrown in the Application today.";
+        }
+        
         body += "/n - This is a system generated message.";
         return body;
     }

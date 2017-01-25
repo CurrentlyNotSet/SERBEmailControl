@@ -7,6 +7,7 @@ package com.util;
 
 import com.model.ActivityModel;
 import com.model.EmailOutModel;
+import com.model.SECExceptionsModel;
 import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import java.io.File;
 import java.io.IOException;
@@ -67,9 +68,20 @@ public class FileService {
                 return false;
             }
         } else if (PDFfile.exists() == false) {
-            System.out.println("file does not exist: " + PDFfile);
+//            System.out.println("file does not exist: " + PDFfile);
+            SECExceptionsModel item = new SECExceptionsModel();
+            item.setClassName("FileService");
+            item.setMethodName("testFileLock");
+            item.setExceptionType("FileMissing");
+            item.setExceptionDescription("Can't Stamp Scan, File Missing: " + PDFfile);
+            ExceptionHandler.HandleNoException(item);
         } else if (PDFfile.isDirectory() == false) {
-            System.out.println("file is a directory: " + PDFfile);
+//            System.out.println("file is a directory: " + PDFfile);
+            SECExceptionsModel item = new SECExceptionsModel();
+            item.setClassName("FileService");
+            item.setMethodName("testFileLock");
+            item.setExceptionType("NotAFile");
+            item.setExceptionDescription("Can't Stamp Scan, is Directory: " + PDFfile);
         }
         return false;
     }

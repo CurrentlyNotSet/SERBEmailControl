@@ -26,7 +26,6 @@ public class DBConnection {
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
-                System.out.println();
                 if (nbAttempts == 2) {
                     System.out.println("/nUnable to connect to server. Trying again shortly./n");
                 }
@@ -54,7 +53,6 @@ public class DBConnection {
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
-                System.out.println();
                 if (nbAttempts == 2) {
                     System.out.println("/nUnable to connect to server. Trying again shortly./n");
                 }

@@ -111,5 +111,4 @@ public class EmailBodyPDF {
         this.body = body;
     }
     
-    
 }

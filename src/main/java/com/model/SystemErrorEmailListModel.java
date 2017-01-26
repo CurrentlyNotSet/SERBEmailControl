@@ -10,6 +10,7 @@ package com.model;
  * @author User
  */
 public class SystemErrorEmailListModel {
+
     private int id;
     private boolean active;
     private String firstName;
@@ -55,6 +56,5 @@ public class SystemErrorEmailListModel {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
-    
-    
+
 }

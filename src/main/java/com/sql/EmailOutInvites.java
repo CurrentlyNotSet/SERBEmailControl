@@ -21,6 +21,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EmailOutInvites {
 
+    /**
+     * Get a list of all of the email invites awaiting to be sent.
+     * 
+     * @return List EmailOutInvitesModel
+     */
     public static List<EmailOutInvitesModel> getQueuedEmailInvites() {
         List<EmailOutInvitesModel> list = new ArrayList();
         Connection conn = null;
@@ -56,6 +61,11 @@ public class EmailOutInvites {
         return list;
     }
 
+    /**
+     * Deletes email out invite from database after sending.
+     * 
+     * @param id Integer
+     */
     public static void deleteEmailEntry(int id) {
         Connection conn = null;
         PreparedStatement ps = null;

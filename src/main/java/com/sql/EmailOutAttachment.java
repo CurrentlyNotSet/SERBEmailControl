@@ -21,6 +21,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EmailOutAttachment {
     
+    /**
+     * Gathers a list of attachments for a specific email address.
+     * 
+     * @param emailID Integer
+     * @return List (EmailOutAttachmentModel) 
+     */
     public static List<EmailOutAttachmentModel> getAttachmentsByEmail(int emailID) {
         List<EmailOutAttachmentModel> list = new ArrayList();
         Connection conn = null;
@@ -49,6 +55,11 @@ public class EmailOutAttachment {
         return list;
     }
 
+    /**
+     * Deletes attachment based off of email ID
+     * 
+     * @param id Integer
+     */
     public static void deleteAttachmentsForEmail(int id) {
         Connection conn = null;
         PreparedStatement ps = null;

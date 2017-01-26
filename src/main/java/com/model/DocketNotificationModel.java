@@ -10,7 +10,7 @@ package com.model;
  * @author Andrew
  */
 public class DocketNotificationModel {
-    
+
     private int id;
     private String section;
     private String sendTo;
@@ -56,5 +56,5 @@ public class DocketNotificationModel {
     public void setMessageBody(String messageBody) {
         this.messageBody = messageBody;
     }
-    
+
 }

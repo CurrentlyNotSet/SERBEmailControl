@@ -27,19 +27,26 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * @author parker.johnston
  */
 public class TXTtoPDF {
- 
+
+    /**
+     * creates PDF from text document
+     *
+     * @param filePath String
+     * @param fileName String
+     * @return String - new File Name
+     */
     public static String createPDF(String filePath, String fileName) {
         String txtFile = filePath + fileName;
         String pdfFile = filePath + FilenameUtils.removeExtension(fileName) + ".pdf";
-        
+
         makePDF(pdfFile, getTextfromTXT(txtFile));
-        
+
         new File(txtFile).delete();
-        
+
         return FilenameUtils.getName(pdfFile);
     }
-        
-    private static String getTextfromTXT(String file){
+
+    private static String getTextfromTXT(String file) {
         String textBody = "";
         BufferedReader br = null;
         try {
@@ -61,19 +68,19 @@ public class TXTtoPDF {
         }
         return textBody;
     }
-    
-    private static void makePDF(String pdfFile, String text){
+
+    private static void makePDF(String pdfFile, String text) {
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
-        
+
         //Fonts used
         PDFont bodyFont = PDType1Font.HELVETICA;
-        
+
         //Font Sizes
         float bodyFontSize = 12;
         float leadingBody = 1.5f * bodyFontSize;
 
-        try {            
+        try {
             //Create Document, Page, Margins.
             doc = new PDDocument();
             PDPage page = new PDPage();
@@ -85,7 +92,7 @@ public class TXTtoPDF {
             float startX = mediabox.getLowerLeftX() + margin;
             float startY = mediabox.getUpperRightY() - margin;
             float textYlocation = margin;
-            
+
             //Set Line Breaks
             List<String> textContent = PDFBoxTools.setLineBreaks(text, width, bodyFontSize, bodyFont);
 
@@ -93,31 +100,31 @@ public class TXTtoPDF {
             contentStream.setFont(bodyFont, bodyFontSize);
             contentStream.setNonStrokingColor(Color.BLACK);
             contentStream.newLineAtOffset(startX, startY);
-            
-            if (!"".equals(text)) {    
-            for (String line : textContent) {
-                if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingBody)) {
-                    contentStream.endText();
-                    contentStream.close();
-                    textYlocation = 0;
 
-                    page = new PDPage();
-                    doc.addPage(page);
-                    contentStream = new PDPageContentStream(doc, page, true, true, false);
+            if (!"".equals(text)) {
+                for (String line : textContent) {
+                    if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingBody)) {
+                        contentStream.endText();
+                        contentStream.close();
+                        textYlocation = 0;
 
-                    contentStream.beginText();
-                    contentStream.setFont(bodyFont, bodyFontSize);
-                    contentStream.setNonStrokingColor(Color.BLACK);
-                    contentStream.newLineAtOffset(startX, startY);
+                        page = new PDPage();
+                        doc.addPage(page);
+                        contentStream = new PDPageContentStream(doc, page, true, true, false);
+
+                        contentStream.beginText();
+                        contentStream.setFont(bodyFont, bodyFontSize);
+                        contentStream.setNonStrokingColor(Color.BLACK);
+                        contentStream.newLineAtOffset(startX, startY);
+                    }
+
+                    textYlocation += leadingBody;
+
+                    contentStream.showText(line);
+                    contentStream.newLineAtOffset(0, -leadingBody);
                 }
+                contentStream.endText();
 
-                textYlocation += leadingBody;
-
-                contentStream.showText(line);
-                contentStream.newLineAtOffset(0, -leadingBody);
-            }
-            contentStream.endText();
-            
             }
             contentStream.close();
             doc.save(pdfFile);
@@ -133,7 +140,5 @@ public class TXTtoPDF {
             }
         }
     }
-    
-    
-    
+
 }

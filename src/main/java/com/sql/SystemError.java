@@ -21,6 +21,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class SystemError {
     
+    /**
+     * Gathers a list of errors based on type and count total of them
+     * 
+     * @return
+     */
     public static List<SystemErrorModel> getErrorCounts() {
         List<SystemErrorModel> list = new ArrayList();
         Connection conn = null;

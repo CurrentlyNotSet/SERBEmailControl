@@ -10,7 +10,7 @@ package com.model;
  * @author User
  */
 public class SystemErrorModel {
-    
+
     private String exceptionType;
     private int number;
 
@@ -29,5 +29,5 @@ public class SystemErrorModel {
     public void setNumber(int number) {
         this.number = number;
     }
-    
+
 }

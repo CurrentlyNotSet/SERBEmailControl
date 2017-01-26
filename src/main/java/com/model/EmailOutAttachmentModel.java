@@ -10,7 +10,7 @@ package com.model;
  * @author Andrew
  */
 public class EmailOutAttachmentModel {
-    
+
     private int id;
     private int emailOutID;
     private String fileName;
@@ -38,5 +38,5 @@ public class EmailOutAttachmentModel {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    
+
 }

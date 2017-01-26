@@ -15,6 +15,12 @@ import java.util.logging.Logger;
  */
 public class ExceptionHandler {
         
+    /**
+     * Exception handler for an item that has a catch. This method places
+     * an SECExceptionsModel item into the database
+     * 
+     * @param ex Exception
+     */
     public static void Handle(Exception ex) {
         SECExceptionsModel item = new SECExceptionsModel();
         item.setClassName(Thread.currentThread().getStackTrace()[2].getClassName());
@@ -32,6 +38,12 @@ public class ExceptionHandler {
         }
     }
     
+    /**
+     * Exception handler for an item that has no catch. This method places
+     * the SECExceptionsModel item into the database
+     * 
+     * @param item SECExceptionsModel
+     */
     public static void HandleNoException(SECExceptionsModel item) {
         boolean insert = true;
         if (item.getExceptionDescription().startsWith("Can't Send Email, File Missing for EmailID:")

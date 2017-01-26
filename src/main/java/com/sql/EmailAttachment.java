@@ -17,6 +17,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EmailAttachment {
     
+    /**
+     * Insert attachement into received email attachment database table.
+     * 
+     * @param EmailID Integer
+     * @param fileName String
+     */
     public static void insertEmailAttachment(int EmailID, String fileName){
         Connection conn = null;
         PreparedStatement ps = null;

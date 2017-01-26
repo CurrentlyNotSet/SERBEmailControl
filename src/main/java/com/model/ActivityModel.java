@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @author Andrew
  */
 public class ActivityModel {
-    
+
     private int id;
     private String caseYear;
     private String caseType;
@@ -149,7 +149,4 @@ public class ActivityModel {
         this.awaitingTimestamp = awaitingTimestamp;
     }
 
-    
-    
-    
 }

@@ -26,7 +26,13 @@ import org.apache.commons.validator.routines.EmailValidator;
  * @author Andrew
  */
 public class SendEmailNotification {
-    
+
+    /**
+     * This sends a basic notification email that is just pure TEXT. Message is
+     * sent from the section gathered
+     *
+     * @param eml DocketNotificationModel
+     */
     public static void sendNotificationEmail(DocketNotificationModel eml) {
         //Get Account
         SystemEmailModel account = null;
@@ -44,24 +50,24 @@ public class SendEmailNotification {
 
             Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
             Properties properties = EmailProperties.setEmailOutProperties(account);
-            
+
             Session session = Session.getInstance(properties, auth);
             MimeMessage email = new MimeMessage(session);
 
             try {
                 for (String To : TOAddressess) {
-                    if (EmailValidator.getInstance().isValid(To)){
+                    if (EmailValidator.getInstance().isValid(To)) {
                         email.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
                     }
                 }
-                
+
                 email.setFrom(new InternetAddress(FROMaddress));
                 email.setSubject(subject);
                 email.setText(body);
                 if (Global.isOkToSendEmail()) {
                     Transport.send(email);
                 }
-                
+
                 DocketNotification.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
                 ExceptionHandler.Handle(ex);
@@ -70,5 +76,5 @@ public class SendEmailNotification {
             }
         }
     }
-    
+
 }

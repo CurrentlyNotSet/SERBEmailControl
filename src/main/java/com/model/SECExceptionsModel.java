@@ -12,6 +12,7 @@ import java.sql.Timestamp;
  * @author Andrew
  */
 public class SECExceptionsModel {
+
     private int id;
     private String className;
     private String methodName;
@@ -66,5 +67,5 @@ public class SECExceptionsModel {
     public void setTimeOccurred(Timestamp timeOccurred) {
         this.timeOccurred = timeOccurred;
     }
-    
+
 }

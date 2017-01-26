@@ -15,6 +15,13 @@ import com.model.EmailOutModel;
  */
 public class NumberFormatService {
 
+    /**
+     * Gets four columns worth of case number information and converts it to
+     * its single case number
+     * 
+     * @param caseNumber ActivityModel
+     * @return String full case number
+     */
     public static String FullCaseNumber(ActivityModel caseNumber) {
         return caseNumber.getCaseYear() + "-" 
                 + caseNumber.getCaseType() + "-" 
@@ -22,6 +29,13 @@ public class NumberFormatService {
                 + caseNumber.getCaseNumber();
     }
 
+    /**
+     * Gets four columns worth of case number information and converts it to
+     * its single case number
+     * 
+     * @param caseNumber EmailOutModel
+     * @return String full case number
+     */
     public static String FullCaseNumber(EmailOutModel caseNumber) {
         return caseNumber.getCaseYear() + "-" 
                 + caseNumber.getCaseType() + "-" 
@@ -29,6 +43,11 @@ public class NumberFormatService {
                 + caseNumber.getCaseNumber();
     }
 
+    /**
+     * Gets section based off of casetype from case number
+     * @param caseType String
+     * @return String (section)
+     */
     public static String getSection(String caseType) {
         for (CaseTypeModel item : Global.getCaseTypeList()) {
             if (item.getCaseType().equalsIgnoreCase(caseType)) {

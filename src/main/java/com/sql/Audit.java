@@ -18,6 +18,9 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class Audit {
     
+    /**
+     * Removes old audits based on specific time frame.
+     */
     public static void removeOldAudits(){
         Connection conn = null;
         PreparedStatement ps = null;

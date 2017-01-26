@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @author Andrew
  */
 public class EmailOutInvitesModel {
-    
+
     private int id;
     private String section;
     private String toAddress;

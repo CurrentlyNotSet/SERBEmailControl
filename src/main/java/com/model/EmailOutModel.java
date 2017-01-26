@@ -10,6 +10,7 @@ package com.model;
  * @author Andrew
  */
 public class EmailOutModel {
+
     private int id;
     private String section;
     private String caseYear;
@@ -127,5 +128,5 @@ public class EmailOutModel {
     public void setUserID(int userID) {
         this.userID = userID;
     }
-    
+
 }

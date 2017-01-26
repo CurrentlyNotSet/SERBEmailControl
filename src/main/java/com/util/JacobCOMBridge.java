@@ -16,6 +16,14 @@ import java.io.File;
  */
 public class JacobCOMBridge {
 
+    /**
+     * COM bridge to talk to Microsoft Office for conversion of DOCX to PDF
+     * 
+     * @param active boolean
+     * @param visible boolean
+     * @param eolWord ActiveXComponent
+     * @return ActiveXComponent
+     */
     public static ActiveXComponent setWordActive(boolean active, boolean visible, ActiveXComponent eolWord) {
         final String libFile = "amd64".equals(System.getProperty("os.arch")) ? "jacob-1.18-x64.dll" : "jacob-1.18-x86.dll";
         String dllPath = "";

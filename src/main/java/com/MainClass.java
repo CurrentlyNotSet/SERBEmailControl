@@ -29,7 +29,6 @@ import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
 import com.util.TimerSettings;
-import static java.lang.Math.abs;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,6 +40,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainClass {
 
+    /**
+     * setDefaults() verifies and checks to make sure the folder paths
+     * and the connection information is available to the applications before
+     * running. 
+     * 
+     * Then it starts the different threads that the application runs
+     */
     public void setDefaults() {
         if (FileService.setFolderPaths() && SystemEmail.loadEmailConnectionInformation()) {
             Global.setCaseTypeList(CaseType.getCaseTypes());
@@ -50,6 +56,15 @@ public class MainClass {
         }
     }
 
+    /**
+     * threads() runs several different threads simultaniously
+     * Email Thread
+     * Scans Thread
+     * Daily Crash Email (Scheduled Task)
+     * Refresh Email Accounts (Scheduled Task)
+     * //Database Cleanup (Scheduled Task) DISABLED
+     * //Database Backups (Scheduled Task) DISABLED
+     */
     private void threads() {
         Thread emailThread, scansThread;
         
@@ -74,10 +89,10 @@ public class MainClass {
         };
         
         //Run Tasks
-//        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
-//        timer.scheduleAtFixedRate(new refreshEmailAccounts(), new Date(), halfHour);
-//        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
+        timer.scheduleAtFixedRate(new refreshEmailAccounts(), new Date(), halfHour);
+//        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
+//        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
         scansThread.start();
     }

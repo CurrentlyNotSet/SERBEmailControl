@@ -24,10 +24,16 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class StampPDF {
 
+    /**
+     * This stamps docketed files.
+     *
+     * @param file String (full file path)
+     * @param docketTime Timestamp
+     */
     public static void stampDocument(String file, Timestamp docketTime) {
         // the document
-            PDDocument doc = null;
-        try {    
+        PDDocument doc = null;
+        try {
             PDFont stampFont = PDType1Font.TIMES_ROMAN;
             float stampFontSize = 10;
             String title = PDFBoxTools.HeaderTimeStamp(docketTime);
@@ -43,7 +49,7 @@ public class StampPDF {
                 PDPage page = (PDPage) doc.getPages().get(i);
 
                 contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, true);
-                page.getResources().getFontNames(); 
+                page.getResources().getFontNames();
 
                 contentStream.beginText();
                 contentStream.setFont(stampFont, stampFontSize);

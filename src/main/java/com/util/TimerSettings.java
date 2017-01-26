@@ -14,6 +14,12 @@ import java.util.Date;
  */
 public class TimerSettings {
     
+    /**
+     * Gets the cal Time for when to clean up the database
+     * for the day
+     * 
+     * @return Date
+     */
     public static Date dbCleanupTime(){
         Calendar date = Calendar.getInstance();
         date.set(Calendar.HOUR_OF_DAY, Global.getHourOfPurge());
@@ -22,6 +28,12 @@ public class TimerSettings {
         return date.getTime();
     }
     
+    /**
+     * Gets the cal Time for when to back up the database
+     * for the day
+     * 
+     * @return Date
+     */
     public static Date dbBackupTime(){
         Calendar date = Calendar.getInstance();
         date.set(Calendar.HOUR_OF_DAY, Global.getHourOfDBBackup());
@@ -30,6 +42,12 @@ public class TimerSettings {
         return date.getTime();
     }
     
+    /**
+     * Gets the cal Time for when to send the Email for the system Errors
+     * for the day
+     * 
+     * @return Date
+     */
     public static Date errorEmailTime(){
         Calendar date = Calendar.getInstance();
         date.set(Calendar.HOUR_OF_DAY, Global.getHourOfErrorEmail());

@@ -10,6 +10,7 @@ package com.model;
  * @author User
  */
 public class CaseTypeModel {
+
     private int id;
     private boolean active;
     private String section;
@@ -55,7 +56,5 @@ public class CaseTypeModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    
-    
+
 }

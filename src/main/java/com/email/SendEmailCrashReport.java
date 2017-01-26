@@ -30,7 +30,10 @@ import org.apache.commons.validator.routines.EmailValidator;
  * @author User
  */
 public class SendEmailCrashReport {
-    
+
+    /**
+     *
+     */
     public static void sendCrashEmail() {
         //Get Account
         SystemEmailModel account = null;
@@ -40,33 +43,33 @@ public class SendEmailCrashReport {
                 break;
             }
         }
-        
+
         if (account != null) {
             String FROMaddress = account.getEmailAddress();
             List<String> TOAddresses = SystemErrorEmailList.getActiveEmailAddresses();
             String[] BCCAddressess = ("Andrew.Schmidt@XLNSystems.com; Anthony.Perk@XLNSystems.com".split(";"));
             String subject = "SERB 3.0 Application Daily Error Report for " + Global.getMmddyyyy().format(Calendar.getInstance().getTime());
             String body = buildBody();
-            
+
             Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
             Properties properties = EmailProperties.setEmailOutProperties(account);
-            
+
             Session session = Session.getInstance(properties, auth);
             MimeMessage email = new MimeMessage(session);
 
             try {
                 for (String TO : TOAddresses) {
-                    if (EmailValidator.getInstance().isValid(TO)){
+                    if (EmailValidator.getInstance().isValid(TO)) {
                         email.addRecipient(Message.RecipientType.TO, new InternetAddress(TO));
                     }
                 }
-                
+
                 for (String BCC : BCCAddressess) {
-                    if (EmailValidator.getInstance().isValid(BCC)){
+                    if (EmailValidator.getInstance().isValid(BCC)) {
                         email.addRecipient(Message.RecipientType.BCC, new InternetAddress(BCC));
                     }
                 }
-                
+
                 email.setFrom(new InternetAddress(FROMaddress));
                 email.setSubject(subject);
                 email.setText(body);
@@ -80,13 +83,13 @@ public class SendEmailCrashReport {
             System.out.println("No account found to send Error Email");
         }
     }
-    
+
     private static String buildBody() {
         String body = "";
 
         List<SystemErrorModel> errorList = SystemError.getErrorCounts();
         List<SystemErrorModel> emailErrorList = SECExceptions.getErrorCounts();
-        
+
         if (errorList.size() > 0) {
             body += "These errors have been logged by the system today. \n\n";
 
@@ -96,9 +99,9 @@ public class SendEmailCrashReport {
         } else {
             body += "No errors have been thrown in the application today.";
         }
-        
+
         body += "\n\n";
-        
+
         if (emailErrorList.size() > 0) {
             body += "These errors have been logged by the email server today. \n\n";
 
@@ -108,9 +111,9 @@ public class SendEmailCrashReport {
         } else {
             body += "No errors have been thrown in the Application today.";
         }
-        
+
         body += "\n\n\n    - This is a system generated message.";
         return body;
     }
-    
+
 }

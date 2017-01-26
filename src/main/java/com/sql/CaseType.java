@@ -21,6 +21,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class CaseType {
     
+    /**
+     * Gathers a list of active case types for finding the proper section based 
+     * on the case number.
+     * 
+     * @return List CaseTypeModel
+     */
     public static List<CaseTypeModel> getCaseTypes() {
         List<CaseTypeModel> list = new ArrayList();
         Connection conn = null;

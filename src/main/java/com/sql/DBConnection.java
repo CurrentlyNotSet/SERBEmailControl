@@ -16,6 +16,11 @@ import java.sql.SQLException;
  */
 public class DBConnection {
 
+    /**
+     * Gets the connection for the default database. 
+     * 
+     * @return
+     */
     public static Connection connectToDB() {
         Connection conn = null;
         int nbAttempts = 0;
@@ -43,6 +48,11 @@ public class DBConnection {
         return conn;
     }
     
+    /**
+     * Gets the connection for backing up the database.
+     * 
+     * @return
+     */
     public static Connection connectToDBforBackup() {
         Connection conn = null;
         int nbAttempts = 0;

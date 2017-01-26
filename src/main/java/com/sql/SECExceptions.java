@@ -23,6 +23,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class SECExceptions {
     
+    /**
+     * Inserts an exception to the database
+     * 
+     * @param item SECExceptionsModel
+     * @return boolean
+     */
     public static boolean insertException(SECExceptionsModel item){
         Connection conn = null;
         PreparedStatement ps = null;
@@ -56,6 +62,9 @@ public class SECExceptions {
         return false;
     }
         
+    /**
+     * Removes old exception based off of a global exception date timeframe
+     */
     public static void removeOldExceptions(){
         Connection conn = null;
         PreparedStatement ps = null;
@@ -74,6 +83,13 @@ public class SECExceptions {
         }
     }
     
+    /**
+     * Gets a count of errors where the description text matches. 
+     * This is to eliminate the repeat of entries from the application looping
+     * 
+     * @param description String
+     * @return Integer count
+     */
     public static int getExistingException(String description) {
         int count = 0;
         Connection conn = null;
@@ -100,6 +116,11 @@ public class SECExceptions {
         return count;
     }
     
+    /**
+     *  Gathers a list of errors based on type and count total of them.
+     * 
+     * @return
+     */
     public static List<SystemErrorModel> getErrorCounts() {
         List<SystemErrorModel> list = new ArrayList();
         Connection conn = null;

@@ -21,11 +21,28 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
  * @author Andrew
  */
 public class PDFBoxTools {
-    
+
+    /**
+     * Gets timestamp and convert to "MM/dd/yyyy HH:mm:ss a" format
+     *
+     * @param docketDate
+     * @return String of date
+     */
     public static String HeaderTimeStamp(Timestamp docketDate) {
         return Global.getMmddyyyyhhmmssa().format(docketDate);
     }
-    
+
+    /**
+     * This sets the line breaks for PDFBox. PDFBox does not know when lines or
+     * pages end so this method configures the best possible spacing and breaks
+     * the lines where it deems it necessary
+     *
+     * @param origText String
+     * @param width float
+     * @param fontSize float
+     * @param pdfFont PDFont
+     * @return List of Strings for each line of text to loop through.
+     */
     public static List<String> setLineBreaks(String origText, float width, float fontSize, PDFont pdfFont) {
         List<String> lines = new ArrayList<>();
         origText = (origText == null ? "" : origText);
@@ -70,6 +87,13 @@ public class PDFBoxTools {
         return lines;
     }
 
+    /**
+     * Gets scaled dimensions of image for proper fitment to printable page
+     *
+     * @param imgSize Dimension
+     * @param boundary Dimension
+     * @return Dimension
+     */
     public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
         int original_width = imgSize.width;
         int original_height = imgSize.height;
@@ -97,6 +121,12 @@ public class PDFBoxTools {
         return new Dimension(new_width, new_height);
     }
 
+    /**
+     * Get the TIFF compression type from an image
+     *
+     * @param image String
+     * @return Integer of compression type
+     */
     public static int TIFFCompression(String image) {
         // 1 = No compression
         // 2 = CCITT modified Huffman RLE
@@ -109,9 +139,9 @@ public class PDFBoxTools {
         // 8 = Deflate ('Adobe-style')
         // 9 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.85 (which boils down to JBIG on black and white).
         // 10 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.43 (which boils down to JBIG on color). 
-        
+
         RenderedOp tiffFile = JAI.create("fileload", image);
-        
+
         int TAG_COMPRESSION = 259;
         TIFFDirectory dir = (TIFFDirectory) tiffFile.getProperty("tiff_directory");
         if (dir.isTagPresent(TAG_COMPRESSION)) {

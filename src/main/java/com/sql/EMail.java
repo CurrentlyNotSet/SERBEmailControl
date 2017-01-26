@@ -20,6 +20,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EMail {
     
+    /**
+     * Inserts email message into email table. 
+     * 
+     * @param eml EmailMessageModel
+     * @return Integer - generated key of the email
+     */
     public static int InsertEmail(EmailMessageModel eml){
         Connection conn = null;
         PreparedStatement ps = null;
@@ -74,6 +80,12 @@ public class EMail {
         return 0;
     }    
     
+    /**
+     * Marks an email ready to file by the system. This is in place so a user 
+     * does not try to docket an email that is currently being processed.
+     * 
+     * @param eml
+     */
     public static void setEmailReadyToFile(EmailMessageModel eml){
         Connection conn = null;
         PreparedStatement ps = null;

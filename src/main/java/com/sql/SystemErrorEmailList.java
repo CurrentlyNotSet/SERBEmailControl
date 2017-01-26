@@ -20,6 +20,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class SystemErrorEmailList {
     
+    /**
+     * Gathers a list of active email addresses to send to for the email
+     * for the daily crash report email.
+     * 
+     * @return
+     */
     public static List<String> getActiveEmailAddresses() {
         List<String> list = new ArrayList();
         Connection conn = null;

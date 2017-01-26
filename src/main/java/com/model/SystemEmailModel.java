@@ -10,19 +10,19 @@ package com.model;
  * @author Andrew
  */
 public class SystemEmailModel {
-    
-    private int    id;
-    private int    active;
+
+    private int id;
+    private int active;
     private String section;
     private String emailAddress;
     private String username;
     private String password;
     private String incomingURL;
-    private int    incomingPort;
+    private int incomingPort;
     private String incomingProtocol;
     private String incomingFolder;
     private String outgoingURL;
-    private int    outgoingPort;
+    private int outgoingPort;
     private String outgoingProtocol;
     private String outgoingFolder;
 
@@ -138,5 +138,4 @@ public class SystemEmailModel {
         this.outgoingFolder = outgoingFolder;
     }
 
-    
 }

@@ -21,7 +21,12 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class Activity {
     
-    public static List getFilesToStamp() {
+    /**
+     * Gathers a list of tiles that are awaiting a timestamp
+     * 
+     * @return List (ActivityModel)
+     */
+    public static List<ActivityModel> getFilesToStamp() {
         List<ActivityModel> list = new ArrayList();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -52,6 +57,12 @@ public class Activity {
         return list;
     }
     
+    /**
+     * Updates activity set to no longer awaiting timestamp for items that have 
+     * been properly stamped
+     * 
+     * @param id Integer
+     */
     public static void markEntryStamped(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -69,6 +80,11 @@ public class Activity {
         }
     }
     
+    /**
+     * Inserts activity into the Activity Table after sending email message
+     * 
+     * @param act ActivityModel
+     */
     public static void insertActivity(ActivityModel act){
         Connection conn = null;
         PreparedStatement ps = null;

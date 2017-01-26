@@ -9,14 +9,17 @@ import in.ashwanthkumar.slack.webhook.Slack;
 import in.ashwanthkumar.slack.webhook.SlackMessage;
 import java.io.IOException;
 
-//TODO: Update file to Slack (DB Backup)
-
 /**
  *
  * @author parkerjohnston
  */
 public class SlackNotification {
-    
+
+    /**
+     * Sends notification to slack 
+     * 
+     * @param message String
+     */
     public static void sendNotification(String message) {
         try {
             new Slack(SlackInfo.getSlackHook())
@@ -28,5 +31,5 @@ public class SlackNotification {
             ExceptionHandler.Handle(ex);
         }
     }
-    
+
 }

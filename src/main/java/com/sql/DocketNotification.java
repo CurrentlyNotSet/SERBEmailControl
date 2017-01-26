@@ -21,6 +21,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class DocketNotification {
     
+    /**
+     * Gather a list of notifications for items that were docketed
+     * 
+     * @return
+     */
     public static List<DocketNotificationModel> getQueuedNotifications() {
         List<DocketNotificationModel> list = new ArrayList();
         Connection conn = null;
@@ -50,6 +55,11 @@ public class DocketNotification {
         return list;
     }
     
+    /**
+     * Delete item from docket notification based off of ID
+     * 
+     * @param id Integer
+     */
     public static void deleteEmailEntry(int id) {
         Connection conn = null;
         PreparedStatement ps = null;

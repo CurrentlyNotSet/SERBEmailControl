@@ -19,6 +19,14 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class WordToPDF {
 
+    /**
+     * Creates PDF from DOCX, does this by opening file and "SaveAs" within
+     * Microsoft Office itself and closing out.
+     *
+     * @param filePath String
+     * @param fileName String
+     * @return String - new File Name
+     */
     public static String createPDF(String filePath, String fileName) {
         ActiveXComponent eolWord = null;
         String docxFile = filePath + fileName;

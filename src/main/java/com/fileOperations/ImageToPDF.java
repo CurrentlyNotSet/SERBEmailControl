@@ -32,11 +32,11 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 public class ImageToPDF {
 
     /**
-     * create the second sample document from the PDF file format specification.
+     * create PDF from image and scales it accordingly to fit in a single page
      *
-     * @param folderPath
-     * @param imageFileName
-     * @return
+     * @param folderPath String
+     * @param imageFileName String
+     * @return String new filename
      */
     public static String createPDFFromImage(String folderPath, String imageFileName) {
         String pdfFile = FilenameUtils.removeExtension(imageFileName) + ".pdf";
@@ -75,7 +75,7 @@ public class ImageToPDF {
             }
 
             if (pdImage != null) {
-                if (pdImage.getWidth() > pdImage.getHeight()){
+                if (pdImage.getWidth() > pdImage.getHeight()) {
                     page.setRotation(270);
                     PDRectangle rotatedPage = new PDRectangle(page.getMediaBox().getHeight(), page.getMediaBox().getWidth());
                     page.setMediaBox(rotatedPage);

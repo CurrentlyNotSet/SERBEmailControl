@@ -22,6 +22,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class SystemEmail {
     
+    /**
+     * Gathers active email accounts for sending or receiving. 
+     * 
+     * @return
+     */
     public static boolean loadEmailConnectionInformation() {
         List<SystemEmailModel> systemEmailList = new ArrayList();
         Connection conn = null;

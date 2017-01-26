@@ -13,7 +13,14 @@ import javax.mail.PasswordAuthentication;
  * @author Andrew
  */
 public class EmailAuthenticator {
-    
+
+    /**
+     * This method returns the password authentication and uses the username and
+     * password from the SystemEmailModel
+     *
+     * @param account SystemEmailModel (requires username & password)
+     * @return the javax.mail.Authenticator
+     */
     public static javax.mail.Authenticator setEmailAuthenticator(SystemEmailModel account) {
         javax.mail.Authenticator auth = new javax.mail.Authenticator() {
             @Override
@@ -24,5 +31,5 @@ public class EmailAuthenticator {
         };
         return auth;
     }
-    
+
 }

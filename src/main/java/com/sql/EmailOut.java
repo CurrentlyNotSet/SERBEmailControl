@@ -21,6 +21,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class EmailOut {
     
+    /**
+     * Gathers current emails waiting to be sent out.
+     * 
+     * @return List (EmailOutModel)
+     */
     public static List<EmailOutModel> getEmailOutQueue() {
         List<EmailOutModel> list = new ArrayList();
         Connection conn = null;
@@ -58,6 +63,11 @@ public class EmailOut {
         return list;
     }
 
+    /**
+     * Deletes email entry based off of the ID
+     *  
+     * @param id Integer - emailID from the database
+     */
     public static void deleteEmailEntry(int id) {
         Connection conn = null;
         PreparedStatement ps = null;

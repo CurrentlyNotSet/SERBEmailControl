@@ -18,6 +18,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class DBBackupScript {
     
+    /**
+     * Backup database command
+     * 
+     * @param databaseName String
+     */
     public static void backupDB(String databaseName){
             Connection conn = null;
             PreparedStatement ps = null;

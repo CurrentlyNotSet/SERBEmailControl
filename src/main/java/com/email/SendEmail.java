@@ -53,6 +53,14 @@ import org.apache.pdfbox.multipdf.PDFMergerUtility;
  */
 public class SendEmail {
 
+    /**
+     * Sends a single email and uses account based off of the section that the
+     * email comes from after email is sent the attachments are gathered
+     * together and collated into a single PDF file and a history entry is
+     * created based off of that entry
+     *
+     * @param eml EmailOutModel
+     */
     public static void sendEmails(EmailOutModel eml) {
         SystemEmailModel account = null;
 
@@ -67,22 +75,22 @@ public class SendEmail {
         //Account Exists?
         if (account != null) {
             //Case Location
-            String casePath = (eml.getCaseType().equals("CSC") || eml.getCaseType().equals("ORG")) 
+            String casePath = (eml.getCaseType().equals("CSC") || eml.getCaseType().equals("ORG"))
                     ? FileService.getCaseFolderORGCSCLocation(eml) : FileService.getCaseFolderLocation(eml);
 
             //Attachment List
             boolean allFilesExists = true;
             List<EmailOutAttachmentModel> attachmentList = EmailOutAttachment.getAttachmentsByEmail(eml.getId());
 
-            for (EmailOutAttachmentModel attach : attachmentList){
+            for (EmailOutAttachmentModel attach : attachmentList) {
                 File attachment = new File(casePath + attach.getFileName());
                 boolean exists = attachment.exists();
-                if (exists == false){
+                if (exists == false) {
                     allFilesExists = false;
                     break;
                 }
-            }            
-            
+            }
+
             if (allFilesExists) {
                 //Set up Initial Merge Utility
                 PDFMergerUtility ut = new PDFMergerUtility();
@@ -238,13 +246,13 @@ public class SendEmail {
                     ExceptionHandler.Handle(ex);
                 }
             }
-            
+
             SECExceptionsModel item = new SECExceptionsModel();
             item.setClassName("SendEmail");
             item.setMethodName("sendEmails");
             item.setExceptionType("FileMissing");
             item.setExceptionDescription("Can't Send Email, File Missing for EmailID: " + eml.getId());
-            
+
             ExceptionHandler.HandleNoException(item);
         }
     }

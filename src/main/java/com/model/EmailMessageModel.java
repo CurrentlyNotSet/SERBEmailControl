@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  * @author Andrew
  */
 public class EmailMessageModel {
-    
+
     private int id;
     private String section;
     private String emailFrom;
@@ -121,5 +121,5 @@ public class EmailMessageModel {
     public void setReadyToFile(int readyToFile) {
         this.readyToFile = readyToFile;
     }
-    
+
 }

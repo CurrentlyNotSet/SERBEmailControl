@@ -17,6 +17,11 @@ import org.apache.commons.dbutils.DbUtils;
  */
 public class ServerEmailControl {
     
+    /**
+     * Update completion time of current thread.
+     * 
+     * @param column
+     */
     public static void updateCompletionTime(String column){
         Connection conn = null;
         PreparedStatement ps = null;

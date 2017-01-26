@@ -30,7 +30,13 @@ import org.apache.commons.validator.routines.EmailValidator;
  * @author Andrew
  */
 public class SendEmailCalInvite {
-    
+
+    /**
+     * Sends email based off of the section it comes from. This creates a
+     * calendar invite object that is interactive by Outlook.
+     *
+     * @param eml EmailOutInviteModel
+     */
     public static void sendCalendarInvite(EmailOutInvitesModel eml) {
         SystemEmailModel account = null;
 
@@ -44,8 +50,8 @@ public class SendEmailCalInvite {
         if (account != null) {
             //Get parts
             String FromAddress = account.getEmailAddress();
-            String[] TOAddressess = ((eml.getToAddress()== null) ? "".split(";") : eml.getToAddress().split(";"));
-            String[] CCAddressess = ((eml.getCcAddress()== null) ? "".split(";") : eml.getCcAddress().split(";"));
+            String[] TOAddressess = ((eml.getToAddress() == null) ? "".split(";") : eml.getToAddress().split(";"));
+            String[] CCAddressess = ((eml.getCcAddress() == null) ? "".split(";") : eml.getCcAddress().split(";"));
             String emailSubject = Subject(eml);
             BodyPart emailBody = body(eml);
             BodyPart inviteBody = invite(eml, account, emailSubject);
@@ -59,12 +65,12 @@ public class SendEmailCalInvite {
             try {
                 smessage.addFrom(new InternetAddress[]{new InternetAddress(FromAddress)});
                 for (String To : TOAddressess) {
-                    if (EmailValidator.getInstance().isValid(To)){
+                    if (EmailValidator.getInstance().isValid(To)) {
                         smessage.addRecipient(Message.RecipientType.TO, new InternetAddress(To));
                     }
                 }
                 for (String Cc : CCAddressess) {
-                    if (EmailValidator.getInstance().isValid(Cc)){
+                    if (EmailValidator.getInstance().isValid(Cc)) {
                         smessage.addRecipient(Message.RecipientType.CC, new InternetAddress(Cc));
                     }
                 }
@@ -73,8 +79,8 @@ public class SendEmailCalInvite {
                 multipart.addBodyPart(inviteBody);
                 smessage.setContent(multipart);
                 if (Global.isOkToSendEmail()) {
-                        Transport.send(smessage);
-                    }
+                    Transport.send(smessage);
+                }
                 EmailOutInvites.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
                 ExceptionHandler.Handle(ex);
@@ -83,19 +89,19 @@ public class SendEmailCalInvite {
             }
         }
     }
-    
+
     private static String Subject(EmailOutInvitesModel eml) {
-        return "Upcoming " + eml.getHearingType() 
+        return "Upcoming " + eml.getHearingType()
                 + " hearing for Case Number: " + eml.getCaseNumber();
     }
-    
+
     private static BodyPart body(EmailOutInvitesModel eml) {
         MimeBodyPart descriptionPart = new MimeBodyPart();
         try {
             String content = "There has been a " + eml.getHearingDescription()
                     + " scheduled for " + eml.getCaseNumber()
                     + " on " + Global.getMmddyyyy().format(eml.getHearingStartTime())
-                    + " at " + Global.getHhmmssa().format(eml.getHearingStartTime()) 
+                    + " at " + Global.getHhmmssa().format(eml.getHearingStartTime())
                     + "\n\n\n";
             descriptionPart.setContent(content, "text/html; charset=utf-8");
         } catch (MessagingException ex) {
@@ -103,12 +109,12 @@ public class SendEmailCalInvite {
         }
         return descriptionPart;
     }
-    
+
     private static BodyPart invite(EmailOutInvitesModel eml, SystemEmailModel account, String emailSubject) {
         BodyPart calendarPart = new MimeBodyPart();
-        try {            
-            String calendarContent =
-                    "BEGIN:VCALENDAR\n"
+        try {
+            String calendarContent
+                    = "BEGIN:VCALENDAR\n"
                     + "METHOD:REQUEST\n"
                     + "PRODID: BCP - Meeting\n"
                     + "VERSION:2.0\n"
@@ -116,13 +122,18 @@ public class SendEmailCalInvite {
                     + "DTSTAMP:" + Global.getiCalendarDateFormat().format(eml.getHearingStartTime()) + "\n"
                     + "DTSTART:" + Global.getiCalendarDateFormat().format(eml.getHearingStartTime()) + "\n"
                     + "DTEND:" + Global.getiCalendarDateFormat().format(eml.getHearingEndTime()) + "\n"
-                    + "SUMMARY: " + emailSubject.replace("Upcoming", "").trim() + "\n" + //Subject
-                    "UID:324\n"
-                    + "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n" + //return email
-                    "ORGANIZER:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n" + //return email
-                    "LOCATION: " + eml.getHearingRoomAbv() + "\n" + //hearing room
-                    "DESCRIPTION: " + emailSubject + "\n" + //subject
-                    "SEQUENCE:0\n"
+                    //Subject
+                    + "SUMMARY: " + emailSubject.replace("Upcoming", "").trim() + "\n"
+                    + "UID:324\n"
+                    //return email
+                    + "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n"
+                    //return email
+                    + "ORGANIZER:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n"
+                    //hearing room
+                    + "LOCATION: " + eml.getHearingRoomAbv() + "\n"
+                    //subject
+                    + "DESCRIPTION: " + emailSubject + "\n"
+                    + "SEQUENCE:0\n"
                     + "PRIORITY:5\n"
                     + "CLASS:PUBLIC\n"
                     + "STATUS:CONFIRMED\n"
@@ -141,5 +152,5 @@ public class SendEmailCalInvite {
         }
         return calendarPart;
     }
-    
+
 }

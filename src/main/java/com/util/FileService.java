@@ -22,6 +22,12 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class FileService {
 
+    /**
+     * sets the folder paths for the file locations depending on the host 
+     * computer the application is running from.
+     * 
+     * @return boolean for file paths not available
+     */
     public static boolean setFolderPaths() {
         try {
             switch (InetAddress.getLocalHost().getHostName()) {
@@ -55,6 +61,14 @@ public class FileService {
         }
     }
 
+    /**
+     * This tests the file lock to see if a file is in use if there is an issue 
+     * with the file beyond being locked then an exception is thrown and placed
+     * into the database.
+     * 
+     * @param path String
+     * @return boolean
+     */
     public static boolean testFileLock(String path) {
         File PDFfile = new File(path);
 
@@ -86,6 +100,12 @@ public class FileService {
         return false;
     }
 
+    /**
+     * Get case file location
+     * 
+     * @param item ActivityModel
+     * @return String file path
+     */
     public static String getCaseFolderFileLocation(ActivityModel item) {
         return Global.getActivityPath()
                 + File.separatorChar + NumberFormatService.getSection(item.getCaseType())
@@ -93,7 +113,13 @@ public class FileService {
                 + File.separatorChar + NumberFormatService.FullCaseNumber(item)
                 + File.separatorChar + item.getFileName();
     }
-    
+
+    /**
+     * Get case file location
+     * 
+     * @param item EmailOutModel
+     * @return String file path
+     */
     public static String getCaseFolderLocation(EmailOutModel item) {
         return Global.getActivityPath()
                 + File.separatorChar + NumberFormatService.getSection(item.getCaseType())
@@ -102,20 +128,39 @@ public class FileService {
                 + File.separatorChar;
     }
 
+    /**
+     * Gets case folder location for ORG or CSC cases
+     * 
+     * @param item ActivityModel
+     * @return String file path
+     */
     public static String getCaseFolderORGCSCFileLocation(ActivityModel item) {
         return Global.getActivityPath()
                 + File.separatorChar + item.getCaseType()
                 + File.separatorChar + item.getCaseNumber()
                 + File.separatorChar + item.getFileName();
     }
-    
+
+    /**
+     * Gets case folder location for ORG or CSC cases
+     * 
+     * @param item EmailOutModel
+     * @return String file path
+     */
     public static String getCaseFolderORGCSCLocation(EmailOutModel item) {
         return Global.getActivityPath()
                 + File.separatorChar + item.getCaseType()
                 + File.separatorChar + item.getCaseNumber()
                 + File.separatorChar;
     }
-    
+
+    /**
+     * This method checks the file extension to see if it is a valid image
+     * format.
+     *
+     * @param image String
+     * @return boolean is image format
+     */
     public static boolean isImageFormat(String image) {
         return image.toLowerCase().endsWith(".jpg")
                 || ((image.toLowerCase().endsWith(".tif")
@@ -126,6 +171,12 @@ public class FileService {
                 || image.toLowerCase().endsWith(".png");
     }
 
+    /**
+     * Checks to see if the file is a valid attachment type for receiving
+     * 
+     * @param file String
+     * @return boolean
+     */
     public static boolean isValidAttachment(String file) {
         if (file != null) {
             String ext = FilenameUtils.getExtension(file);
@@ -133,4 +184,5 @@ public class FileService {
         }
         return false;
     }
+    
 }

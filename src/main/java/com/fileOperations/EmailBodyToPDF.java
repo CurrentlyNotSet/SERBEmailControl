@@ -32,19 +32,27 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  */
 public class EmailBodyToPDF {
 
-    public static EmailMessageModel createEmailBodyIn(EmailMessageModel eml, String emailTime, List<String> attachmentList){
-        String filePath = Global.getEmailPath()+ eml.getSection() 
-                + File.separatorChar ;
+    /**
+     * This converts the email body to PDF from information in the database
+     *
+     * @param eml EmailMessageModel
+     * @param emailTime String
+     * @param attachmentList List(Strings filename of attachments)
+     * @return
+     */
+    public static EmailMessageModel createEmailBodyIn(EmailMessageModel eml, String emailTime, List<String> attachmentList) {
+        String filePath = Global.getEmailPath() + eml.getSection()
+                + File.separatorChar;
         String fileName = eml.getId() + "_00_" + emailTime + ".pdf";
         String attachList = "";
-        for (String attachment : attachmentList){
+        for (String attachment : attachmentList) {
             if ("".equals(attachList)) {
                 attachList += attachment;
             } else {
                 attachList += "; " + attachment;
             }
         }
-        
+
         eml.setEmailBodyFileName(fileName);
         EmailBodyPDF emlPDF = new EmailBodyPDF();
         emlPDF.setFilePath(filePath);
@@ -58,25 +66,34 @@ public class EmailBodyToPDF {
         emlPDF.setAttachments(attachList);
         emlPDF.setSubject(eml.getEmailSubject() == null ? "" : eml.getEmailSubject());
         emlPDF.setBody(eml.getEmailBody() == null ? "" : eml.getEmailBody());
-        
+
         createEmailBody(emlPDF);
         return eml;
     }
-    
+
+    /**
+     * This creates the email out body message to be used when inserting
+     * activity after sending email
+     *
+     * @param eml EmailOutModel
+     * @param attachmentList List (EmailOutAttachmentModel)
+     * @param emailSentTime Date
+     * @return
+     */
     public static String createEmailOutBody(EmailOutModel eml, List<EmailOutAttachmentModel> attachmentList, Date emailSentTime) {
-        String filePath = (eml.getCaseType().equals("CSC") || eml.getCaseType().equals("ORG")) 
+        String filePath = (eml.getCaseType().equals("CSC") || eml.getCaseType().equals("ORG"))
                 ? FileService.getCaseFolderORGCSCLocation(eml) : FileService.getCaseFolderLocation(eml);
         String fileName = String.valueOf(emailSentTime.getTime()) + ".pdf";
         String attachList = "";
-        
-        for (EmailOutAttachmentModel attachment : attachmentList){
-            if (!"".equals(attachList)){
+
+        for (EmailOutAttachmentModel attachment : attachmentList) {
+            if (!"".equals(attachList)) {
                 attachList += "; " + attachment;
-            } else{
+            } else {
                 attachList += attachment;
             }
         }
-                
+
         EmailBodyPDF emlPDF = new EmailBodyPDF();
         emlPDF.setFilePath(filePath);
         emlPDF.setFileName(fileName);
@@ -89,26 +106,26 @@ public class EmailBodyToPDF {
         emlPDF.setAttachments(attachList);
         emlPDF.setSubject(eml.getSubject() == null ? "" : eml.getSubject());
         emlPDF.setBody(eml.getBody() == null ? "" : eml.getBody());
-        
+
         createEmailBody(emlPDF);
         return fileName;
     }
-    
-    private static void createEmailBody(EmailBodyPDF eml) {      
+
+    private static void createEmailBody(EmailBodyPDF eml) {
         PDDocument doc = null;
         PDPageContentStream contentStream = null;
-        
+
         //Fonts used
         PDFont bodyTitleFont = PDType1Font.HELVETICA_BOLD;
         PDFont bodyFont = PDType1Font.HELVETICA;
-        
+
         //Font Sizes
         float emailHeaderFontSize = 7;
         float leadingEmailHeader = 1.5f * emailHeaderFontSize;
         float bodyFontSize = 12;
         float leadingBody = 1.5f * bodyFontSize;
 
-        try {            
+        try {
             //Create Document, Page, Margins.
             doc = new PDDocument();
             PDPage page = new PDPage();
@@ -120,7 +137,7 @@ public class EmailBodyToPDF {
             float startX = mediabox.getLowerLeftX() + margin;
             float startY = mediabox.getUpperRightY() - margin;
             float textYlocation = margin;
-            
+
             //Set Line Breaks
             List<String> sentDateContent = PDFBoxTools.setLineBreaks(eml.getSentDate(), width, emailHeaderFontSize, bodyFont);
             List<String> recievedDateContent = PDFBoxTools.setLineBreaks(eml.getReceiveDate(), width, emailHeaderFontSize, bodyFont);
@@ -166,7 +183,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingEmailHeader;
                 }
             }
-            
+
             //Set Date Received
             if (!"".equals(eml.getReceiveDate().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
@@ -196,7 +213,7 @@ public class EmailBodyToPDF {
                 }
             }
             contentStream.newLineAtOffset(0, -leadingBody);
-            
+
             //Set From
             if (!"".equals(eml.getFrom().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
@@ -224,7 +241,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingEmailHeader;
                 }
             }
-            
+
             //Set To
             if (!"".equals(eml.getTo().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
@@ -252,7 +269,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingEmailHeader;
                 }
             }
-            
+
             //Set CC
             if (!"".equals(eml.getCc().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
@@ -280,7 +297,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingEmailHeader;
                 }
             }
-            
+
             //Set BCC
             if (!"".equals(eml.getBcc().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
@@ -308,7 +325,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingEmailHeader;
                 }
             }
-            
+
             //Set AttachmentList
             if (!"".equals(eml.getAttachments().trim())) {
                 contentStream.setFont(bodyTitleFont, emailHeaderFontSize);
@@ -336,7 +353,7 @@ public class EmailBodyToPDF {
                     textYlocation += leadingEmailHeader;
                 }
             }
-            
+
             //Set Subject
             if (!"".equals(eml.getSubject().trim())) {
                 contentStream.newLineAtOffset(0, -leadingBody);
@@ -367,35 +384,35 @@ public class EmailBodyToPDF {
                 }
             }
             if (!"".equals(eml.getBody().trim())) {
-            // Set Email Body
-            contentStream.newLineAtOffset(0, -leadingBody);
-            contentStream.setFont(bodyTitleFont, bodyFontSize);
-            contentStream.showText("Message: ");
-            contentStream.setFont(bodyFont, bodyFontSize);
-            contentStream.newLineAtOffset(0, -leadingBody);
-            for (String line : bodyContent) {
-                if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingBody)) {
-                    contentStream.endText();
-                    contentStream.close();
-                    textYlocation = 0;
-
-                    page = new PDPage();
-                    doc.addPage(page);
-                    contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, false);
-
-                    contentStream.beginText();
-                    contentStream.setFont(bodyFont, bodyFontSize);
-                    contentStream.setNonStrokingColor(Color.BLACK);
-                    contentStream.newLineAtOffset(startX, startY);
-                }
-
-                textYlocation += leadingBody;
-
-                contentStream.showText(line);
+                // Set Email Body
                 contentStream.newLineAtOffset(0, -leadingBody);
-            }
-            contentStream.endText();
-            
+                contentStream.setFont(bodyTitleFont, bodyFontSize);
+                contentStream.showText("Message: ");
+                contentStream.setFont(bodyFont, bodyFontSize);
+                contentStream.newLineAtOffset(0, -leadingBody);
+                for (String line : bodyContent) {
+                    if (textYlocation > (mediabox.getHeight() - (margin * 2) - leadingBody)) {
+                        contentStream.endText();
+                        contentStream.close();
+                        textYlocation = 0;
+
+                        page = new PDPage();
+                        doc.addPage(page);
+                        contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, false);
+
+                        contentStream.beginText();
+                        contentStream.setFont(bodyFont, bodyFontSize);
+                        contentStream.setNonStrokingColor(Color.BLACK);
+                        contentStream.newLineAtOffset(startX, startY);
+                    }
+
+                    textYlocation += leadingBody;
+
+                    contentStream.showText(line);
+                    contentStream.newLineAtOffset(0, -leadingBody);
+                }
+                contentStream.endText();
+
             }
             contentStream.close();
             doc.save(eml.getFilePath() + eml.getFileName());
@@ -411,5 +428,5 @@ public class EmailBodyToPDF {
             }
         }
     }
-    
+
 }

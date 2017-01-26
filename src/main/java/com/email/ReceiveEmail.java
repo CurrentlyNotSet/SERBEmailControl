@@ -56,6 +56,13 @@ public class ReceiveEmail {
     private static int attachmentCount;
     private static List<String> attachmentList;
 
+    /**
+     * This account fetches emails from a specified account and marks the emails
+     * as seen, only touches the email account does not delete or move any
+     * information.
+     *
+     * @param account SystemEmailModel
+     */
     public static void fetchEmail(SystemEmailModel account) {
         Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
         Properties properties = EmailProperties.setEmailInProperties(account);
@@ -65,7 +72,7 @@ public class ReceiveEmail {
             Store store = session.getStore();
             store.connect(account.getIncomingURL(), account.getIncomingPort(), account.getUsername(), account.getPassword());
             Folder fetchFolder = store.getFolder(account.getIncomingFolder());
-            if (!"".equals(account.getIncomingFolder().trim())){
+            if (!"".equals(account.getIncomingFolder().trim())) {
                 fetchFolder = store.getFolder("INBOX");
             }
 

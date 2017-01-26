@@ -16,19 +16,23 @@ import java.util.List;
  * @author Andrew
  */
 public class ScansStamper {
-    
-    public static void stampScans(){
+
+    /**
+     * This method loops through all of the available scans in the Activity
+     * table and applies the stamp to them if they are available.
+     */
+    public static void stampScans() {
         List<ActivityModel> list = Activity.getFilesToStamp();
-        
-        for (ActivityModel item: list){
-            String path = (item.getCaseType().equals("CSC") || item.getCaseType().equals("ORG")) 
+
+        for (ActivityModel item : list) {
+            String path = (item.getCaseType().equals("CSC") || item.getCaseType().equals("ORG"))
                     ? FileService.getCaseFolderORGCSCFileLocation(item) : FileService.getCaseFolderFileLocation(item);
-            
-            if (FileService.testFileLock(path)){
+
+            if (FileService.testFileLock(path)) {
                 StampPDF.stampDocument(path, item.getDate());
                 Activity.markEntryStamped(item.getId());
             }
         }
     }
-    
+
 }

@@ -27,7 +27,7 @@ public class Global {
     private static final String auditTimeAmount = "1";
     private static final int hourOfPurge = 1; //24hr clock
     private static final int hourOfDBBackup = 1; //24hr clock
-    private static final int hourOfErrorEmail = 17; //24hr clock
+    private static final int hourOfErrorEmail = 17; //24hr clock (5pm)
     
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");

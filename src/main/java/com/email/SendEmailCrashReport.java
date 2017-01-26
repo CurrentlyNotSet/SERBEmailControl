@@ -35,7 +35,7 @@ public class SendEmailCrashReport {
         //Get Account
         SystemEmailModel account = null;
         for (SystemEmailModel acc : Global.getSystemEmailParams()) {
-            if (acc.getSection().equals("Error")) {
+            if (acc.getSection().equals("ERROR")) {
                 account = acc;
                 break;
             }
@@ -76,6 +76,8 @@ public class SendEmailCrashReport {
             } catch (MessagingException ex) {
                 ExceptionHandler.Handle(ex);
             }
+        } else {
+            System.out.println("No account found to send Error Email");
         }
     }
     
@@ -86,28 +88,28 @@ public class SendEmailCrashReport {
         List<SystemErrorModel> emailErrorList = SECExceptions.getErrorCounts();
         
         if (errorList.size() > 0) {
-            body = "These errors have been logged by the system today. /n/n";
+            body += "These errors have been logged by the system today. \n\n";
 
             for (SystemErrorModel item : errorList) {
-                body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "/n";
+                body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "\n";
             }
         } else {
-            body = "No Errors have been thrown in the Application today.";
+            body += "No errors have been thrown in the application today.";
         }
         
-        body += "/n/n";
+        body += "\n\n";
         
         if (emailErrorList.size() > 0) {
-            body = "These errors have been logged by the email server today. /n/n";
+            body += "These errors have been logged by the email server today. \n\n";
 
             for (SystemErrorModel item : emailErrorList) {
-                body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "/n";
+                body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "\n";
             }
         } else {
-            body = "No Errors have been thrown in the Application today.";
+            body += "No errors have been thrown in the Application today.";
         }
         
-        body += "/n - This is a system generated message.";
+        body += "\n\n\n    - This is a system generated message.";
         return body;
     }
     

@@ -16,7 +16,7 @@ import org.apache.commons.dbutils.DbUtils;
 
 /**
  *
- * @author User
+ * @author Andrew
  */
 public class SystemErrorEmailList {
     

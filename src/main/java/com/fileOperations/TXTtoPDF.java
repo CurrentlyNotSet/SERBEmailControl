@@ -24,7 +24,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 /**
  *
- * @author parker.johnston
+ * @author Andrew
  */
 public class TXTtoPDF {
 
@@ -46,6 +46,12 @@ public class TXTtoPDF {
         return FilenameUtils.getName(pdfFile);
     }
 
+    /**
+     * Read the text from the .TXT document
+     * 
+     * @param file String (path + filename)
+     * @return String (text from document)
+     */
     private static String getTextfromTXT(String file) {
         String textBody = "";
         BufferedReader br = null;
@@ -69,6 +75,12 @@ public class TXTtoPDF {
         return textBody;
     }
 
+    /**
+     * Takes the text from the string and insert it into the PDF file
+     * 
+     * @param pdfFile String (path + filename)
+     * @param text String (text from document)
+     */
     private static void makePDF(String pdfFile, String text) {
         PDDocument doc = null;
         PDPageContentStream contentStream = null;

@@ -60,7 +60,6 @@ public class StampPDF {
 
                 contentStream.close();
             }
-
             doc.save(file);
         } catch (IOException ex) {
             ExceptionHandler.Handle(ex);

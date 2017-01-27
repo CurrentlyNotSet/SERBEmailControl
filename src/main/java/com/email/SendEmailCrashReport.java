@@ -27,7 +27,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
- * @author User
+ * @author Andrew
  */
 public class SendEmailCrashReport {
 

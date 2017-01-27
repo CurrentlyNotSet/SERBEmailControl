@@ -80,7 +80,6 @@ public class ReceiveEmail {
             Flags seen = new Flags(Flags.Flag.SEEN);
             FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
             Message[] msgs = fetchFolder.search(unseenFlagTerm);
-            //Message[] msgs = inbox.getMessages();
             fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
             if (msgs.length != 0) {
                 for (Message msg : msgs) {

@@ -29,7 +29,6 @@ import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
 import com.util.TimerSettings;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -69,7 +68,6 @@ public class MainClass {
         Thread emailThread, scansThread;
         
         long oneDay = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
-        long halfHour = TimeUnit.MILLISECONDS.convert(30, TimeUnit.MINUTES);
 
         // every night at 2am you run your task
         Timer timer = new Timer();

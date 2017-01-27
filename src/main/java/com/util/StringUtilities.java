@@ -12,7 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  *
- * @author parker.johnston
+ * @author Andrew
  */
 public class StringUtilities {
 

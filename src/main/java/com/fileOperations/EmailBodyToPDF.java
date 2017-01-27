@@ -111,6 +111,11 @@ public class EmailBodyToPDF {
         return fileName;
     }
 
+    /**
+     * Places the text of the email into the PDF
+     * 
+     * @param eml EmailBodyPDF
+     */
     private static void createEmailBody(EmailBodyPDF eml) {
         PDDocument doc = null;
         PDPageContentStream contentStream = null;

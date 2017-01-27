@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  *
- * @author parkerjohnston
+ * @author Andrew
  */
 public class SlackNotification {
 

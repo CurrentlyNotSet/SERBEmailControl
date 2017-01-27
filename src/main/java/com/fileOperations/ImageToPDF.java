@@ -101,7 +101,6 @@ public class ImageToPDF {
             if (doc != null) {
                 try {
                     doc.close();
-
                 } catch (IOException ex) {
                     ExceptionHandler.Handle(ex);
                     return "";

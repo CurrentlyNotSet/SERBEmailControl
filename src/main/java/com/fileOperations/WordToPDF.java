@@ -35,12 +35,15 @@ public class WordToPDF {
         eolWord = JacobCOMBridge.setWordActive(true, false, eolWord);
         if (eolWord != null) {
             try {
+                //Open MS Word & Save AS
                 Dispatch document = eolWord.getProperty("Documents").toDispatch();
                 Dispatch.call(document, "Open", docxFile).toDispatch();
                 Dispatch WordBasic = Dispatch.call(eolWord, "WordBasic").getDispatch();
                 Dispatch.call(WordBasic, "FileSaveAs", pdfFile, new Variant(17));
                 Dispatch.call(document, "Close", new Variant(false));
                 Thread.sleep(250);
+                
+                //Close out MS Word
                 JacobCOMBridge.setWordActive(false, false, eolWord);
                 Dispatch.call(eolWord, "Quit");
                 eolWord.safeRelease();

@@ -90,7 +90,6 @@ public class MainClass {
         
         //Run Tasks
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
-        timer.scheduleAtFixedRate(new refreshEmailAccounts(), new Date(), halfHour);
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
@@ -116,16 +115,6 @@ public class MainClass {
             Audit.removeOldAudits();
             SECExceptions.removeOldExceptions();
         }
-    }
-    
-    /**
-     * refresh email accounts
-     */
-    private static class refreshEmailAccounts extends TimerTask {
-        @Override
-        public void run() {
-            SystemEmail.loadEmailConnectionInformation();
-        } 
     }
     
     /**
@@ -175,11 +164,11 @@ public class MainClass {
             Thread.sleep(1000);
             while (true) {
                 try {
+                    SystemEmail.loadEmailConnectionInformation();
                     incomingEmails();
                     calInvites();
                     notificationEmails();
                     outgoingEmail();
-                    SystemEmail.loadEmailConnectionInformation();
                     //Printout the sleep information
                     System.out.println("Email Thread - Sleeping for: " 
                             + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min \n");

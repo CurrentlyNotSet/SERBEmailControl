@@ -111,6 +111,13 @@ public class ReceiveEmail {
         }
     }
 
+    /**
+     * Saved the list of all of the TO, FROM, CC, BCC, and dates
+     * @param m Message
+     * @param p Part
+     * @param eml EmailMessageModel
+     * @return EmailMessageModel
+     */
     private static EmailMessageModel saveEnvelope(Message m, Part p, EmailMessageModel eml) {
         String to = "";
         String cc = "";
@@ -185,6 +192,12 @@ public class ReceiveEmail {
         return eml;
     }
 
+    /**
+     * Gather the email body
+     * 
+     * @param p Part
+     * @return String body
+     */
     private static String getEmailBodyText(Part p) {
         try {
             if (p.isMimeType("text/*")) {
@@ -228,6 +241,13 @@ public class ReceiveEmail {
         return "";
     }
 
+    /**
+     * Save the attachments from the email
+     * 
+     * @param p Part
+     * @param m Message
+     * @param eml EmailMessageModel
+     */
     private static void saveAttachments(Part p, Message m, EmailMessageModel eml) {
         try {
             String filename = p.getFileName();
@@ -254,6 +274,12 @@ public class ReceiveEmail {
         }
     }
 
+    /**
+     * Save the actual attachment and convert the file if needed
+     * @param part Part
+     * @param filename String
+     * @param eml EmailMessageModel
+     */
     private static void saveFile(Part part, String filename, EmailMessageModel eml) {
         int i = attachmentCount++;
         String filePath = Global.getEmailPath() + eml.getSection() + File.separatorChar;
@@ -292,6 +318,13 @@ public class ReceiveEmail {
         }
     }
 
+    /**
+     * Strip out the emojis and symbols from the email so we can actually save
+     * it in the database
+     * 
+     * @param content String
+     * @return String
+     */
     private static String removeEmojiAndSymbolFromString(String content) {
         String utf8tweet = "";
         try {
@@ -312,6 +345,14 @@ public class ReceiveEmail {
         return utf8tweet;
     }
 
+    /**
+     * Save the attachment to the drive
+     * 
+     * @param p Part
+     * @param filePath String
+     * @param filename String
+     * @return boolean
+     */
     private static boolean saveAttachment(Part p, String filePath, String filename) {
         try {
             ((MimeBodyPart) p).saveFile(filePath + filename);

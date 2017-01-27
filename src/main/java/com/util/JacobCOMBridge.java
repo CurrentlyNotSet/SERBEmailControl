@@ -50,6 +50,12 @@ public class JacobCOMBridge {
         return eolWord;
     }
 
+    /**
+     * Load the library file, jacob.dll file. 
+     * 
+     * @param dllPath String
+     * @return boolean
+     */
     private static boolean loadLibrary(final String dllPath) {
         try {
             System.setProperty(LibraryLoader.JACOB_DLL_PATH, dllPath);

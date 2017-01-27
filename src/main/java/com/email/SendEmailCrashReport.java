@@ -32,7 +32,9 @@ import org.apache.commons.validator.routines.EmailValidator;
 public class SendEmailCrashReport {
 
     /**
-     *
+     * Sends crash email to predetermined list from the database.
+     * 
+     * Also BCCs members of XLN team for notification of errors
      */
     public static void sendCrashEmail() {
         //Get Account
@@ -84,6 +86,11 @@ public class SendEmailCrashReport {
         }
     }
 
+    /**
+     * Builds the email body for the crash email
+     * 
+     * @return String (The built out body)
+     */
     private static String buildBody() {
         String body = "";
 

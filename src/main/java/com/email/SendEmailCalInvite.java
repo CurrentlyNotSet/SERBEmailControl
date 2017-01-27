@@ -90,11 +90,23 @@ public class SendEmailCalInvite {
         }
     }
 
+    /**
+     * Builds the subject for the email
+     * 
+     * @param eml EmailOutInvitesModel
+     * @return String (Subject)
+     */
     private static String Subject(EmailOutInvitesModel eml) {
         return "Upcoming " + eml.getHearingType()
                 + " hearing for Case Number: " + eml.getCaseNumber();
     }
 
+    /**
+     * Builds the body for the email
+     * 
+     * @param eml EmailOutInvitesModel
+     * @return String (Body)
+     */
     private static BodyPart body(EmailOutInvitesModel eml) {
         MimeBodyPart descriptionPart = new MimeBodyPart();
         try {
@@ -110,6 +122,12 @@ public class SendEmailCalInvite {
         return descriptionPart;
     }
 
+    /**
+     * Builds the calendar invite for the email
+     * 
+     * @param eml EmailOutInvitesModel
+     * @return BodyPart (calendar invite)
+     */
     private static BodyPart invite(EmailOutInvitesModel eml, SystemEmailModel account, String emailSubject) {
         BodyPart calendarPart = new MimeBodyPart();
         try {

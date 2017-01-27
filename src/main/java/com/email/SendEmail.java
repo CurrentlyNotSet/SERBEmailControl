@@ -257,6 +257,13 @@ public class SendEmail {
         }
     }
 
+    /**
+     * Adds activity to case after sending email
+     * 
+     * @param eml EmailOutModel
+     * @param PDFname String (File Name)
+     * @param emailSentTime Date (Time Sent)
+     */
     private static void addEmailActivity(EmailOutModel eml, String PDFname, Date emailSentTime) {
         ActivityModel act = new ActivityModel();
         act.setCaseYear(eml.getCaseYear());

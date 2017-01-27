@@ -57,7 +57,7 @@ public class MainClass {
     }
 
     /**
-     * threads() runs several different threads simultaniously
+     * threads() runs several different threads simultaneously
      * Email Thread
      * Scans Thread
      * Daily Crash Email (Scheduled Task)
@@ -97,6 +97,9 @@ public class MainClass {
         scansThread.start();
     }
 
+    /**
+     * Timer task for sending daily crash email.
+     */
     private static class dailyCrashNotifyEmail extends TimerTask {
         @Override
         public void run() {
@@ -104,6 +107,9 @@ public class MainClass {
         } 
     }
     
+    /**
+     * Timer task for the clean up of the database.
+     */
     private static class databaseCleanupTask extends TimerTask {
         @Override
         public void run() {
@@ -112,6 +118,9 @@ public class MainClass {
         }
     }
     
+    /**
+     * refresh email accounts
+     */
     private static class refreshEmailAccounts extends TimerTask {
         @Override
         public void run() {
@@ -119,6 +128,9 @@ public class MainClass {
         } 
     }
     
+    /**
+     * Timer task for the back up of the database.
+     */
     private static class databaseBackups extends TimerTask {
         @Override
         public void run() {
@@ -128,6 +140,9 @@ public class MainClass {
         }
     }
     
+    /**
+     * Thread for stamping scans
+     */
     private void stampScansThread() {
         try {
             Thread.sleep(1000);
@@ -152,6 +167,9 @@ public class MainClass {
         }
     }
 
+    /**
+     * Thread for sending email.
+     */
     private void emailThreads() {
         try {
             Thread.sleep(1000);
@@ -180,6 +198,9 @@ public class MainClass {
         }
     }
 
+    /**
+     * Stamp scans
+     */
     private void stampScans() {
         long lStartTime = System.currentTimeMillis();
         ScansStamper.stampScans();
@@ -189,6 +210,9 @@ public class MainClass {
         ServerEmailControl.updateCompletionTime("stampScans");
     }
 
+    /**
+     * Gather incoming emails by looping through accounts
+     */
     private void incomingEmails() {
         long lStartTime = System.currentTimeMillis();
         for (SystemEmailModel account : Global.getSystemEmailParams()) {
@@ -200,6 +224,9 @@ public class MainClass {
         ServerEmailControl.updateCompletionTime("incomingEmail");
     }
 
+    /**
+     * Send calendar invites by looping through accounts
+     */
     private void calInvites() {
         long lStartTime = System.currentTimeMillis();
         for (EmailOutInvitesModel email : EmailOutInvites.getQueuedEmailInvites()) {
@@ -211,6 +238,9 @@ public class MainClass {
         ServerEmailControl.updateCompletionTime("calInvites");
     }
 
+    /**
+     * Send notifications by looping through accounts
+     */
     private void notificationEmails() {
         long lStartTime = System.currentTimeMillis();
         for (DocketNotificationModel email : DocketNotification.getQueuedNotifications()) {
@@ -222,6 +252,9 @@ public class MainClass {
         ServerEmailControl.updateCompletionTime("notificationEmail");
     }
 
+    /**
+     * Send outgoing emails by looping through accounts
+     */
     private void outgoingEmail() {
         long lStartTime = System.currentTimeMillis();
         for (EmailOutModel email : EmailOut.getEmailOutQueue()) {

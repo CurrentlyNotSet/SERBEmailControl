@@ -6,6 +6,7 @@
 package com.sql;
 
 import com.util.DBCInfo;
+import com.util.StringUtilities;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -31,17 +32,15 @@ public class DBConnection {
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
-                if (nbAttempts == 2) {
-                    System.out.println("/nUnable to connect to server. Trying again shortly./n");
+                if (nbAttempts > 1) {
+                    System.out.println(StringUtilities.currentTime()
+                            + " - Unable to connect to server. Trying again shortly.");
                 }
                 try {
-                    Thread.sleep(3000);
-                } catch (Exception exi) {
+                    System.out.println("Sleeping for: " + 3000 * nbAttempts + "ms");
+                    Thread.sleep(3000 * nbAttempts);
+                } catch (InterruptedException exi) {
                     System.err.println(exi.getMessage());
-                }
-                if (nbAttempts == 3) {
-                    System.out.println("/nUnable to connect to server. The system will now exit./n");
-                    System.exit(0);
                 }
             }
         }
@@ -63,17 +62,15 @@ public class DBConnection {
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
-                if (nbAttempts == 2) {
-                    System.out.println("/nUnable to connect to server. Trying again shortly./n");
+                if (nbAttempts > 1) {
+                    System.out.println(StringUtilities.currentTime()
+                            + " - Unable to connect to server. Trying again shortly.");
                 }
                 try {
-                    Thread.sleep(3000);
-                } catch (Exception exi) {
+                    System.out.println("Sleeping for: " + 3000 * nbAttempts + "ms");
+                    Thread.sleep(3000 * nbAttempts);
+                } catch (InterruptedException exi) {
                     System.err.println(exi.getMessage());
-                }
-                if (nbAttempts == 3) {
-                    System.out.println("/nUnable to connect to server. The system will now exit./n");
-                    System.exit(0);
                 }
             }
         }

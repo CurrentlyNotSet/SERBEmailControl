@@ -18,8 +18,8 @@ import java.util.List;
 public class Global {
     
     //Operational Parameters
-    private static final boolean debug = false;
-    private static final boolean okToSendEmail = false;
+    private static final boolean debug = false; //email debug
+    private static final boolean okToSendEmail = false; //false = DOES NOT SEND MAIL
     private static final int sleep = 300000; //milliseconds  (5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";

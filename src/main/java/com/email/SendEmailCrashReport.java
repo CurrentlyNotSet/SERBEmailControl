@@ -33,7 +33,7 @@ public class SendEmailCrashReport {
 
     /**
      * Sends crash email to predetermined list from the database.
-     * 
+     *
      * Also BCCs members of XLN team for notification of errors
      */
     public static void sendCrashEmail() {
@@ -88,7 +88,7 @@ public class SendEmailCrashReport {
 
     /**
      * Builds the email body for the crash email
-     * 
+     *
      * @return String (The built out body)
      */
     private static String buildBody() {
@@ -97,18 +97,20 @@ public class SendEmailCrashReport {
         List<SystemErrorModel> errorList = SystemError.getErrorCounts();
         List<SystemErrorModel> emailErrorList = SECExceptions.getErrorCounts();
 
+        //Application Errors
         if (errorList.size() > 0) {
-            body += "These errors have been logged by the system today. \n\n";
+            body += "These errors have been logged by the application today. \n\n";
 
             for (SystemErrorModel item : errorList) {
                 body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "\n";
             }
         } else {
-            body += "No errors have been thrown in the application today.";
+            body += "No errors have been logged by the application today.";
         }
 
         body += "\n\n";
 
+        //Email Server Emails
         if (emailErrorList.size() > 0) {
             body += "These errors have been logged by the email server today. \n\n";
 
@@ -116,7 +118,7 @@ public class SendEmailCrashReport {
                 body += item.getExceptionType() + ": " + String.valueOf(item.getNumber()) + "\n";
             }
         } else {
-            body += "No errors have been thrown in the Application today.";
+            body += "No errors have been logged by the email server today.";
         }
 
         body += "\n\n\n    - This is a system generated message.";

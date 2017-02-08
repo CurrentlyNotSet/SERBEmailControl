@@ -29,6 +29,7 @@ import com.util.FileService;
 import com.util.Global;
 import com.util.StringUtilities;
 import com.util.TimerSettings;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -42,8 +43,8 @@ public class MainClass {
     /**
      * setDefaults() verifies and checks to make sure the folder paths
      * and the connection information is available to the applications before
-     * running. 
-     * 
+     * running.
+     *
      * Then it starts the different threads that the application runs
      */
     public void setDefaults() {
@@ -66,12 +67,12 @@ public class MainClass {
      */
     private void threads() {
         Thread emailThread, scansThread;
-        
+
         long oneDay = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
 
         // every night at 2am you run your task
         Timer timer = new Timer();
-        
+
         emailThread = new Thread() {
             @Override
             public void run() {
@@ -85,7 +86,7 @@ public class MainClass {
                 stampScansThread();
             }
         };
-        
+
         //Run Tasks
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
@@ -100,10 +101,14 @@ public class MainClass {
     private static class dailyCrashNotifyEmail extends TimerTask {
         @Override
         public void run() {
-            SendEmailCrashReport.sendCrashEmail();
-        } 
+            int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+            if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY){
+                SendEmailCrashReport.sendCrashEmail();
+            }
+        }
     }
-    
+
     /**
      * Timer task for the clean up of the database.
      */
@@ -114,7 +119,7 @@ public class MainClass {
             SECExceptions.removeOldExceptions();
         }
     }
-    
+
     /**
      * Timer task for the back up of the database.
      */
@@ -126,7 +131,7 @@ public class MainClass {
             }
         }
     }
-    
+
     /**
      * Thread for stamping scans
      */
@@ -137,7 +142,7 @@ public class MainClass {
                 try {
                     stampScans();
                     //Printout the sleep information
-                    System.out.println("Stamp Thread - Sleeping for: " 
+                    System.out.println("Stamp Thread - Sleeping for: "
                             + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min \n");
 
                     //Sleep the thread based on the INI file variable.
@@ -168,7 +173,7 @@ public class MainClass {
                     notificationEmails();
                     outgoingEmail();
                     //Printout the sleep information
-                    System.out.println("Email Thread - Sleeping for: " 
+                    System.out.println("Email Thread - Sleeping for: "
                             + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min \n");
 
                     //Sleep the thread based on the INI file variable.
@@ -191,8 +196,8 @@ public class MainClass {
     private void stampScans() {
         long lStartTime = System.currentTimeMillis();
         ScansStamper.stampScans();
-        long lEndTime = System.currentTimeMillis();        
-        System.out.println(StringUtilities.currentTime() 
+        long lEndTime = System.currentTimeMillis();
+        System.out.println(StringUtilities.currentTime()
                 + " - Finished Stamping Scans (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("stampScans");
     }
@@ -206,7 +211,7 @@ public class MainClass {
             ReceiveEmail.fetchEmail(account);
         }
         long lEndTime = System.currentTimeMillis();
-        System.out.println(StringUtilities.currentTime() 
+        System.out.println(StringUtilities.currentTime()
                 + " - Finished Receiving Emails (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("incomingEmail");
     }
@@ -220,7 +225,7 @@ public class MainClass {
             SendEmailCalInvite.sendCalendarInvite(email);
         }
         long lEndTime = System.currentTimeMillis();
-        System.out.println(StringUtilities.currentTime() 
+        System.out.println(StringUtilities.currentTime()
                 + " - Finished Sending Calendar Invites (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("calInvites");
     }
@@ -234,7 +239,7 @@ public class MainClass {
             SendEmailNotification.sendNotificationEmail(email);
         }
         long lEndTime = System.currentTimeMillis();
-        System.out.println(StringUtilities.currentTime() 
+        System.out.println(StringUtilities.currentTime()
                 + " - Finished Sending Notification Emails (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("notificationEmail");
     }
@@ -248,7 +253,7 @@ public class MainClass {
             SendEmail.sendEmails(email);
         }
         long lEndTime = System.currentTimeMillis();
-        System.out.println(StringUtilities.currentTime() 
+        System.out.println(StringUtilities.currentTime()
                 + " - Finished Sending Emails (" + StringUtilities.convertLongToTime(lEndTime - lStartTime) + ")");
         ServerEmailControl.updateCompletionTime("outgoingEmail");
     }

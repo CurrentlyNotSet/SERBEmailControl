@@ -14,7 +14,7 @@
         <dependency> <!-- Slack notifications -->
             <groupId>in.ashwanthkumar</groupId>
             <artifactId>slack-java-webhook</artifactId>
-            <version>0.0.5</version>
+            <version>0.0.7</version>
         </dependency>
         <dependency>  <!-- TIFF Detection -->
             <groupId>javax.media.jai</groupId>
@@ -29,12 +29,12 @@
         <dependency> <!-- Converting files to PDF -->
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.4</version>
         </dependency>
         <dependency> <!-- file tools in conjunction with Extensions -->
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>2.5</version>
         </dependency>
         <dependency> <!-- closing DB connections safely easily -->
             <groupId>commons-dbutils</groupId>
@@ -45,7 +45,7 @@
         <dependency> <!-- Sending/Recieving Emails -->
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.6</version>
         </dependency>
         <dependency> <!-- SQL Server Connections -->
             <groupId>com.microsoft.sqlserver</groupId>
@@ -55,12 +55,12 @@
         <dependency> <!-- parsing Emails -->
             <groupId>net.htmlparser.jericho</groupId>
             <artifactId>jericho-html</artifactId>
-            <version>3.3</version>
+            <version>3.4</version>
         </dependency>
         <dependency> <!-- Validate Email Addresses -->
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.1</version>
         </dependency>
         <dependency> <!-- COM hook for Microsoft Word conversion to PDF -->
           <groupId>local.net.sf.jacob-project</groupId>
@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
+                <version>2.10</version>
                 <configuration>
                     <downloadSources>true</downloadSources>
                     <downloadJavadocs>false</downloadJavadocs>
@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.6.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -99,7 +99,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>3.0.0</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -117,6 +117,14 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <excludeScope>system</excludeScope>
+                            <excludes>META-INF/*.SF</excludes>
+                            <excludes>META-INF/*.DSA</excludes>
+                            <excludes>META-INF/*.RSA</excludes>
+                            <excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

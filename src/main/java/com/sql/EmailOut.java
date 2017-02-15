@@ -20,10 +20,10 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class EmailOut {
-    
+
     /**
      * Gathers current emails waiting to be sent out.
-     * 
+     *
      * @return List (EmailOutModel)
      */
     public static List<EmailOutModel> getEmailOutQueue() {
@@ -33,7 +33,7 @@ public class EmailOut {
         ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "SELECT * FROM EmailOut";
+            String sql = "SELECT * FROM EmailOut WHERE okToSend = 1";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -65,7 +65,7 @@ public class EmailOut {
 
     /**
      * Deletes email entry based off of the ID
-     *  
+     *
      * @param id Integer - emailID from the database
      */
     public static void deleteEmailEntry(int id) {

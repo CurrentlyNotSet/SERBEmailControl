@@ -46,6 +46,11 @@ public class ImageToPDF {
         FileInputStream fileStream = null;
         BufferedImage bim = null;
 
+        File attachmentLocation = new File(folderPath);
+        if (!attachmentLocation.exists()) {
+            attachmentLocation.mkdirs();
+        }
+
         // the document
         PDDocument doc = null;
         PDPageContentStream contentStream = null;

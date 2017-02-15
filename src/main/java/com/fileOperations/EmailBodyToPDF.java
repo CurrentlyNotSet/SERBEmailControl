@@ -53,6 +53,11 @@ public class EmailBodyToPDF {
             }
         }
 
+        File attachmentLocation = new File(filePath);
+        if (!attachmentLocation.exists()) {
+            attachmentLocation.mkdirs();
+        }
+
         eml.setEmailBodyFileName(fileName);
         EmailBodyPDF emlPDF = new EmailBodyPDF();
         emlPDF.setFilePath(filePath);
@@ -113,7 +118,7 @@ public class EmailBodyToPDF {
 
     /**
      * Places the text of the email into the PDF
-     * 
+     *
      * @param eml EmailBodyPDF
      */
     private static void createEmailBody(EmailBodyPDF eml) {

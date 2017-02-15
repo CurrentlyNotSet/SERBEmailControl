@@ -39,6 +39,11 @@ public class TXTtoPDF {
         String txtFile = filePath + fileName;
         String pdfFile = filePath + FilenameUtils.removeExtension(fileName) + ".pdf";
 
+        File attachmentLocation = new File(filePath);
+        if (!attachmentLocation.exists()) {
+            attachmentLocation.mkdirs();
+        }
+
         makePDF(pdfFile, getTextfromTXT(txtFile));
 
         new File(txtFile).delete();
@@ -48,7 +53,7 @@ public class TXTtoPDF {
 
     /**
      * Read the text from the .TXT document
-     * 
+     *
      * @param file String (path + filename)
      * @return String (text from document)
      */
@@ -77,7 +82,7 @@ public class TXTtoPDF {
 
     /**
      * Takes the text from the string and insert it into the PDF file
-     * 
+     *
      * @param pdfFile String (path + filename)
      * @param text String (text from document)
      */

@@ -360,6 +360,11 @@ public class ReceiveEmail {
      * @return boolean
      */
     private static boolean saveAttachment(Part p, String filePath, String filename) {
+        File attachmentLocation = new File(filePath);
+        if (!attachmentLocation.exists()) {
+            attachmentLocation.mkdirs();
+        }
+
         try {
             ((MimeBodyPart) p).saveFile(filePath + filename);
             return true;

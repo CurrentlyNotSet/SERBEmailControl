@@ -76,38 +76,40 @@ public class ReceiveEmail {
                 fetchFolder = store.getFolder("INBOX");
             }
 
-            fetchFolder.open(Folder.READ_WRITE);
-            Message[] msgs = fetchFolder.getMessages();
+            if (fetchFolder.exists()) {
 
-            // USE THIS FOR UNSEEN MAIL TO SEEN MAIL
-            //Flags seen = new Flags(Flags.Flag.SEEN);
-            //FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-            //Message[] msgs = fetchFolder.search(unseenFlagTerm);
-            //fetchFolder.setFlags(msgs, seen, true);
+                fetchFolder.open(Folder.READ_WRITE);
+                Message[] msgs = fetchFolder.getMessages();
 
-            if (msgs.length != 0) {
-                for (Message msg : msgs) {
-                    attachmentCount = 1;
-                    attachmentList = new ArrayList<>();
-                    EmailMessageModel eml = new EmailMessageModel();
-                    String emailTime = String.valueOf(new Date().getTime());
-                    eml.setSection(account.getSection());
-                    eml = saveEnvelope(msg, msg, eml);
-                    eml.setId(EMail.InsertEmail(eml));
-                    saveAttachments(msg, msg, eml);
-                    eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
-                    eml.setReadyToFile(1);
-                    EMail.setEmailReadyToFile(eml);
-                    if (deleteEmailEnabled) {
-                        //  Will Delete message from server
-                        //  Un Comment line below to run
-                        msg.setFlag(Flags.Flag.DELETED, true);
+                // USE THIS FOR UNSEEN MAIL TO SEEN MAIL
+                //Flags seen = new Flags(Flags.Flag.SEEN);
+                //FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
+                //Message[] msgs = fetchFolder.search(unseenFlagTerm);
+                //fetchFolder.setFlags(msgs, seen, true);
+
+                if (msgs.length != 0) {
+                    for (Message msg : msgs) {
+                        attachmentCount = 1;
+                        attachmentList = new ArrayList<>();
+                        EmailMessageModel eml = new EmailMessageModel();
+                        String emailTime = String.valueOf(new Date().getTime());
+                        eml.setSection(account.getSection());
+                        eml = saveEnvelope(msg, msg, eml);
+                        eml.setId(EMail.InsertEmail(eml));
+                        saveAttachments(msg, msg, eml);
+                        eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
+                        eml.setReadyToFile(1);
+                        EMail.setEmailReadyToFile(eml);
+                        if (deleteEmailEnabled) {
+                            //  Will Delete message from server
+                            //  Un Comment line below to run
+                            msg.setFlag(Flags.Flag.DELETED, true);
+                        }
                     }
                 }
+                fetchFolder.close(true);
+                store.close();
             }
-            fetchFolder.close(true);
-            store.close();
-
         } catch (MessagingException ex) {
             if (ex != null) {
                 System.out.println("Unable to connect to email Server for: "

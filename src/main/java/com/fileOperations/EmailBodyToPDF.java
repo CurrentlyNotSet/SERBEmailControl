@@ -92,10 +92,10 @@ public class EmailBodyToPDF {
         String attachList = "";
 
         for (EmailOutAttachmentModel attachment : attachmentList) {
-            if (!"".equals(attachList)) {
-                attachList += "; " + attachment;
+            if (attachList.trim().equals("")) {
+                attachList += attachment.getFileName();
             } else {
-                attachList += attachment;
+                attachList += "; " + attachment.getFileName();
             }
         }
 

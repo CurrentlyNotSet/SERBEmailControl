@@ -7,6 +7,7 @@ package com.email;
 
 import com.model.EmailOutInvitesModel;
 import com.model.SystemEmailModel;
+import com.sql.Audit;
 import com.sql.EmailOutInvites;
 import com.util.ExceptionHandler;
 import com.util.Global;
@@ -80,6 +81,8 @@ public class SendEmailCalInvite {
                 smessage.setContent(multipart);
                 if (Global.isOkToSendEmail()) {
                     Transport.send(smessage);
+                } else {
+                    Audit.addAuditEntry("Cal Invite Not Actually Sent: " + eml.getId() + " - " + emailSubject);
                 }
                 EmailOutInvites.deleteEmailEntry(eml.getId());
             } catch (AddressException ex) {
@@ -92,7 +95,7 @@ public class SendEmailCalInvite {
 
     /**
      * Builds the subject for the email
-     * 
+     *
      * @param eml EmailOutInvitesModel
      * @return String (Subject)
      */
@@ -103,7 +106,7 @@ public class SendEmailCalInvite {
 
     /**
      * Builds the body for the email
-     * 
+     *
      * @param eml EmailOutInvitesModel
      * @return String (Body)
      */
@@ -124,7 +127,7 @@ public class SendEmailCalInvite {
 
     /**
      * Builds the calendar invite for the email
-     * 
+     *
      * @param eml EmailOutInvitesModel
      * @return BodyPart (calendar invite)
      */

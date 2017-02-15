@@ -7,6 +7,7 @@ package com.email;
 
 import com.model.DocketNotificationModel;
 import com.model.SystemEmailModel;
+import com.sql.Audit;
 import com.sql.DocketNotification;
 import com.util.ExceptionHandler;
 import com.util.Global;
@@ -66,6 +67,8 @@ public class SendEmailNotification {
                 email.setText(body);
                 if (Global.isOkToSendEmail()) {
                     Transport.send(email);
+                } else {
+                    Audit.addAuditEntry("Notification Not Actually Sent: " + eml.getId() + " - " + subject);
                 }
 
                 DocketNotification.deleteEmailEntry(eml.getId());

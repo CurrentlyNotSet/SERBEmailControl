@@ -15,6 +15,7 @@ import com.model.EmailOutModel;
 import com.model.SECExceptionsModel;
 import com.model.SystemEmailModel;
 import com.sql.Activity;
+import com.sql.Audit;
 import com.sql.EmailOut;
 import com.sql.EmailOutAttachment;
 import com.util.ExceptionHandler;
@@ -213,6 +214,8 @@ public class SendEmail {
                     //Send Message
                     if (Global.isOkToSendEmail()) {
                         Transport.send(smessage);
+                    } else {
+                        Audit.addAuditEntry("Email Not Actually Sent: " + eml.getId() + " - " + emailSubject);
                     }
 
                     //DocumentFileName
@@ -259,7 +262,7 @@ public class SendEmail {
 
     /**
      * Adds activity to case after sending email
-     * 
+     *
      * @param eml EmailOutModel
      * @param PDFname String (File Name)
      * @param emailSentTime Date (Time Sent)

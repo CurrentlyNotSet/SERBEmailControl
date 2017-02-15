@@ -41,7 +41,6 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.search.FlagTerm;
 import net.htmlparser.jericho.Renderer;
 import net.htmlparser.jericho.Segment;
 import net.htmlparser.jericho.Source;
@@ -55,6 +54,7 @@ public class ReceiveEmail {
 
     private static int attachmentCount;
     private static List<String> attachmentList;
+    private static final boolean deleteEmailEnabled = true;
 
     /**
      * This account fetches emails from a specified account and marks the emails
@@ -77,10 +77,12 @@ public class ReceiveEmail {
             }
 
             fetchFolder.open(Folder.READ_WRITE);
-            Flags seen = new Flags(Flags.Flag.SEEN);
-            FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-            Message[] msgs = fetchFolder.search(unseenFlagTerm);
-            fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+            Message[] msgs = fetchFolder.getMessages();
+
+//            Flags seen = new Flags(Flags.Flag.SEEN);
+//            FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
+//            Message[] msgs = fetchFolder.search(unseenFlagTerm);
+//            fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     attachmentCount = 1;
@@ -94,6 +96,11 @@ public class ReceiveEmail {
                     eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
                     eml.setReadyToFile(1);
                     EMail.setEmailReadyToFile(eml);
+                    if (deleteEmailEnabled) {
+                        //  Will Delete message from server
+                        //  Un Comment line below to run
+                        msg.setFlag(Flags.Flag.DELETED, true);
+                    }
                 }
             }
             fetchFolder.close(false);
@@ -193,7 +200,7 @@ public class ReceiveEmail {
 
     /**
      * Gather the email body
-     * 
+     *
      * @param p Part
      * @return String body
      */
@@ -242,7 +249,7 @@ public class ReceiveEmail {
 
     /**
      * Save the attachments from the email
-     * 
+     *
      * @param p Part
      * @param m Message
      * @param eml EmailMessageModel
@@ -320,7 +327,7 @@ public class ReceiveEmail {
     /**
      * Strip out the emojis and symbols from the email so we can actually save
      * it in the database
-     * 
+     *
      * @param content String
      * @return String
      */
@@ -346,7 +353,7 @@ public class ReceiveEmail {
 
     /**
      * Save the attachment to the drive
-     * 
+     *
      * @param p Part
      * @param filePath String
      * @param filename String

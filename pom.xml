@@ -67,6 +67,11 @@
           <artifactId>jacob</artifactId>
           <version>1.18</version>
         </dependency>
+        <dependency><!-- String Utilities -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
     </dependencies>
     <repositories>    
         <repository>

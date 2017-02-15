@@ -13,16 +13,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author Andrew
  */
 public class EMail {
-    
+
     /**
-     * Inserts email message into email table. 
-     * 
+     * Inserts email message into email table.
+     *
      * @param eml EmailMessageModel
      * @return Integer - generated key of the email
      */
@@ -56,8 +57,8 @@ public class EMail {
                     + "?, " //10
                     + "0)"; // Ready to File False
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString   ( 1, eml.getSection());
-            ps.setString   ( 2, eml.getEmailFrom());
+            ps.setString   ( 1, StringUtils.left(eml.getSection(), 4));
+            ps.setString   ( 2, StringUtils.left(eml.getEmailFrom(), 200));
             ps.setString   ( 3, eml.getEmailTo());
             ps.setString   ( 4, eml.getEmailSubject());
             ps.setTimestamp( 5, eml.getSentDate());
@@ -78,12 +79,12 @@ public class EMail {
             DbUtils.closeQuietly(ps);
         }
         return 0;
-    }    
-    
+    }
+
     /**
-     * Marks an email ready to file by the system. This is in place so a user 
+     * Marks an email ready to file by the system. This is in place so a user
      * does not try to docket an email that is currently being processed.
-     * 
+     *
      * @param eml
      */
     public static void setEmailReadyToFile(EmailMessageModel eml){
@@ -102,7 +103,7 @@ public class EMail {
         } finally {
             DbUtils.closeQuietly(ps);
             DbUtils.closeQuietly(conn);
-        }        
+        }
     }
-    
+
 }

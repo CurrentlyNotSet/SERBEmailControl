@@ -72,17 +72,19 @@ public class ReceiveEmail {
             Store store = session.getStore();
             store.connect(account.getIncomingURL(), account.getIncomingPort(), account.getUsername(), account.getPassword());
             Folder fetchFolder = store.getFolder(account.getIncomingFolder());
-            if (!"".equals(account.getIncomingFolder().trim())) {
+            if (account.getIncomingFolder().trim().equals("")) {
                 fetchFolder = store.getFolder("INBOX");
             }
 
             fetchFolder.open(Folder.READ_WRITE);
             Message[] msgs = fetchFolder.getMessages();
 
-//            Flags seen = new Flags(Flags.Flag.SEEN);
-//            FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-//            Message[] msgs = fetchFolder.search(unseenFlagTerm);
-//            fetchFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+            // USE THIS FOR UNSEEN MAIL TO SEEN MAIL
+            //Flags seen = new Flags(Flags.Flag.SEEN);
+            //FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
+            //Message[] msgs = fetchFolder.search(unseenFlagTerm);
+            //fetchFolder.setFlags(msgs, seen, true);
+
             if (msgs.length != 0) {
                 for (Message msg : msgs) {
                     attachmentCount = 1;
@@ -103,7 +105,7 @@ public class ReceiveEmail {
                     }
                 }
             }
-            fetchFolder.close(false);
+            fetchFolder.close(true);
             store.close();
 
         } catch (MessagingException ex) {

@@ -45,10 +45,10 @@ public class PDFBoxTools {
      */
     public static List<String> setLineBreaks(String origText, float width, float fontSize, PDFont pdfFont) {
         List<String> lines = new ArrayList<>();
-        origText = (origText == null ? "" : origText);
-
-        origText = origText.replaceAll(System.getProperty("line.separator"), System.getProperty("line.separator") + " ");
-        String[] splitText = origText.split(System.getProperty("line.separator"));
+        origText = (origText == null ? "" : " " + origText);
+        origText = origText.replaceAll("\\u200B", System.lineSeparator()); //strip ZERO WIDTH SPACE
+        origText = origText.replaceAll(System.lineSeparator(), System.lineSeparator() + " ");
+        String[] splitText = origText.split(System.lineSeparator());
 
         for (String text : splitText) {
             int lastSpace = -1;
@@ -138,7 +138,7 @@ public class PDFBoxTools {
         // 7 = JPEG ('new-style' JPEG)
         // 8 = Deflate ('Adobe-style')
         // 9 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.85 (which boils down to JBIG on black and white).
-        // 10 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.43 (which boils down to JBIG on color). 
+        // 10 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.43 (which boils down to JBIG on color).
 
         RenderedOp tiffFile = JAI.create("fileload", image);
 

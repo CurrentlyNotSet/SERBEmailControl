@@ -29,14 +29,15 @@ public class StampPDF {
      *
      * @param file String (full file path)
      * @param docketTime Timestamp
+     * @param dept
      */
-    public static void stampDocument(String file, Timestamp docketTime) {
+    public static void stampDocument(String file, Timestamp docketTime, String dept) {
         // the document
         PDDocument doc = null;
         try {
             PDFont stampFont = PDType1Font.TIMES_ROMAN;
             float stampFontSize = 10;
-            String title = PDFBoxTools.HeaderTimeStamp(docketTime);
+            String title = PDFBoxTools.HeaderTimeStamp(docketTime) + dept;
             float titleWidth = stampFont.getStringWidth(title) / 1000 * stampFontSize;
             float titleHeight = stampFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * stampFontSize;
             int marginTop = 20;

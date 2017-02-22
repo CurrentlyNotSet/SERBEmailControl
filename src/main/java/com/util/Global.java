@@ -16,11 +16,11 @@ import java.util.List;
  * @author Andrew
  */
 public class Global {
-    
+
     //Operational Parameters
     private static final boolean debug = false; //email debug
     private static final boolean okToSendEmail = false; //false = DOES NOT SEND MAIL
-    private static final int sleep = 300000; //milliseconds  (5 min)
+    private static final int sleep = 60000; //milliseconds  (1 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
     private static final String auditTimeFrame = "year";
@@ -28,43 +28,43 @@ public class Global {
     private static final int hourOfPurge = 1; //24hr clock
     private static final int hourOfDBBackup = 1; //24hr clock
     private static final int hourOfErrorEmail = 17; //24hr clock (5pm)
-    
+
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
     private static final SimpleDateFormat iCalendarDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmm'00'");
     private static final SimpleDateFormat mmddyyyy = new SimpleDateFormat("MM/dd/yyyy");
     private static final SimpleDateFormat hhmmssa = new SimpleDateFormat("HH:mm:ss a");
-    
+
     //Folder Paths
     private static String scanPath;
     private static String emailPath;
     private static String activityPath;
-    
+
     //MSSQL Backup Information
     private static final String databaseBackupPath = "c:\\backupPath";
     private static final List<String> backupDatabases = Arrays.asList(
             "SERB", "SERB-DEMO");
-    
+
     //System Email
     private static List<SystemEmailModel> systemEmailParams;
 
     //CaseTypes
     private static List<CaseTypeModel> caseTypeList;
-    
+
     //Attachment FileType Blacklist
     private static final List<String> fileBlackList = Arrays.asList(
-            ".??_", ".?Q?", ".?Z?", ".7z", ".a", ".ace", ".afa", ".alz", 
-            ".apk", ".ar", ".arc", ".arj", ".b1", ".ba", ".bat", ".bh", 
-            ".bz2", ".cab", ".car", ".cfs", ".cpio", ".cpt",".dar", ".dd", 
-            ".dgc", ".dmg", ".ear", ".exe", ".F", ".gca", ".gz", ".ha", 
-            ".hki", ".ice", ".infl", ".iso", ".jar", ".kgb", ".LBR", ".lbr", 
-            ".lha", ".lz", ".lzo", ".lzh", ".lzx", ".mar", ".msi", ".pak", 
-            ".partimg", ".paq6", ".paq7", ".paq8", ".pea", ".pim", ".pit", 
-            ".qda", ".rar", ".rk", ".rz", ".s7z", ".sda", ".sea", ".sen", 
-            ".sfark", ".sfx", ".shar", ".sit", ".sitx", ".sqx", ".sz", ".tar", 
-            ".tar.gz", ".tgz.tar.Z", ".tar.bz2",".tbz2", ".tar.lzma", ".tlz", 
-            ".uc ", ".uc0", ".uc2", ".ucn", ".ur2", ".ue2", ".uca", ".uha", 
-            ".vcf", ".war", ".wim", ".xar", ".xp3", ".xz", ".yz1", ".z", 
+            ".??_", ".?Q?", ".?Z?", ".7z", ".a", ".ace", ".afa", ".alz",
+            ".apk", ".ar", ".arc", ".arj", ".b1", ".ba", ".bat", ".bh",
+            ".bz2", ".cab", ".car", ".cfs", ".cpio", ".cpt",".dar", ".dd",
+            ".dgc", ".dmg", ".ear", ".exe", ".F", ".gca", ".gz", ".ha",
+            ".hki", ".ice", ".infl", ".iso", ".jar", ".kgb", ".LBR", ".lbr",
+            ".lha", ".lz", ".lzo", ".lzh", ".lzx", ".mar", ".msi", ".pak",
+            ".partimg", ".paq6", ".paq7", ".paq8", ".pea", ".pim", ".pit",
+            ".qda", ".rar", ".rk", ".rz", ".s7z", ".sda", ".sea", ".sen",
+            ".sfark", ".sfx", ".shar", ".sit", ".sitx", ".sqx", ".sz", ".tar",
+            ".tar.gz", ".tgz.tar.Z", ".tar.bz2",".tbz2", ".tar.lzma", ".tlz",
+            ".uc ", ".uc0", ".uc2", ".ucn", ".ur2", ".ue2", ".uca", ".uha",
+            ".vcf", ".war", ".wim", ".xar", ".xp3", ".xz", ".yz1", ".z",
             ".zip", ".zipx", ".zoo", ".zpaq", ".zz");
 
     public static boolean isDebug() {
@@ -114,7 +114,7 @@ public class Global {
     public static void setCaseTypeList(List<CaseTypeModel> caseTypeList) {
         Global.caseTypeList = caseTypeList;
     }
-    
+
     public static SimpleDateFormat getMmddyyyyhhmmssa() {
         return mmddyyyyhhmmssa;
     }
@@ -174,5 +174,5 @@ public class Global {
     public static boolean isOkToSendEmail() {
         return okToSendEmail;
     }
-    
+
 }

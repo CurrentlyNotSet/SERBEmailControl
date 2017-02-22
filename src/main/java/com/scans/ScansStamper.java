@@ -9,6 +9,7 @@ import com.fileOperations.StampPDF;
 import com.model.ActivityModel;
 import com.sql.Activity;
 import com.util.FileService;
+import com.util.StringUtilities;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class ScansStamper {
                     ? FileService.getCaseFolderORGCSCFileLocation(item) : FileService.getCaseFolderFileLocation(item);
 
             if (FileService.testFileLock(path)) {
-                StampPDF.stampDocument(path, item.getDate());
+                StampPDF.stampDocument(path, item.getDate(), StringUtilities.getDepartmentByCaseType(item.getCaseType()));
                 Activity.markEntryStamped(item.getId());
             }
         }

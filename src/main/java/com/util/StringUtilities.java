@@ -42,11 +42,11 @@ public class StringUtilities {
         }
         return ret;
     }
-        
+
     /**
      * Builds out the filename for the attachment. order is...
      * [emailID_number_base.extension]
-     * 
+     *
      * @param filename String
      * @param emailID Integer
      * @param attachmentNumber Integer
@@ -61,19 +61,19 @@ public class StringUtilities {
         }
         return emailID + "_" + number + "_" + base + "." + extension;
     }
-    
+
     /**
      * Gets the current time in "MM/dd/yyyy HH:mm:ss a" Format
-     * 
+     *
      * @return String
      */
     public static String currentTime(){
         return Global.getMmddyyyyhhmmssa().format(new Date());
     }
-    
+
     /**
      * converts millis to [__hr __min __sec] format
-     * 
+     *
      * @param millis long
      * @return String of duration
      */
@@ -90,5 +90,14 @@ public class StringUtilities {
         }
         return duration.trim();
     }
-    
+
+    public static String getDepartmentByCaseType(String caseType) {
+        String section = NumberFormatService.getSection(caseType);
+        if (section.equalsIgnoreCase("CMDS") || section.equalsIgnoreCase("CSC")){
+            return "SPBR";
+        } else {
+            return "SERB";
+        }
+    }
+
 }

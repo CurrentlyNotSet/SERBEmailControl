@@ -91,7 +91,7 @@ public class TXTtoPDF {
         PDPageContentStream contentStream = null;
 
         //Fonts used
-        PDFont bodyFont = PDType1Font.HELVETICA;
+        PDFont bodyFont = PDType1Font.TIMES_ROMAN;
 
         //Font Sizes
         float bodyFontSize = 12;
@@ -111,6 +111,7 @@ public class TXTtoPDF {
             float textYlocation = margin;
 
             //Set Line Breaks
+            text = text.replaceAll("[\\p{C}\\p{Z}]", System.getProperty("line.separator")); //strip ZERO WIDTH SPACE
             List<String> textContent = PDFBoxTools.setLineBreaks(text, width, bodyFontSize, bodyFont);
 
             contentStream.beginText();

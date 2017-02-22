@@ -126,8 +126,8 @@ public class EmailBodyToPDF {
         PDPageContentStream contentStream = null;
 
         //Fonts used
-        PDFont bodyTitleFont = PDType1Font.HELVETICA_BOLD;
-        PDFont bodyFont = PDType1Font.HELVETICA;
+        PDFont bodyTitleFont = PDType1Font.TIMES_BOLD;
+        PDFont bodyFont = PDType1Font.TIMES_ROMAN;
 
         //Font Sizes
         float emailHeaderFontSize = 7;
@@ -156,7 +156,7 @@ public class EmailBodyToPDF {
             List<String> ccContent = PDFBoxTools.setLineBreaks(eml.getCc(), width, emailHeaderFontSize, bodyFont);
             List<String> bccContent = PDFBoxTools.setLineBreaks(eml.getBcc(), width, emailHeaderFontSize, bodyFont);
             List<String> attachmentContent = PDFBoxTools.setLineBreaks(eml.getAttachments(), width, emailHeaderFontSize, bodyFont);
-            List<String> subjectContent = PDFBoxTools.setLineBreaks(eml.getSubject(), width, emailHeaderFontSize, bodyFont);
+            List<String> subjectContent = PDFBoxTools.setLineBreaks(eml.getSubject(), width, bodyFontSize, bodyFont);
             List<String> bodyContent = PDFBoxTools.setLineBreaks(eml.getBody(), width, bodyFontSize, bodyFont);
 
             //Set Email Header

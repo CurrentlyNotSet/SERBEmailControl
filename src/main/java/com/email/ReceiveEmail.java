@@ -7,6 +7,7 @@ package com.email;
 
 import com.fileOperations.EmailBodyToPDF;
 import com.fileOperations.ImageToPDF;
+import com.fileOperations.StampPDF;
 import com.fileOperations.TXTtoPDF;
 import com.fileOperations.WordToPDF;
 import com.model.EmailMessageModel;
@@ -300,10 +301,13 @@ public class ReceiveEmail {
             if (saveAttachment(part, filePath, fileNameDB)) {
                 if (FileService.isImageFormat(filename)) {
                     fileNameDB = ImageToPDF.createPDFFromImage(filePath, fileNameDB);
+                    StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
                 } else if ("docx".equals(extension) || "doc".equals(extension)) {
                     fileNameDB = WordToPDF.createPDF(filePath, fileNameDB);
+                    StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
                 } else if ("txt".equals(extension)) {
                     fileNameDB = TXTtoPDF.createPDF(filePath, fileNameDB);
+                    StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
                 }
                 if (!"".equals(fileNameDB)) {
                     attachmentList.add(fileNameDB);

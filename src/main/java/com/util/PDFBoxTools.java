@@ -10,6 +10,7 @@ import com.sun.media.jai.codec.TIFFField;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.media.jai.JAI;
@@ -46,7 +47,13 @@ public class PDFBoxTools {
     public static List<String> setLineBreaks(String origText, float width, float fontSize, PDFont pdfFont) {
         List<String> lines = new ArrayList<>();
         origText = (origText == null ? "" : " " + origText);
+        origText = Normalizer.normalize(origText, Normalizer.Form.NFD);
+        origText = origText.replaceAll("[^\\n\\r\\t\\p{Print}]", "");
         origText = origText.replaceAll("\\u200B", System.lineSeparator()); //strip ZERO WIDTH SPACE
+        origText = origText.replaceAll("\\u0009", "    "); //strip CHARACTER TABULATION
+        origText = origText.replaceAll("\\u000A", "    "); //strip controlLF
+        origText = origText.replaceAll("\\u000D", "    "); //strip controlCR
+        origText = origText.replaceAll("[^\\x00-\\x7F]", "");
         origText = origText.replaceAll(System.lineSeparator(), System.lineSeparator() + " ");
         String[] splitText = origText.split(System.lineSeparator());
 

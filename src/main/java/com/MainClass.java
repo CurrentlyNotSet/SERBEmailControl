@@ -61,7 +61,7 @@ public class MainClass {
      * Email Thread
      * Scans Thread
      * Daily Crash Email (Scheduled Task)
-     * Refresh Email Accounts (Scheduled Task)
+     * Refresh Email Accounts (Scheduled Task) REMOVED
      * //Database Cleanup (Scheduled Task) DISABLED
      * //Database Backups (Scheduled Task) DISABLED
      */
@@ -80,19 +80,19 @@ public class MainClass {
             }
         };
 
-        scansThread = new Thread() {
-            @Override
-            public void run() {
-                stampScansThread();
-            }
-        };
+//        scansThread = new Thread() {
+//            @Override
+//            public void run() {
+//                stampScansThread();
+//            }
+//        };
 
         //Run Tasks
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
-        scansThread.start();
+//        scansThread.start();
     }
 
     /**

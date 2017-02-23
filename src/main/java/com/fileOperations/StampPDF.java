@@ -37,7 +37,7 @@ public class StampPDF {
         try {
             PDFont stampFont = PDType1Font.TIMES_ROMAN;
             float stampFontSize = 10;
-            String title = PDFBoxTools.HeaderTimeStamp(docketTime) + dept;
+            String title = PDFBoxTools.HeaderTimeStamp(docketTime) + " " + dept;
             float titleWidth = stampFont.getStringWidth(title) / 1000 * stampFontSize;
             float titleHeight = stampFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * stampFontSize;
             int marginTop = 20;

@@ -13,6 +13,7 @@ import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
 import com.util.PDFBoxTools;
+import com.util.StringUtilities;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +74,8 @@ public class EmailBodyToPDF {
         emlPDF.setBody(eml.getEmailBody() == null ? "" : eml.getEmailBody());
 
         createEmailBody(emlPDF);
+
+        StampPDF.stampDocument(filePath + fileName, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
         return eml;
     }
 

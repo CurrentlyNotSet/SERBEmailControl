@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -78,7 +79,6 @@ public class ReceiveEmail {
             }
 
             if (fetchFolder.exists()) {
-
                 fetchFolder.open(Folder.READ_WRITE);
                 Message[] msgs = fetchFolder.getMessages();
 
@@ -87,20 +87,35 @@ public class ReceiveEmail {
                 //FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
                 //Message[] msgs = fetchFolder.search(unseenFlagTerm);
                 //fetchFolder.setFlags(msgs, seen, true);
+                if (msgs.length > 0) {
+                    List<String> messageList = new ArrayList<>();
 
-                if (msgs.length != 0) {
                     for (Message msg : msgs) {
-                        attachmentCount = 1;
-                        attachmentList = new ArrayList<>();
-                        EmailMessageModel eml = new EmailMessageModel();
-                        String emailTime = String.valueOf(new Date().getTime());
-                        eml.setSection(account.getSection());
-                        eml = saveEnvelope(msg, msg, eml);
-                        eml.setId(EMail.InsertEmail(eml));
-                        saveAttachments(msg, msg, eml);
-                        eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
-                        eml.setReadyToFile(1);
-                        EMail.setEmailReadyToFile(eml);
+                        boolean notDuplicate = true;
+                        String headerText = Arrays.toString(msg.getHeader("Message-ID"));
+
+                        for (String header : messageList) {
+                            if (header.equals(headerText)) {
+                                notDuplicate = false;
+                                break;
+                            }
+                        }
+
+                        if (notDuplicate) {
+                            messageList.add(headerText);
+                            attachmentCount = 1;
+                            attachmentList = new ArrayList<>();
+                            EmailMessageModel eml = new EmailMessageModel();
+                            String emailTime = String.valueOf(new Date().getTime());
+                            eml.setSection(account.getSection());
+                            eml = saveEnvelope(msg, msg, eml);
+                            eml.setId(EMail.InsertEmail(eml));
+                            saveAttachments(msg, msg, eml);
+                            eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
+                            eml.setReadyToFile(1);
+                            EMail.setEmailReadyToFile(eml);
+                        }
+
                         if (deleteEmailEnabled) {
                             //  Will Delete message from server
                             //  Un Comment line below to run
@@ -124,6 +139,7 @@ public class ReceiveEmail {
 
     /**
      * Saved the list of all of the TO, FROM, CC, BCC, and dates
+     *
      * @param m Message
      * @param p Part
      * @param eml EmailMessageModel
@@ -287,6 +303,7 @@ public class ReceiveEmail {
 
     /**
      * Save the actual attachment and convert the file if needed
+     *
      * @param part Part
      * @param filename String
      * @param eml EmailMessageModel

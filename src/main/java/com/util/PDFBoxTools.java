@@ -49,10 +49,14 @@ public class PDFBoxTools {
         origText = (origText == null ? "" : " " + origText);
         origText = Normalizer.normalize(origText, Normalizer.Form.NFD);
         origText = origText.replaceAll("[^\\n\\r\\t\\p{Print}]", "");
-        origText = origText.replaceAll("\\u200B", System.lineSeparator()); //strip ZERO WIDTH SPACE
-        origText = origText.replaceAll("\\u0009", "    "); //strip CHARACTER TABULATION
-        origText = origText.replaceAll("\\u000A", "    "); //strip controlLF
-        origText = origText.replaceAll("\\u000D", "    "); //strip controlCR
+        //remove htmllinks
+        origText = origText.replaceAll("\\<http.*?\\>", "");
+
+        //strip ZERO WIDTH SPACE, strip CHARACTER TABULATION, strip controlLF
+        origText = origText.replaceAll("[\\u200B\\u0009\\u000A]", "");
+
+        //strip controlCR
+        origText = origText.replaceAll("\\u000D", System.lineSeparator());
         origText = origText.replaceAll("[^\\x00-\\x7F]", "");
         origText = origText.replaceAll(System.lineSeparator(), System.lineSeparator() + " ");
         String[] splitText = origText.split(System.lineSeparator());

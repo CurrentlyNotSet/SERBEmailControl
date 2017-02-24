@@ -12,12 +12,14 @@ import com.fileOperations.WordToPDF;
 import com.model.ActivityModel;
 import com.model.EmailOutAttachmentModel;
 import com.model.EmailOutModel;
+import com.model.RelatedCaseModel;
 import com.model.SECExceptionsModel;
 import com.model.SystemEmailModel;
 import com.sql.Activity;
 import com.sql.Audit;
 import com.sql.EmailOut;
 import com.sql.EmailOutAttachment;
+import com.sql.RelatedCase;
 import com.util.ExceptionHandler;
 import com.util.FileService;
 import com.util.Global;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -43,6 +47,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.pdfbox.io.MemoryUsageSetting;
@@ -233,6 +238,32 @@ public class SendEmail {
 
                     //Add emailBody Activity
                     addEmailActivity(eml, savedDoc, emailSentTime);
+                    
+                    //Copy to related case folders for MED
+                    if (eml.getSection().equals("MED")){
+                        List<RelatedCaseModel> relatedList = RelatedCase.getRelatedCases(eml.getSection());
+                        if (relatedList.size() > 0){
+                            for (RelatedCaseModel related : relatedList){
+                                
+                                //Copy finalized document to proper folder
+                                File destPath = new File((eml.getSection().equals("CSC") || eml.getSection().equals("ORG"))
+                                    ? FileService.getCaseFolderORGCSCLocation(related) : FileService.getCaseFolderLocationRelatedCase(related));
+                                destPath.mkdirs();
+                                
+                                File srcFile = new File(casePath + savedDoc);
+                                File destDir = new File(destPath + savedDoc);                                
+                                
+                                try {
+                                    FileUtils.copyFileToDirectory(srcFile, destDir);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                
+                                //Add Related Case Activity Entry
+                                addEmailActivityRelatedCase(eml, related, savedDoc, emailSentTime);        
+                            }
+                        }
+                    }
 
                     //Delete Out entries
                     EmailOut.deleteEmailEntry(eml.getId());
@@ -288,4 +319,32 @@ public class SendEmail {
         Activity.insertActivity(act);
     }
 
+    /**
+     * Adds activity to related case after sending email
+     *
+     * @param eml EmailOutModel
+     * @param PDFname String (File Name)
+     * @param emailSentTime Date (Time Sent)
+     */
+    private static void addEmailActivityRelatedCase(EmailOutModel eml, RelatedCaseModel related, String PDFname, Date emailSentTime) {
+        ActivityModel act = new ActivityModel();
+        act.setCaseYear(related.getCaseYear());
+        act.setCaseType(related.getCaseType());
+        act.setCaseMonth(related.getCaseMonth());
+        act.setCaseNumber(related.getCaseNumber());
+        act.setUserID(String.valueOf(eml.getUserID()));
+        act.setDate(new Timestamp(emailSentTime.getTime()));
+        act.setAction(Global.isOkToSendEmail() ? "OUT - " + eml.getSubject() : "OUT (Not Actually Sent) - " + eml.getSubject());
+        act.setFileName(PDFname);
+        act.setFrom(eml.getFrom());
+        act.setTo(eml.getTo());
+        act.setType("");
+        act.setComment(eml.getBody());
+        act.setRedacted(0);
+        act.setAwaitingTimestamp(0);
+
+        //Insert Email
+        Activity.insertActivity(act);
+    }
+    
 }

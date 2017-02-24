@@ -7,6 +7,7 @@ package com.util;
 
 import com.model.ActivityModel;
 import com.model.EmailOutModel;
+import com.model.RelatedCaseModel;
 import com.model.SECExceptionsModel;
 import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import java.io.File;
@@ -129,6 +130,20 @@ public class FileService {
     }
 
     /**
+     * Get case file location
+     * 
+     * @param item RelatedCaseModel
+     * @return String file path
+     */
+    public static String getCaseFolderLocationRelatedCase(RelatedCaseModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + NumberFormatService.getSection(item.getCaseType())
+                + File.separatorChar + item.getCaseYear()
+                + File.separatorChar + NumberFormatService.FullCaseNumber(item)
+                + File.separatorChar;
+    }
+    
+    /**
      * Gets case folder location for ORG or CSC cases
      * 
      * @param item ActivityModel
@@ -154,6 +169,19 @@ public class FileService {
                 + File.separatorChar;
     }
 
+    /**
+     * Gets case folder location for ORG or CSC cases
+     * 
+     * @param item RelatedCaseModel
+     * @return String file path
+     */
+    public static String getCaseFolderORGCSCLocation(RelatedCaseModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + item.getCaseNumber()
+                + File.separatorChar;
+    }
+    
     /**
      * This method checks the file extension to see if it is a valid image
      * format.

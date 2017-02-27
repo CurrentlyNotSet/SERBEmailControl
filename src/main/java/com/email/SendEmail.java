@@ -246,15 +246,14 @@ public class SendEmail {
                             for (RelatedCaseModel related : relatedList) {
 
                                 //Copy finalized document to proper folder
+                                File srcFile = new File(casePath + savedDoc);
+
                                 File destPath = new File((eml.getSection().equals("CSC") || eml.getSection().equals("ORG"))
                                         ? FileService.getCaseFolderORGCSCLocation(related) : FileService.getCaseFolderLocationRelatedCase(related));
                                 destPath.mkdirs();
 
-                                File srcFile = new File(casePath + savedDoc);
-                                File destDir = new File(destPath + savedDoc);
-
                                 try {
-                                    FileUtils.copyFileToDirectory(srcFile, destDir);
+                                    FileUtils.copyFileToDirectory(srcFile, destPath);
                                 } catch (IOException ex) {
                                     Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
                                 }

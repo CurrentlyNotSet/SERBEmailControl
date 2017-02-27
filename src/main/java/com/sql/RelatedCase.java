@@ -5,7 +5,6 @@
  */
 package com.sql;
 
-import com.model.CaseTypeModel;
 import com.model.EmailOutModel;
 import com.model.RelatedCaseModel;
 import com.util.ExceptionHandler;
@@ -22,42 +21,32 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class RelatedCase {
-    
-    public static List<RelatedCaseModel> getRelatedCases(String section) {
+
+    public static List<RelatedCaseModel> getRelatedCases(EmailOutModel eml) {
         List<RelatedCaseModel> list = new ArrayList();
-        List<CaseTypeModel> casetypes = CaseType.getCaseTypesBySection(section);
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             int i = 0;
             conn = DBConnection.connectToDB();
-            String sql = "SELECT * FROM RelatedCase WHERE LEN(relatedCaseNumber) = 16 ";
-            
-            if (!casetypes.isEmpty()) {
-                sql += "AND (";
+            String sql = "SELECT * FROM RelatedCase WHERE LEN(relatedCaseNumber) = 16 "
+                    + " AND CaseYear = ? "
+                    + " AND CaseType = ? "
+                    + " AND CaseMonth = ? "
+                    + " AND CaseNumber = ? ";
 
-                while(i < casetypes.size()) {
-                    sql += " Activity.caseType = ? OR";
-                    i++;
-                }
-
-                sql = sql.substring(0, (sql.length() - 2)) + ")";
-            }
-            
             ps = conn.prepareStatement(sql);
-                        
-            int count = 0;
-            for (Object casetype : casetypes) {
-                count = count + 1;
-                ps.setString(count, casetype.toString());
-            }
-            
+            ps.setString(1, eml.getCaseYear());
+            ps.setString(2, eml.getCaseType());
+            ps.setString(3, eml.getCaseMonth());
+            ps.setString(4, eml.getCaseNumber());
+
             rs = ps.executeQuery();
             while (rs.next()) {
-                String[] relatedCase = rs.getString("caseYear").split("-");
-                
-                if (relatedCase.length == 4){
+                String[] relatedCase = rs.getString("relatedCaseNumber").split("-");
+
+                if (relatedCase.length == 4) {
                     RelatedCaseModel item = new RelatedCaseModel();
                     item.setCaseYear(rs.getString("caseYear"));
                     item.setCaseType(rs.getString("caseType"));
@@ -79,5 +68,5 @@ public class RelatedCase {
         }
         return list;
     }
-    
+
 }

@@ -238,29 +238,29 @@ public class SendEmail {
 
                     //Add emailBody Activity
                     addEmailActivity(eml, savedDoc, emailSentTime);
-                    
+
                     //Copy to related case folders for MED
-                    if (eml.getSection().equals("MED")){
-                        List<RelatedCaseModel> relatedList = RelatedCase.getRelatedCases(eml.getSection());
-                        if (relatedList.size() > 0){
-                            for (RelatedCaseModel related : relatedList){
-                                
+                    if (eml.getSection().equals("MED")) {
+                        List<RelatedCaseModel> relatedList = RelatedCase.getRelatedCases(eml);
+                        if (relatedList.size() > 0) {
+                            for (RelatedCaseModel related : relatedList) {
+
                                 //Copy finalized document to proper folder
                                 File destPath = new File((eml.getSection().equals("CSC") || eml.getSection().equals("ORG"))
-                                    ? FileService.getCaseFolderORGCSCLocation(related) : FileService.getCaseFolderLocationRelatedCase(related));
+                                        ? FileService.getCaseFolderORGCSCLocation(related) : FileService.getCaseFolderLocationRelatedCase(related));
                                 destPath.mkdirs();
-                                
+
                                 File srcFile = new File(casePath + savedDoc);
-                                File destDir = new File(destPath + savedDoc);                                
-                                
+                                File destDir = new File(destPath + savedDoc);
+
                                 try {
                                     FileUtils.copyFileToDirectory(srcFile, destDir);
                                 } catch (IOException ex) {
                                     Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                
+
                                 //Add Related Case Activity Entry
-                                addEmailActivityRelatedCase(eml, related, savedDoc, emailSentTime);        
+                                addEmailActivityRelatedCase(eml, related, savedDoc, emailSentTime);
                             }
                         }
                     }
@@ -328,10 +328,10 @@ public class SendEmail {
      */
     private static void addEmailActivityRelatedCase(EmailOutModel eml, RelatedCaseModel related, String PDFname, Date emailSentTime) {
         ActivityModel act = new ActivityModel();
-        act.setCaseYear(related.getCaseYear());
-        act.setCaseType(related.getCaseType());
-        act.setCaseMonth(related.getCaseMonth());
-        act.setCaseNumber(related.getCaseNumber());
+        act.setCaseYear(related.getRelatedCaseYear());
+        act.setCaseType(related.getRelatedCaseType());
+        act.setCaseMonth(related.getRelatedCaseMonth());
+        act.setCaseNumber(related.getRelatedCaseNumber());
         act.setUserID(String.valueOf(eml.getUserID()));
         act.setDate(new Timestamp(emailSentTime.getTime()));
         act.setAction(Global.isOkToSendEmail() ? "OUT - " + eml.getSubject() : "OUT (Not Actually Sent) - " + eml.getSubject());
@@ -346,5 +346,5 @@ public class SendEmail {
         //Insert Email
         Activity.insertActivity(act);
     }
-    
+
 }

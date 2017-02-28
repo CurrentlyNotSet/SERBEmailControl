@@ -102,16 +102,28 @@ public class ReceiveEmail {
                         }
 
                         if (notDuplicate) {
+                            //Add to header to stop duplicates
                             messageList.add(headerText);
                             attachmentCount = 1;
                             attachmentList = new ArrayList<>();
+                            
+                            //Setup Email For dbo.Email
                             EmailMessageModel eml = new EmailMessageModel();
                             String emailTime = String.valueOf(new Date().getTime());
                             eml.setSection(account.getSection());
                             eml = saveEnvelope(msg, msg, eml);
                             eml.setId(EMail.InsertEmail(eml));
+                            
+                            //After Email has been inserted Gather Attachments
                             saveAttachments(msg, msg, eml);
+                            
+                            //Create Email Body
                             eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
+                            
+                            //Insert Email Body As Attachment (so it shows up in attachment table during Docketing)
+                            EmailAttachment.insertEmailAttachment(eml.getId(), eml.getEmailBodyFileName());
+                            
+                            //Flag email As ready to file so it is available in the docket tab of SERB3.0
                             eml.setReadyToFile(1);
                             EMail.setEmailReadyToFile(eml);
                         }
@@ -318,15 +330,15 @@ public class ReceiveEmail {
             if (saveAttachment(part, filePath, fileNameDB)) {
                 if (FileService.isImageFormat(filename)) {
                     fileNameDB = ImageToPDF.createPDFFromImage(filePath, fileNameDB);
-                    StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
-                } else if ("docx".equals(extension) || "doc".equals(extension)) {
+                } else if ("docx".equalsIgnoreCase(extension) || "doc".equalsIgnoreCase(extension)) {
                     fileNameDB = WordToPDF.createPDF(filePath, fileNameDB);
-                    StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
-                } else if ("txt".equals(extension)) {
+                } else if ("txt".equalsIgnoreCase(extension)) {
                     fileNameDB = TXTtoPDF.createPDF(filePath, fileNameDB);
-                    StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
                 }
                 if (!"".equals(fileNameDB)) {
+                    if (FilenameUtils.getExtension(fileNameDB).equalsIgnoreCase("pdf")) {
+                        StampPDF.stampDocument(filePath + fileNameDB, eml.getReceivedDate(), StringUtilities.getDepartmentByCaseType(eml.getSection()));
+                    }
                     attachmentList.add(fileNameDB);
                     EmailAttachment.insertEmailAttachment(eml.getId(), fileNameDB);
                 } else {

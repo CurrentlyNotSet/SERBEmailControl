@@ -41,9 +41,8 @@ import java.util.concurrent.TimeUnit;
 public class MainClass {
 
     /**
-     * setDefaults() verifies and checks to make sure the folder paths
-     * and the connection information is available to the applications before
-     * running.
+     * setDefaults() verifies and checks to make sure the folder paths and the
+     * connection information is available to the applications before running.
      *
      * Then it starts the different threads that the application runs
      */
@@ -57,12 +56,9 @@ public class MainClass {
     }
 
     /**
-     * threads() runs several different threads simultaneously
-     * Email Thread
-     * Scans Thread
-     * Daily Crash Email (Scheduled Task)
-     * Refresh Email Accounts (Scheduled Task) REMOVED
-     * //Database Cleanup (Scheduled Task) DISABLED
+     * threads() runs several different threads simultaneously Email Thread
+     * Scans Thread Daily Crash Email (Scheduled Task) Refresh Email Accounts
+     * (Scheduled Task) REMOVED //Database Cleanup (Scheduled Task) DISABLED
      * //Database Backups (Scheduled Task) DISABLED
      */
     private void threads() {
@@ -86,7 +82,6 @@ public class MainClass {
 //                stampScansThread();
 //            }
 //        };
-
         //Run Tasks
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
@@ -99,11 +94,12 @@ public class MainClass {
      * Timer task for sending daily crash email.
      */
     private static class dailyCrashNotifyEmail extends TimerTask {
+
         @Override
         public void run() {
             int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-            if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY){
+            if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
                 SendEmailCrashReport.sendCrashEmail();
             }
         }
@@ -113,6 +109,7 @@ public class MainClass {
      * Timer task for the clean up of the database.
      */
     private static class databaseCleanupTask extends TimerTask {
+
         @Override
         public void run() {
             Audit.removeOldAudits();
@@ -124,6 +121,7 @@ public class MainClass {
      * Timer task for the back up of the database.
      */
     private static class databaseBackups extends TimerTask {
+
         @Override
         public void run() {
             for (String databaseName : Global.getBackupDatabases()) {
@@ -167,6 +165,8 @@ public class MainClass {
             Thread.sleep(1000);
             while (true) {
                 try {
+                    System.out.println(StringUtilities.currentTime()
+                            + " - Starting Email Thread");
                     SystemEmail.loadEmailConnectionInformation();
                     incomingEmails();
                     calInvites();
@@ -174,7 +174,7 @@ public class MainClass {
                     outgoingEmail();
                     //Printout the sleep information
                     System.out.println("Email Thread - Sleeping for: "
-                            + TimeUnit.MILLISECONDS.toMinutes(Global.getSleep()) + "min \n");
+                            + TimeUnit.MILLISECONDS.toSeconds(Global.getSleep()) + "sec \n");
 
                     //Sleep the thread based on the INI file variable.
                     Thread.sleep(Global.getSleep());

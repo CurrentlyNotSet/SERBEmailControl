@@ -19,7 +19,7 @@ public class Global {
 
     //Operational Parameters
     private static final boolean debug = false; //email debug
-    private static final boolean okToSendEmail = false; //false = DOES NOT SEND MAIL
+    private static final boolean okToSendEmail = true; //false = DOES NOT SEND MAIL
     private static final int sleep = 30000; //milliseconds  (0.5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
@@ -55,14 +55,14 @@ public class Global {
     private static final List<String> fileBlackList = Arrays.asList(
             ".??_", ".?Q?", ".?Z?", ".7z", ".a", ".ace", ".afa", ".alz",
             ".apk", ".ar", ".arc", ".arj", ".b1", ".ba", ".bat", ".bh",
-            ".bz2", ".cab", ".car", ".cfs", ".cpio", ".cpt",".dar", ".dd",
+            ".bz2", ".cab", ".car", ".cfs", ".cpio", ".cpt", ".dar", ".dd",
             ".dgc", ".dmg", ".ear", ".exe", ".F", ".gca", ".gz", ".ha",
             ".hki", ".ice", ".infl", ".iso", ".jar", ".kgb", ".LBR", ".lbr",
             ".lha", ".lz", ".lzo", ".lzh", ".lzx", ".mar", ".msi", ".pak",
             ".partimg", ".paq6", ".paq7", ".paq8", ".pea", ".pim", ".pit",
             ".qda", ".rar", ".rk", ".rz", ".s7z", ".sda", ".sea", ".sen",
             ".sfark", ".sfx", ".shar", ".sit", ".sitx", ".sqx", ".sz", ".tar",
-            ".tar.gz", ".tgz.tar.Z", ".tar.bz2",".tbz2", ".tar.lzma", ".tlz",
+            ".tar.gz", ".tgz.tar.Z", ".tar.bz2", ".tbz2", ".tar.lzma", ".tlz",
             ".uc ", ".uc0", ".uc2", ".ucn", ".ur2", ".ue2", ".uca", ".uha",
             ".vcf", ".war", ".wim", ".xar", ".xp3", ".xz", ".yz1", ".z",
             ".zip", ".zipx", ".zoo", ".zpaq", ".zz");

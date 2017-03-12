@@ -52,6 +52,26 @@ public class TXTtoPDF {
     }
 
     /**
+     * creates PDF from text document
+     *
+     * @param filePath String
+     * @param fileName String
+     * @return String - new File Name
+     */
+    public static String createPDFNoDelete(String filePath, String fileName) {
+        String txtFile = filePath + fileName;
+        String pdfFile = filePath + FilenameUtils.removeExtension(fileName) + ".pdf";
+
+        File attachmentLocation = new File(filePath);
+        if (!attachmentLocation.exists()) {
+            attachmentLocation.mkdirs();
+        }
+
+        makePDF(pdfFile, getTextfromTXT(txtFile));
+        return FilenameUtils.getName(pdfFile);
+    }
+
+    /**
      * Read the text from the .TXT document
      *
      * @param file String (path + filename)

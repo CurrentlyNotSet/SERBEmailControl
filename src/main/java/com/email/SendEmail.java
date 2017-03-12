@@ -163,7 +163,7 @@ public class SendEmail {
                         //Convert attachments to PDF
                         //If Image
                         if (FileService.isImageFormat(fileName)) {
-                            fileName = ImageToPDF.createPDFFromImage(casePath, fileName);
+                            fileName = ImageToPDF.createPDFFromImageNoDelete(casePath, fileName);
 
                             //Add Attachment To PDF Merge
                             try {
@@ -175,7 +175,7 @@ public class SendEmail {
 
                             //If Word Doc
                         } else if (extension.equals("docx") || extension.equals("doc")) {
-                            fileName = WordToPDF.createPDF(casePath, fileName);
+                            fileName = WordToPDF.createPDFNoDelete(casePath, fileName);
 
                             //Add Attachment To PDF Merge
                             try {
@@ -187,7 +187,7 @@ public class SendEmail {
 
                             //If Text File
                         } else if ("txt".equals(extension)) {
-                            fileName = TXTtoPDF.createPDF(casePath, fileName);
+                            fileName = TXTtoPDF.createPDFNoDelete(casePath, fileName);
 
                             //Add Attachment To PDF Merge
                             try {
@@ -208,7 +208,7 @@ public class SendEmail {
                             }
                         }
 
-                        DataSource source = new FileDataSource(fileName);
+                        DataSource source = new FileDataSource(casePath + fileName);
                         messageBodyPart = new MimeBodyPart();
                         messageBodyPart.setDataHandler(new DataHandler(source));
                         messageBodyPart.setFileName(fileName);

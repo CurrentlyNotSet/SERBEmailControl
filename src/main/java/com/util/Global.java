@@ -30,7 +30,7 @@ public class Global {
     private static final int hourOfErrorEmail = 17; //24hr clock (5pm)
 
     //Date Time Formatters
-    private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+    private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("EEE, MM/dd/yyyy hh:mm:ss a");
     private static final SimpleDateFormat iCalendarDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmm'00'");
     private static final SimpleDateFormat mmddyyyy = new SimpleDateFormat("MM/dd/yyyy");
     private static final SimpleDateFormat hhmmssa = new SimpleDateFormat("HH:mm:ss a");

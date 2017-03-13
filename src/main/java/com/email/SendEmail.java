@@ -284,7 +284,8 @@ public class SendEmail {
             item.setClassName("SendEmail");
             item.setMethodName("sendEmails");
             item.setExceptionType("FileMissing");
-            item.setExceptionDescription("Can't Send Email, File Missing for EmailID: " + eml.getId());
+            item.setExceptionDescription("Can't Send Email, File Missing for EmailID: "
+                    + eml.getId() + System.lineSeparator() + "EmailSubject: " + eml.getSubject());
 
             ExceptionHandler.HandleNoException(item);
         }

@@ -152,7 +152,7 @@ public class SendEmail {
                     smessage.setSubject(emailSubject);
 
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
-                    messageBodyPart.setContent(emailBody, "text/html");
+                    messageBodyPart.setContent(emailBody, "text/plain");
                     multipart.addBodyPart(messageBodyPart);
 
                     //get attachments

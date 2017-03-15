@@ -310,8 +310,8 @@ public class SendEmail {
         act.setFileName(PDFname);
         act.setFrom(eml.getFrom());
         act.setTo(eml.getTo());
-        act.setType("");
-        act.setComment(eml.getBody());
+        act.setType(null);
+        act.setComment(null);
         act.setRedacted(0);
         act.setAwaitingTimestamp(0);
 

@@ -36,7 +36,7 @@ public class StampPDF {
         PDDocument doc = null;
         try {
             PDFont stampFont = PDType1Font.TIMES_ROMAN;
-            float stampFontSize = 10;
+            float stampFontSize = 14;
             String title = PDFBoxTools.HeaderTimeStamp(docketTime) + " " + dept;
             float titleWidth = stampFont.getStringWidth(title) / 1000 * stampFontSize;
             float titleHeight = stampFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * stampFontSize;
@@ -54,7 +54,7 @@ public class StampPDF {
 
                 contentStream.beginText();
                 contentStream.setFont(stampFont, stampFontSize);
-                contentStream.setNonStrokingColor(Color.PINK);
+                contentStream.setNonStrokingColor(Color.RED);
                 contentStream.newLineAtOffset((page.getMediaBox().getWidth() - titleWidth) / 2, page.getMediaBox().getHeight() - marginTop - titleHeight);
                 contentStream.showText(title);
                 contentStream.endText();

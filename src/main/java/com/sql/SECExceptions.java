@@ -22,14 +22,14 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class SECExceptions {
-    
+
     /**
      * Inserts an exception to the database
-     * 
+     *
      * @param item SECExceptionsModel
      * @return boolean
      */
-    public static boolean insertException(SECExceptionsModel item){
+    public static boolean insertException(SECExceptionsModel item) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -61,17 +61,17 @@ public class SECExceptions {
         }
         return false;
     }
-        
+
     /**
      * Removes old exception based off of a global exception date timeframe
      */
-    public static void removeOldExceptions(){
+    public static void removeOldExceptions() {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = DBConnection.connectToDB();
             String sql = "DELETE FROM SECExceptions WHERE "
-                    + "timeOccurred < dateadd(" + Global.getExceptionTimeFrame() 
+                    + "timeOccurred < dateadd(" + Global.getExceptionTimeFrame()
                     + ",-" + Global.getExceptionTimeAmount() + ", getdate())";
             ps = conn.prepareStatement(sql);
             ps.executeUpdate();
@@ -82,11 +82,11 @@ public class SECExceptions {
             DbUtils.closeQuietly(ps);
         }
     }
-    
+
     /**
-     * Gets a count of errors where the description text matches. 
-     * This is to eliminate the repeat of entries from the application looping
-     * 
+     * Gets a count of errors where the description text matches. This is to
+     * eliminate the repeat of entries from the application looping
+     *
      * @param description String
      * @return Integer count
      */
@@ -98,12 +98,12 @@ public class SECExceptions {
         try {
             conn = DBConnection.connectToDB();
             String sql = "SELECT COUNT(*) AS num FROM SECExceptions WHERE "
-                    + "timeOccurred >= CAST(CURRENT_TIMESTAMP AS DATE) AND exceptionDescrption = ?";
+                    + "timeOccurred >= CAST(CURRENT_TIMESTAMP AS DATE) AND exceptionDescrption LIKE ?";
             ps = conn.prepareStatement(sql);
-            ps.setString(1, description);
-            
+            ps.setString(1, description + "%");
+
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 count = rs.getInt("num");
             }
         } catch (SQLException ex) {
@@ -115,10 +115,10 @@ public class SECExceptions {
         }
         return count;
     }
-    
+
     /**
-     *  Gathers a list of errors based on type and count total of them.
-     * 
+     * Gathers a list of errors based on type and count total of them.
+     *
      * @return
      */
     public static List<SystemErrorModel> getErrorCounts() {
@@ -149,5 +149,5 @@ public class SECExceptions {
         }
         return list;
     }
-    
+
 }

@@ -93,7 +93,34 @@ public class SendEmail {
                 boolean exists = attachment.exists();
                 if (exists == false) {
                     allFilesExists = false;
+                    SECExceptionsModel item = new SECExceptionsModel();
+                    item.setClassName("SendEmail");
+                    item.setMethodName("sendEmails");
+                    item.setExceptionType("FileMissing");
+                    item.setExceptionDescription("Can't Send Email, File Missing for EmailID: " + eml.getId()
+                            + System.lineSeparator() + "EmailSubject: " + eml.getSubject()
+                            + System.lineSeparator() + "File: " + attachment);
+
+                    ExceptionHandler.HandleNoException(item);
+
                     break;
+                } else {
+                    if ("docx".equalsIgnoreCase(FilenameUtils.getExtension(attach.getFileName()))
+                            || "doc".equalsIgnoreCase(FilenameUtils.getExtension(attach.getFileName()))) {
+                        if (attachment.renameTo(attachment)) {
+                            allFilesExists = false;
+                            SECExceptionsModel item = new SECExceptionsModel();
+                            item.setClassName("SendEmail");
+                            item.setMethodName("sendEmails");
+                            item.setExceptionType("FileInUse");
+                            item.setExceptionDescription("Can't Send Email, File In Use for EmailID: " + eml.getId()
+                                    + System.lineSeparator() + "EmailSubject: " + eml.getSubject()
+                                    + System.lineSeparator() + "File: " + attachment);
+
+                            ExceptionHandler.HandleNoException(item);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -278,15 +305,6 @@ public class SendEmail {
                 } catch (MessagingException ex) {
                     ExceptionHandler.Handle(ex);
                 }
-            } else {
-                SECExceptionsModel item = new SECExceptionsModel();
-                item.setClassName("SendEmail");
-                item.setMethodName("sendEmails");
-                item.setExceptionType("FileMissing");
-                item.setExceptionDescription("Can't Send Email, File Missing for EmailID: "
-                        + eml.getId() + System.lineSeparator() + "EmailSubject: " + eml.getSubject());
-
-                ExceptionHandler.HandleNoException(item);
             }
         }
     }

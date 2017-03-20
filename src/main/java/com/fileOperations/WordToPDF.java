@@ -96,6 +96,7 @@ public class WordToPDF {
                 JacobCOMBridge.setWordActive(false, false, eolWord);
                 Dispatch.call(eolWord, "Quit");
                 eolWord.safeRelease();
+                Thread.sleep(250);
                 return FilenameUtils.getName(pdfFile);
             } catch (InterruptedException ex) {
                 ExceptionHandler.Handle(ex);

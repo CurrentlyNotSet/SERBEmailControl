@@ -14,11 +14,11 @@ import java.util.logging.Logger;
  * @author Andrew
  */
 public class ExceptionHandler {
-        
+
     /**
-     * Exception handler for an item that has a catch. This method places
-     * an SECExceptionsModel item into the database
-     * 
+     * Exception handler for an item that has a catch. This method places an
+     * SECExceptionsModel item into the database
+     *
      * @param ex Exception
      */
     public static void Handle(Exception ex) {
@@ -27,26 +27,29 @@ public class ExceptionHandler {
         item.setMethodName(Thread.currentThread().getStackTrace()[2].getMethodName());
         item.setExceptionType(ex.getClass().getSimpleName());
         item.setExceptionDescription(ex.toString());
-        
+
         //Print out to commandline
         Logger.getLogger(ex.getMessage());
-        
+
         //Send to the Server
-        if (SECExceptions.insertException(item)){  
+        if (SECExceptions.insertException(item)) {
             //true = failed out || send to Slack instead
             SlackNotification.sendNotification(ex.toString());
         }
     }
-    
+
     /**
-     * Exception handler for an item that has no catch. This method places
-     * the SECExceptionsModel item into the database
-     * 
+     * Exception handler for an item that has no catch. This method places the
+     * SECExceptionsModel item into the database
+     *
      * @param item SECExceptionsModel
      */
     public static void HandleNoException(SECExceptionsModel item) {
         boolean insert = true;
         if (item.getExceptionDescription().startsWith("Can't Send Email, File Missing for EmailID:")
+                && SECExceptions.getExistingException(item.getExceptionDescription()) > 0) {
+            insert = false;
+        } else if (item.getExceptionDescription().startsWith("Can't Send Email, File In Use for EmailID:")
                 && SECExceptions.getExistingException(item.getExceptionDescription()) > 0) {
             insert = false;
         } else if (item.getExceptionDescription().startsWith("Can't Stamp Scan, ")

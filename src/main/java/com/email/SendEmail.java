@@ -107,7 +107,7 @@ public class SendEmail {
                 } else {
                     if ("docx".equalsIgnoreCase(FilenameUtils.getExtension(attach.getFileName()))
                             || "doc".equalsIgnoreCase(FilenameUtils.getExtension(attach.getFileName()))) {
-                        if (attachment.renameTo(attachment)) {
+                        if (!attachment.renameTo(attachment)) {
                             allFilesExists = false;
                             SECExceptionsModel item = new SECExceptionsModel();
                             item.setClassName("SendEmail");

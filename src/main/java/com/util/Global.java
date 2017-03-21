@@ -33,7 +33,7 @@ public class Global {
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("EEE, MM/dd/yyyy hh:mm:ss a");
     private static final SimpleDateFormat iCalendarDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmm'00'");
     private static final SimpleDateFormat mmddyyyy = new SimpleDateFormat("MM/dd/yyyy");
-    private static final SimpleDateFormat hhmmssa = new SimpleDateFormat("HH:mm:ss a");
+    private static final SimpleDateFormat hhmmssa = new SimpleDateFormat("hh:mm:ss a");
 
     //Folder Paths
     private static String scanPath;

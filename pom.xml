@@ -63,17 +63,32 @@
             <version>1.5.1</version>
         </dependency>
         <dependency> <!-- COM hook for Microsoft Word conversion to PDF -->
-          <groupId>local.net.sf.jacob-project</groupId>
-          <artifactId>jacob</artifactId>
-          <version>1.18</version>
+            <groupId>local.net.sf.jacob-project</groupId>
+            <artifactId>jacob</artifactId>
+            <version>1.18</version>
         </dependency>
         <dependency><!-- String Utilities -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
         </dependency>
+        <dependency> <!-- PDFBOX Encryption Dependancy -->
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.54</version>
+        </dependency>
+        <dependency> <!-- PDFBOX Encryption Dependancy -->
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <version>1.54</version>
+        </dependency>
+        <dependency> <!-- PDFBOX Encryption Dependancy -->
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.54</version>
+        </dependency>
     </dependencies>
-    <repositories>    
+    <repositories>
         <repository>
             <id>com.springsource.repository.bundles.external</id>
             <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
@@ -118,7 +133,7 @@
                 <executions>
                     <execution>
                         <id>make-assembly</id>
-                        <phase>package</phase> 
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>

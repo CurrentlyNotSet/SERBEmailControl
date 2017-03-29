@@ -44,24 +44,26 @@ public class StampPDF {
 
             doc = PDDocument.load(new File(file));
 
-            for (int i = 0; i < doc.getPages().getCount(); i++) {
-                PDPageContentStream contentStream = null;
+            if (!doc.isEncrypted()) {
+                for (int i = 0; i < doc.getPages().getCount(); i++) {
+                    PDPageContentStream contentStream = null;
 
-                PDPage page = (PDPage) doc.getPages().get(i);
+                    PDPage page = (PDPage) doc.getPages().get(i);
 
-                contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, true);
-                page.getResources().getFontNames();
+                    contentStream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, true);
+                    page.getResources().getFontNames();
 
-                contentStream.beginText();
-                contentStream.setFont(stampFont, stampFontSize);
-                contentStream.setNonStrokingColor(Color.RED);
-                contentStream.newLineAtOffset((page.getMediaBox().getWidth() - titleWidth) / 2, page.getMediaBox().getHeight() - marginTop - titleHeight);
-                contentStream.showText(title);
-                contentStream.endText();
+                    contentStream.beginText();
+                    contentStream.setFont(stampFont, stampFontSize);
+                    contentStream.setNonStrokingColor(Color.RED);
+                    contentStream.newLineAtOffset((page.getMediaBox().getWidth() - titleWidth) / 2, page.getMediaBox().getHeight() - marginTop - titleHeight);
+                    contentStream.showText(title);
+                    contentStream.endText();
 
-                contentStream.close();
+                    contentStream.close();
+                }
+                doc.save(file);
             }
-            doc.save(file);
         } catch (IOException ex) {
             ExceptionHandler.Handle(ex);
         } finally {

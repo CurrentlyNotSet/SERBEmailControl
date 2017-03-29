@@ -208,6 +208,7 @@ public class MainClass {
     private void incomingEmails() {
         long lStartTime = System.currentTimeMillis();
         for (SystemEmailModel account : Global.getSystemEmailParams()) {
+            System.out.println("    Fetching Email for: " + account.getEmailAddress());
             ReceiveEmail.fetchEmail(account);
         }
         long lEndTime = System.currentTimeMillis();

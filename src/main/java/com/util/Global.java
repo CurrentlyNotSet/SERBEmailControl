@@ -28,6 +28,7 @@ public class Global {
     private static final int hourOfPurge = 1; //24hr clock
     private static final int hourOfDBBackup = 1; //24hr clock
     private static final int hourOfErrorEmail = 17; //24hr clock (5pm)
+    private static final int hourOfCMDSUpdater = 17; //24hr clock (5pm)
 
     //Date Time Formatters
     private static final SimpleDateFormat mmddyyyyhhmmssa = new SimpleDateFormat("EEE, MM/dd/yyyy hh:mm:ss a");
@@ -50,6 +51,11 @@ public class Global {
 
     //CaseTypes
     private static List<CaseTypeModel> caseTypeList;
+
+    //CMDS WebUpdater information
+    private static final String destinationPath = "G:\\CMDS\\CMDSWeb\\CMDS Web Extract\\";
+    private static final String webCaseFileName = "Internet-Case-Extract.SEQ";
+    private static final String webHistoryFileName = "Internet-History-Extract.SEQ";
 
     //Attachment FileType Blacklist
     private static final List<String> fileBlackList = Arrays.asList(
@@ -173,6 +179,22 @@ public class Global {
 
     public static boolean isOkToSendEmail() {
         return okToSendEmail;
+    }
+
+    public static String getDestinationPath() {
+        return destinationPath;
+    }
+
+    public static String getWebCaseFileName() {
+        return webCaseFileName;
+    }
+
+    public static String getWebHistoryFileName() {
+        return webHistoryFileName;
+    }
+
+    public static int getHourOfCMDSUpdater() {
+        return hourOfCMDSUpdater;
     }
 
 }

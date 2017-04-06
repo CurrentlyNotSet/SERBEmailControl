@@ -5,6 +5,7 @@
  */
 package com;
 
+import com.CMDSWebUpdater.CMDSwebUpdater;
 import com.email.ReceiveEmail;
 import com.email.SendEmail;
 import com.email.SendEmailCalInvite;
@@ -84,6 +85,7 @@ public class MainClass {
 //        };
         //Run Tasks
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
+        timer.scheduleAtFixedRate(new dailyCMDSWebupdater(), TimerSettings.cmdsUpdaterTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();
@@ -101,6 +103,22 @@ public class MainClass {
 
             if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
                 SendEmailCrashReport.sendCrashEmail();
+            }
+        }
+    }
+
+    /**
+     * Timer task for parsing CMDSWeb Updater SEQ files.
+     */
+    private static class dailyCMDSWebupdater extends TimerTask {
+
+        @Override
+        public void run() {
+            int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+            if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
+                CMDSwebUpdater.processWebCaseList();
+                CMDSwebUpdater.processWebHistoryList();
             }
         }
     }

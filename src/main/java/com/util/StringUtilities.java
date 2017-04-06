@@ -5,6 +5,7 @@
  */
 package com.util;
 
+import com.model.CasePartyModel;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -98,6 +99,26 @@ public class StringUtilities {
         } else {
             return "SERB";
         }
+    }
+
+    /**
+     * Building the Case Party Name for the CMDS Web Updater
+     * @param item
+     * @return
+     */
+    public static String buildCasePartyName(CasePartyModel item) {
+        String fullName = "";
+        fullName = fullName.trim() + (item.getLastName().equals("") ? "" : item.getLastName().trim());
+        fullName = fullName.trim() + (item.getFirstName().equals("") ? "" : ", " + item.getFirstName().trim());
+        fullName = fullName.trim() + (item.getMiddleInitial().equals("") ? "" : " " + (item.getMiddleInitial().trim().length() == 1 ? item.getMiddleInitial().trim() + "." : item.getMiddleInitial().trim()));
+
+        if (!item.getCompanyName().equals("")) {
+            if (fullName.trim().equals("")) {
+                fullName = item.getCompanyName().trim();
+            }
+        }
+
+        return fullName.trim();
     }
 
 }

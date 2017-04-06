@@ -225,7 +225,7 @@ public class SendEmail {
                             }
 
                             //If PDF
-                        } else if (FilenameUtils.getExtension(fileName).equals(".pdf")) {
+                        } else if (FilenameUtils.getExtension(fileName).equals("pdf")) {
 
                             //Add Attachment To PDF Merge
                             try {

@@ -85,7 +85,7 @@ public class MainClass {
 //        };
         //Run Tasks
         timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
-        timer.scheduleAtFixedRate(new dailyCMDSWebupdater(), TimerSettings.cmdsUpdaterTime(), oneDay);
+//        timer.scheduleAtFixedRate(new dailyCMDSWebupdater(), TimerSettings.cmdsUpdaterTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
         emailThread.start();

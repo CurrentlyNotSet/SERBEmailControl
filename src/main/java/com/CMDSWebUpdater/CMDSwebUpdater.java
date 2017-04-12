@@ -28,17 +28,17 @@ import java.util.logging.Logger;
  */
 public class CMDSwebUpdater {
 
-    public static void processWebCaseList(){
-        System.out.println("Start Time: " + new Date());
+    public static void processWebCaseList() {
+        System.out.println("WebCase Start Time: " + new Date());
 
         String output = "";
 
         List<WEBCaseModel> list = WebCase.getWebCaseList();
 
-        System.out.println("Gathered Cases Time: " + new Date());
-        System.out.println("Gathered Cases : " + list.size());
+        System.out.println("WebCase Gathered Cases Time: " + new Date());
+        System.out.println("WebCase Gathered Cases : " + list.size());
 
-        for (WEBCaseModel item : list){
+        for (WEBCaseModel item : list) {
             String line = "";
 
             String AppellantName = "";
@@ -101,9 +101,9 @@ public class CMDSwebUpdater {
             }
 
             //Case Information
-            line += String.format("%-2s", item.getYear().substring(item.getYear().length()-2));
+            line += String.format("%-2s", item.getYear().substring(item.getYear().length() - 2));
             line += String.format("%-4s", item.getCaseSeqNumber());
-            line += String.format("%-2s", item.getYear().substring(item.getYear().length()-2));
+            line += String.format("%-2s", item.getYear().substring(item.getYear().length() - 2));
             line += String.format("%-3s", item.getType());
             line += String.format("%-2s", item.getMonth());
             line += String.format("%-4s", item.getCaseSeqNumber());
@@ -141,7 +141,7 @@ public class CMDSwebUpdater {
             output += (output.trim().equals("") ? line : System.lineSeparator() + line);
         }
 
-        System.out.println("Writing File Time: " + new Date());
+        System.out.println("WebCase Writing File Time: " + new Date());
 
         //Write File
         try {
@@ -150,17 +150,22 @@ public class CMDSwebUpdater {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.println("End Time: " + new Date());
+        System.out.println("WebCase End Time: " + new Date());
     }
 
-    public static void processWebHistoryList(){
+    public static void processWebHistoryList() {
         String output = "";
+
+        System.out.println("WebHistory Start Time: " + new Date());
 
         //Gather History List
         List<WebHistoryModel> list = WebHistory.getWebHistoryList();
 
+        System.out.println("WebHistory Gathered Cases Time: " + new Date());
+        System.out.println("WebHistory Gathered Cases : " + list.size());
+
         //Process Rows
-        for (WebHistoryModel item : list){
+        for (WebHistoryModel item : list) {
             String line = "";
 
             line += String.format("%-2s", item.getCaseYear());
@@ -178,12 +183,16 @@ public class CMDSwebUpdater {
             output += (output.trim().equals("") ? line : System.lineSeparator() + line);
         }
 
+        System.out.println("WebHistory Writing File Time: " + new Date());
+
         //Write File
         try {
             Files.write(Paths.get(Global.getDestinationPath() + Global.getWebHistoryFileName()), output.getBytes());
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        System.out.println("WebHistory End Time: " + new Date());
     }
 
 }

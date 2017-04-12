@@ -5,7 +5,6 @@
  */
 package com.sql;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.model.WEBCaseModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -54,9 +55,7 @@ public class WebCase {
                 list.add(item);
             }
         } catch (SQLException ex) {
-            if (ex.getCause() instanceof SQLServerException) {
-                getWebCaseList();
-            }
+            Logger.getLogger(WebCase.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             DbUtils.closeQuietly(conn);
             DbUtils.closeQuietly(ps);

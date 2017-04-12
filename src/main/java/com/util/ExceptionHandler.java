@@ -28,6 +28,16 @@ public class ExceptionHandler {
         item.setExceptionType(ex.getClass().getSimpleName());
         item.setExceptionDescription(ex.toString());
 
+        if (ex.getClass().getSimpleName().equals("MessagingException")){
+            if (ex.toString().toLowerCase().contains("connection dropped by server")){
+                item.setExceptionType("Connection Dropped by Server");
+            }else if (ex.toString().toLowerCase().contains("connection reset")){
+                item.setExceptionType("Connection Reset");
+            }else if (ex.toString().toLowerCase().contains("bad user authenticated")){
+                item.setExceptionType("User Unable To Connect");
+            }
+        }
+
         //Print out to commandline
         Logger.getLogger(ex.getMessage());
 

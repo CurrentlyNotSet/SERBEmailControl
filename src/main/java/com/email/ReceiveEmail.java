@@ -106,23 +106,23 @@ public class ReceiveEmail {
                             messageList.add(headerText);
                             attachmentCount = 1;
                             attachmentList = new ArrayList<>();
-                            
+
                             //Setup Email For dbo.Email
                             EmailMessageModel eml = new EmailMessageModel();
                             String emailTime = String.valueOf(new Date().getTime());
                             eml.setSection(account.getSection());
                             eml = saveEnvelope(msg, msg, eml);
                             eml.setId(EMail.InsertEmail(eml));
-                            
+
                             //After Email has been inserted Gather Attachments
                             saveAttachments(msg, msg, eml);
-                            
+
                             //Create Email Body
                             eml = EmailBodyToPDF.createEmailBodyIn(eml, emailTime, attachmentList);
-                            
+
                             //Insert Email Body As Attachment (so it shows up in attachment table during Docketing)
                             EmailAttachment.insertEmailAttachment(eml.getId(), eml.getEmailBodyFileName());
-                            
+
                             //Flag email As ready to file so it is available in the docket tab of SERB3.0
                             eml.setReadyToFile(1);
                             EMail.setEmailReadyToFile(eml);

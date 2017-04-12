@@ -16,6 +16,7 @@ public class Main {
      */
     public static void main(String[] args) {
         System.setProperty("java.net.preferIPv4Stack", "true");
+        java.util.logging.Logger.getLogger("org.apache.pdfbox").setLevel(java.util.logging.Level.SEVERE);
         System.out.println("\n\n\n");
         MainClass bc = new MainClass();
         bc.setDefaults();

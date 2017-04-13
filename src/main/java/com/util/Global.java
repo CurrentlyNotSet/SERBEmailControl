@@ -53,8 +53,7 @@ public class Global {
     private static List<CaseTypeModel> caseTypeList;
 
     //CMDS WebUpdater information
-//    private static final String destinationPath = "G:\\CMDS\\CMDSWeb\\CMDS Web Extract\\";
-    private static final String destinationPath = "G:\\SERB\\Distribution Files\\";
+    private static final String destinationPath = "G:\\CMDS\\CMDSWeb\\CMDS Web Extract\\";
     private static final String webCaseFileName = "Internet-Case-Extract.SEQ";
     private static final String webHistoryFileName = "Internet-History-Extract.SEQ";
 

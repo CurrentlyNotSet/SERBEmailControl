@@ -19,42 +19,42 @@ public class NumberFormatService {
     /**
      * Gets four columns worth of case number information and converts it to
      * its single case number
-     * 
+     *
      * @param caseNumber ActivityModel
      * @return String full case number
      */
     public static String FullCaseNumber(ActivityModel caseNumber) {
-        return caseNumber.getCaseYear() + "-" 
-                + caseNumber.getCaseType() + "-" 
-                + caseNumber.getCaseMonth() + "-" 
+        return caseNumber.getCaseYear() + "-"
+                + caseNumber.getCaseType() + "-"
+                + caseNumber.getCaseMonth() + "-"
                 + caseNumber.getCaseNumber();
     }
 
     /**
      * Gets four columns worth of case number information and converts it to
      * its single case number
-     * 
+     *
      * @param related RelatedCaseModel
      * @return String full case number
      */
     public static String FullCaseNumber(RelatedCaseModel related) {
-        return related.getRelatedCaseYear() + "-" 
-                + related.getRelatedCaseType() + "-" 
-                + related.getRelatedCaseMonth() + "-" 
+        return related.getRelatedCaseYear() + "-"
+                + related.getRelatedCaseType() + "-"
+                + related.getRelatedCaseMonth() + "-"
                 + related.getRelatedCaseNumber();
     }
-    
+
     /**
      * Gets four columns worth of case number information and converts it to
      * its single case number
-     * 
+     *
      * @param caseNumber EmailOutModel
      * @return String full case number
      */
     public static String FullCaseNumber(EmailOutModel caseNumber) {
-        return caseNumber.getCaseYear() + "-" 
-                + caseNumber.getCaseType() + "-" 
-                + caseNumber.getCaseMonth() + "-" 
+        return caseNumber.getCaseYear() + "-"
+                + caseNumber.getCaseType() + "-"
+                + caseNumber.getCaseMonth() + "-"
                 + caseNumber.getCaseNumber();
     }
 
@@ -71,5 +71,5 @@ public class NumberFormatService {
         }
         return caseType;
     }
-    
+
 }

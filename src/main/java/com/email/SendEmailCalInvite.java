@@ -53,9 +53,19 @@ public class SendEmailCalInvite {
             String FromAddress = account.getEmailAddress();
             String[] TOAddressess = ((eml.getToAddress() == null) ? "".split(";") : eml.getToAddress().split(";"));
             String[] CCAddressess = ((eml.getCcAddress() == null) ? "".split(";") : eml.getCcAddress().split(";"));
-            String emailSubject = Subject(eml);
-            BodyPart emailBody = body(eml);
-            BodyPart inviteBody = invite(eml, account, emailSubject);
+            String emailSubject = "";
+            BodyPart emailBody = null;
+            BodyPart inviteBody = null;
+
+            if (eml.getHearingRoomAbv() == null){
+                emailSubject = eml.getEmailBody() == null ? eml.getCaseNumber() : eml.getEmailBody();
+                emailBody = bodyResponseDue(eml);
+                inviteBody = responseDueCalObject(eml, account);
+            } else {
+                emailSubject = Subject(eml);
+                emailBody = body(eml);
+                inviteBody = inviteCalObject(eml, account, emailSubject);
+            }
 
             //Set Email Parts
             Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
@@ -126,12 +136,30 @@ public class SendEmailCalInvite {
     }
 
     /**
+     * Builds the body for the email
+     *
+     * @param eml EmailOutInvitesModel
+     * @return String (Body)
+     */
+    private static BodyPart bodyResponseDue(EmailOutInvitesModel eml) {
+        MimeBodyPart descriptionPart = new MimeBodyPart();
+        try {
+            String content = eml.getEmailBody() == null ? "" : eml.getEmailBody()
+                    + "\n\n\n";
+            descriptionPart.setContent(content, "text/html; charset=utf-8");
+        } catch (MessagingException ex) {
+            ExceptionHandler.Handle(ex);
+        }
+        return descriptionPart;
+    }
+
+    /**
      * Builds the calendar invite for the email
      *
      * @param eml EmailOutInvitesModel
      * @return BodyPart (calendar invite)
      */
-    private static BodyPart invite(EmailOutInvitesModel eml, SystemEmailModel account, String emailSubject) {
+    private static BodyPart inviteCalObject(EmailOutInvitesModel eml, SystemEmailModel account, String emailSubject) {
         BodyPart calendarPart = new MimeBodyPart();
         try {
             String calendarContent
@@ -174,4 +202,53 @@ public class SendEmailCalInvite {
         return calendarPart;
     }
 
+
+    /**
+     * Builds the calendar invite for the email
+     *
+     * @param eml EmailOutInvitesModel
+     * @return BodyPart (calendar invite)
+     */
+    private static BodyPart responseDueCalObject(EmailOutInvitesModel eml, SystemEmailModel account) {
+        BodyPart calendarPart = new MimeBodyPart();
+        try {
+            String calendarContent
+                    = "BEGIN:VCALENDAR\n"
+                    + "METHOD:REQUEST\n"
+                    + "PRODID: BCP - Meeting\n"
+                    + "VERSION:2.0\n"
+                    + "BEGIN:VEVENT\n"
+                    + "DTSTAMP:" + Global.getiCalendarDateFormat().format(eml.getHearingStartTime()) + "\n"
+                    + "DTSTART:" + Global.getiCalendarDateFormat().format(eml.getHearingStartTime()) + "\n"
+                    + "DTEND:" + Global.getiCalendarDateFormat().format(eml.getHearingEndTime()) + "\n"
+                    //Subject
+                    + "SUMMARY: " + "ResponseDue" + "\n"
+                    + "UID:" + Global.getiCalendarDateFormat().format(eml.getHearingStartTime()) + Global.getiCalendarDateFormat().format(eml.getHearingEndTime())  + "\n"
+                    //return email
+                    + "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n"
+                    //return email
+                    + "ORGANIZER:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n"
+                    //hearing room
+                    + "LOCATION: " + "\n"
+                    //subject
+                    + "DESCRIPTION: " + "\n"
+                    + "SEQUENCE:0\n"
+                    + "PRIORITY:5\n"
+                    + "CLASS:PUBLIC\n"
+                    + "STATUS:CONFIRMED\n"
+                    + "TRANSP:OPAQUE\n"
+                    + "BEGIN:VALARM\n"
+                    + "ACTION:DISPLAY\n"
+                    + "DESCRIPTION:REMINDER\n"
+                    + "TRIGGER;RELATED=START:-PT00H15M00S\n"
+                    + "END:VALARM\n"
+                    + "END:VEVENT\n"
+                    + "END:VCALENDAR";
+            calendarPart.addHeader("Content-Class", "urn:content-classes:calendarmessage");
+            calendarPart.setContent(calendarContent, "text/calendar;method=CANCEL");
+        } catch (MessagingException ex) {
+            ExceptionHandler.Handle(ex);
+        }
+        return calendarPart;
+    }
 }

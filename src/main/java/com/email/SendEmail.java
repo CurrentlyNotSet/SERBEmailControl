@@ -112,7 +112,7 @@ public class SendEmail {
                             SECExceptionsModel item = new SECExceptionsModel();
                             item.setClassName("SendEmail");
                             item.setMethodName("sendEmails");
-                            item.setExceptionType("FileInUse");
+                            item.setExceptionType("File In Use");
                             item.setExceptionDescription("Can't Send Email, File In Use for EmailID: " + eml.getId()
                                     + System.lineSeparator() + "EmailSubject: " + eml.getSubject()
                                     + System.lineSeparator() + "File: " + attachment);

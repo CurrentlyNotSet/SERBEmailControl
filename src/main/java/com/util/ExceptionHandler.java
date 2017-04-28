@@ -35,6 +35,8 @@ public class ExceptionHandler {
                 item.setExceptionType("Connection Reset");
             }else if (ex.toString().toLowerCase().contains("bad user authenticated")){
                 item.setExceptionType("User Unable To Connect");
+            }else if (ex.toString().toLowerCase().contains("User is authenticated but not connected")){
+                item.setExceptionType("User Authenticated Failed");
             }
         }
 

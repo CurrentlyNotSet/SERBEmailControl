@@ -20,10 +20,10 @@ import org.apache.commons.dbutils.DbUtils;
  * @author Andrew
  */
 public class SystemError {
-    
+
     /**
      * Gathers a list of errors based on type and count total of them
-     * 
+     *
      * @return
      */
     public static List<SystemErrorModel> getErrorCounts() {
@@ -36,6 +36,8 @@ public class SystemError {
             String sql = "SELECT exceptionType, COUNT(*) AS 'num' "
                     + "FROM SystemError "
                     + "WHERE timeOccurred >= CAST(CURRENT_TIMESTAMP AS DATE) "
+                    + "AND username != 'andrew.schmidt' "
+                    + "AND username != 'anthony.perk' "
                     + "GROUP BY exceptionType";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -54,5 +56,5 @@ public class SystemError {
         }
         return list;
     }
-    
+
 }

@@ -9,7 +9,7 @@ import com.model.ActivityModel;
 import com.model.EmailOutModel;
 import com.model.RelatedCaseModel;
 import com.model.SECExceptionsModel;
-import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
+//import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -191,9 +191,9 @@ public class FileService {
      */
     public static boolean isImageFormat(String image) {
         return image.toLowerCase().endsWith(".jpg")
-                || ((image.toLowerCase().endsWith(".tif")
-                || image.toLowerCase().endsWith(".tiff"))
-                && PDFBoxTools.TIFFCompression(image) == COMPRESSION_GROUP4)
+//                || ((image.toLowerCase().endsWith(".tif")
+//                || image.toLowerCase().endsWith(".tiff"))
+//                && PDFBoxTools.TIFFCompression(image) == COMPRESSION_GROUP4)
                 || image.toLowerCase().endsWith(".gif")
                 || image.toLowerCase().endsWith(".bmp")
                 || image.toLowerCase().endsWith(".png");

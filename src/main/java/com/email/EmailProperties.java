@@ -33,7 +33,7 @@ public class EmailProperties {
                     properties.setProperty("mail.imap.auth", "true");
                     properties.setProperty("mail.imap.host", account.getIncomingURL());
                     properties.put("mail.imap.port", String.valueOf(account.getIncomingPort()));
-                    properties.put("mail.imap.fetchsize", "965536");
+                    properties.setProperty("mail.imap.partialfetch", "false");
                     break;
                 case "pop":
                     properties.setProperty("mail.pop3s.host", account.getIncomingURL());

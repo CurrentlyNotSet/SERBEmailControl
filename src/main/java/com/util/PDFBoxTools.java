@@ -5,16 +5,16 @@
  */
 package com.util;
 
-import com.sun.media.jai.codec.TIFFDirectory;
-import com.sun.media.jai.codec.TIFFField;
+//import com.sun.media.jai.codec.TIFFDirectory;
+//import com.sun.media.jai.codec.TIFFField;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
+//import javax.media.jai.JAI;
+//import javax.media.jai.RenderedOp;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 /**
@@ -132,34 +132,34 @@ public class PDFBoxTools {
         return new Dimension(new_width, new_height);
     }
 
-    /**
-     * Get the TIFF compression type from an image
-     *
-     * @param image String
-     * @return Integer of compression type
-     */
-    public static int TIFFCompression(String image) {
-        // 1 = No compression
-        // 2 = CCITT modified Huffman RLE
-        // 32773 = PackBits compression, aka Macintosh RLE
-        // 3 = CCITT Group 3 fax encoding
-        // 4 = CCITT Group 4 fax encoding
-        // 5 = LZW
-        // 6 = JPEG ('old-style' JPEG, later overriden in Technote2)
-        // 7 = JPEG ('new-style' JPEG)
-        // 8 = Deflate ('Adobe-style')
-        // 9 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.85 (which boils down to JBIG on black and white).
-        // 10 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.43 (which boils down to JBIG on color).
-
-        RenderedOp tiffFile = JAI.create("fileload", image);
-
-        int TAG_COMPRESSION = 259;
-        TIFFDirectory dir = (TIFFDirectory) tiffFile.getProperty("tiff_directory");
-        if (dir.isTagPresent(TAG_COMPRESSION)) {
-            TIFFField compField = dir.getField(TAG_COMPRESSION);
-            return compField.getAsInt(0);
-        }
-        return 0;
-    }
+//    /**
+//     * Get the TIFF compression type from an image
+//     *
+//     * @param image String
+//     * @return Integer of compression type
+//     */
+//    public static int TIFFCompression(String image) {
+//        // 1 = No compression
+//        // 2 = CCITT modified Huffman RLE
+//        // 32773 = PackBits compression, aka Macintosh RLE
+//        // 3 = CCITT Group 3 fax encoding
+//        // 4 = CCITT Group 4 fax encoding
+//        // 5 = LZW
+//        // 6 = JPEG ('old-style' JPEG, later overriden in Technote2)
+//        // 7 = JPEG ('new-style' JPEG)
+//        // 8 = Deflate ('Adobe-style')
+//        // 9 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.85 (which boils down to JBIG on black and white).
+//        // 10 = Defined by TIFF-F and TIFF-FX standard (RFC 2301) as ITU-T Rec. T.82 coding, using ITU-T Rec. T.43 (which boils down to JBIG on color).
+//
+//        RenderedOp tiffFile = JAI.create("fileload", image);
+//
+//        int TAG_COMPRESSION = 259;
+//        TIFFDirectory dir = (TIFFDirectory) tiffFile.getProperty("tiff_directory");
+//        if (dir.isTagPresent(TAG_COMPRESSION)) {
+//            TIFFField compField = dir.getField(TAG_COMPRESSION);
+//            return compField.getAsInt(0);
+//        }
+//        return 0;
+//    }
 
 }

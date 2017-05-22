@@ -5,10 +5,10 @@
  */
 package com.fileOperations;
 
-import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
+//import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
 import com.util.ExceptionHandler;
 import com.util.PDFBoxTools;
-import static com.util.PDFBoxTools.TIFFCompression;
+//import static com.util.PDFBoxTools.TIFFCompression;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,7 +20,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
+//import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -66,11 +66,11 @@ public class ImageToPDF {
                 imageFile = new File(image);
                 fileStream = new FileInputStream(image);
                 pdImage = JPEGFactory.createFromStream(doc, fileStream);
-            } else if ((image.toLowerCase().endsWith(".tif")
-                    || image.toLowerCase().endsWith(".tiff"))
-                    && TIFFCompression(image) == COMPRESSION_GROUP4) {
-                imageFile = new File(image);
-                pdImage = CCITTFactory.createFromFile(doc, imageFile);
+//            } else if ((image.toLowerCase().endsWith(".tif")
+//                    || image.toLowerCase().endsWith(".tiff"))
+//                    && TIFFCompression(image) == COMPRESSION_GROUP4) {
+//                imageFile = new File(image);
+//                pdImage = CCITTFactory.createFromFile(doc, imageFile);
             } else if (image.toLowerCase().endsWith(".gif")
                     || image.toLowerCase().endsWith(".bmp")
                     || image.toLowerCase().endsWith(".png")) {
@@ -164,11 +164,11 @@ public class ImageToPDF {
                 imageFile = new File(image);
                 fileStream = new FileInputStream(image);
                 pdImage = JPEGFactory.createFromStream(doc, fileStream);
-            } else if ((image.toLowerCase().endsWith(".tif")
-                    || image.toLowerCase().endsWith(".tiff"))
-                    && TIFFCompression(image) == COMPRESSION_GROUP4) {
-                imageFile = new File(image);
-                pdImage = CCITTFactory.createFromFile(doc, imageFile);
+//            } else if ((image.toLowerCase().endsWith(".tif")
+//                    || image.toLowerCase().endsWith(".tiff"))
+//                    && TIFFCompression(image) == COMPRESSION_GROUP4) {
+//                imageFile = new File(image);
+//                pdImage = CCITTFactory.createFromFile(doc, imageFile);
             } else if (image.toLowerCase().endsWith(".gif")
                     || image.toLowerCase().endsWith(".bmp")
                     || image.toLowerCase().endsWith(".png")) {

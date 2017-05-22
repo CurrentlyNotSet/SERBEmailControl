@@ -370,20 +370,23 @@ public class ReceiveEmail {
      */
     private static String removeEmojiAndSymbolFromString(String content) {
         String utf8tweet = "";
-        try {
-            byte[] utf8Bytes = content.getBytes("UTF-8");
-            utf8tweet = new String(utf8Bytes, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            ExceptionHandler.Handle(ex);
+
+        if (content != null) {
+            try {
+                byte[] utf8Bytes = content.getBytes("UTF-8");
+                utf8tweet = new String(utf8Bytes, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                ExceptionHandler.Handle(ex);
+            }
+            Pattern unicodeOutliers = Pattern.compile(
+                    "[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",
+                    Pattern.UNICODE_CASE
+                    | Pattern.CANON_EQ
+                    | Pattern.CASE_INSENSITIVE
+            );
+            Matcher unicodeOutlierMatcher = unicodeOutliers.matcher(utf8tweet);
+            utf8tweet = unicodeOutlierMatcher.replaceAll(" ");
         }
-        Pattern unicodeOutliers = Pattern.compile(
-                "[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",
-                Pattern.UNICODE_CASE
-                | Pattern.CANON_EQ
-                | Pattern.CASE_INSENSITIVE
-        );
-        Matcher unicodeOutlierMatcher = unicodeOutliers.matcher(utf8tweet);
-        utf8tweet = unicodeOutlierMatcher.replaceAll(" ");
 
         return utf8tweet;
     }

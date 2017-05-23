@@ -32,7 +32,7 @@ public class DBConnection {
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
-                if (nbAttempts > 1) {
+                if (nbAttempts > 0) {
                     System.out.println(StringUtilities.currentTime()
                             + " - Unable to connect to server. Trying again shortly.");
                 }
@@ -62,7 +62,7 @@ public class DBConnection {
                 break;
             } catch (ClassNotFoundException | SQLException e) {
                 nbAttempts++;
-                if (nbAttempts > 1) {
+                if (nbAttempts > 0) {
                     System.out.println(StringUtilities.currentTime()
                             + " - Unable to connect to server. Trying again shortly.");
                 }

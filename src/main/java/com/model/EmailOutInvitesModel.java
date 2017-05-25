@@ -24,6 +24,7 @@ public class EmailOutInvitesModel {
     private String hearingDescription;
     private Timestamp hearingStartTime;
     private Timestamp hearingEndTime;
+    private String emailSubject;
 
     public int getId() {
         return id;
@@ -111,6 +112,14 @@ public class EmailOutInvitesModel {
 
     public void setHearingEndTime(Timestamp hearingEndTime) {
         this.hearingEndTime = hearingEndTime;
+    }
+
+    public String getEmailSubject() {
+        return emailSubject;
+    }
+
+    public void setEmailSubject(String emailSubject) {
+        this.emailSubject = emailSubject;
     }
 
 }

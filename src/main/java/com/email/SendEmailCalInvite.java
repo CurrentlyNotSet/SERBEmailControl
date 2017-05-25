@@ -54,16 +54,16 @@ public class SendEmailCalInvite {
             String[] TOAddressess = ((eml.getToAddress() == null) ? "".split(";") : eml.getToAddress().split(";"));
             String[] CCAddressess = ((eml.getCcAddress() == null) ? "".split(";") : eml.getCcAddress().split(";"));
             String emailSubject = "";
-            BodyPart emailBody = null;
+            BodyPart emailBody = body(eml);
             BodyPart inviteBody = null;
 
             if (eml.getHearingRoomAbv() == null){
-                emailSubject = eml.getEmailBody() == null ? eml.getCaseNumber() : eml.getEmailBody();
-                emailBody = bodyResponseDue(eml);
+                emailSubject = eml.getEmailSubject() == null ? 
+                        (eml.getEmailBody() == null ? eml.getCaseNumber() : eml.getEmailBody())
+                        : eml.getEmailSubject();
                 inviteBody = responseDueCalObject(eml, account);
             } else {
-                emailSubject = Subject(eml);
-                emailBody = body(eml);
+                emailSubject = eml.getEmailSubject() == null ? Subject(eml) : eml.getEmailSubject();
                 inviteBody = inviteCalObject(eml, account, emailSubject);
             }
 
@@ -123,29 +123,7 @@ public class SendEmailCalInvite {
     private static BodyPart body(EmailOutInvitesModel eml) {
         MimeBodyPart descriptionPart = new MimeBodyPart();
         try {
-            String content = "There has been a " + eml.getHearingDescription()
-                    + " scheduled for " + eml.getCaseNumber()
-                    + " on " + Global.getMmddyyyy().format(eml.getHearingStartTime())
-                    + " at " + Global.getHhmmssa().format(eml.getHearingStartTime())
-                    + "\n\n\n";
-            descriptionPart.setContent(content, "text/html; charset=utf-8");
-        } catch (MessagingException ex) {
-            ExceptionHandler.Handle(ex);
-        }
-        return descriptionPart;
-    }
-
-    /**
-     * Builds the body for the email
-     *
-     * @param eml EmailOutInvitesModel
-     * @return String (Body)
-     */
-    private static BodyPart bodyResponseDue(EmailOutInvitesModel eml) {
-        MimeBodyPart descriptionPart = new MimeBodyPart();
-        try {
-            String content = eml.getEmailBody() == null ? "" : eml.getEmailBody()
-                    + "\n\n\n";
+            String content = eml.getEmailBody() + "\n\n\n";
             descriptionPart.setContent(content, "text/html; charset=utf-8");
         } catch (MessagingException ex) {
             ExceptionHandler.Handle(ex);

@@ -49,9 +49,7 @@ public class EmailOutInvites {
                 item.setHearingDescription(rs.getString("hearingDescription") == null ? "" : rs.getString("hearingDescription"));
                 item.setHearingStartTime(rs.getTimestamp("hearingStartTime"));
                 item.setHearingEndTime(rs.getTimestamp("hearingEndTime"));
-                
-                // Add in this After new Column is made.
-                //item.setSection(rs.getString("emailSubject"));
+                item.setSection(rs.getString("emailSubject"));
                 list.add(item);
             }
         } catch (SQLException ex) {

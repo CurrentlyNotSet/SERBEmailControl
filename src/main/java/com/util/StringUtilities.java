@@ -54,7 +54,7 @@ public class StringUtilities {
      * @return
      */
     public static String properAttachmentName(String filename, int emailID, int attachmentNumber) {
-        String base = FilenameUtils.removeExtension(filename).replace("/", "-").replace(":", "").replace("\"", "");
+        String base = FilenameUtils.removeExtension(filename).replace("[^A-Za-z0-9]", "_");
         String extension = FilenameUtils.getExtension(filename);
         String number = String.valueOf(attachmentNumber);
         if (attachmentNumber < 10){

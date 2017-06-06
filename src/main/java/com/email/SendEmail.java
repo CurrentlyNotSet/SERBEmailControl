@@ -251,7 +251,8 @@ public class SendEmail {
                     }
 
                     //DocumentFileName
-                    String savedDoc = String.valueOf(new Date().getTime()) + "_" + eml.getSubject() + ".pdf";
+                    String savedDoc = (String.valueOf(new Date().getTime()) 
+                            + "_" + eml.getSubject()).replaceAll("[:\\\\/*?|<>]", "_") + ".pdf";
 
                     //Set Merge File Destination
                     ut.setDestinationFileName(casePath + savedDoc);

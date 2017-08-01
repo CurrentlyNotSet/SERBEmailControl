@@ -21,7 +21,7 @@ public class Main {
         java.util.logging.Logger.getLogger("org.apache.pdfbox").setLevel(java.util.logging.Level.OFF);
         java.util.logging.Logger.getLogger("net.htmlparser.jericho").setLevel(java.util.logging.Level.OFF);
         System.out.println("\n\n\n");
-        System.out.println("Starting SERB Email Server - v1.6.7");
+        System.out.println("Starting SERB Email Server - v1.6.8");
         System.out.println("\n\n\n");
         MainClass bc = new MainClass();
         bc.setDefaults();

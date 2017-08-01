@@ -53,10 +53,12 @@ public class WebHistory {
                     + "WHERE "
                     + "((Activity.action NOT LIKE '%CREATED ON%' "
                     + "AND Activity.action NOT LIKE '%Generated%' "
-                    + "AND Activity.action NOT LIKE '%Case was Filed and Started%' "
+                    //+ "AND Activity.action NOT LIKE '%Case was Filed and Started%' " <-- removed at JB request R3-009
                     + "AND Activity.action NOT LIKE 'Added %' "
                     + "AND Activity.action NOT LIKE 'Set %' "
                     + "AND Activity.action NOT LIKE 'Changed %' "
+                    + "AND Activity.action NOT LIKE 'Ebody %' "
+                    + "AND Activity.action NOT LIKE 'Removed %' "
                     + "AND Activity.type != 'I' "
                     + "AND Activity.type != 'L' "
                     + "AND Activity.type != 'U' "
@@ -100,5 +102,4 @@ public class WebHistory {
         }
         return list;
     }
-
 }

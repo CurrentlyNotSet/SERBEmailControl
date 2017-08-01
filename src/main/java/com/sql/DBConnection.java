@@ -19,8 +19,6 @@ public class DBConnection {
 
     /**
      * Gets the connection for the default database. 
-     * 
-     * @return
      */
     public static Connection connectToDB() {
         Connection conn = null;

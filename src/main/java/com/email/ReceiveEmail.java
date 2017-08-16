@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -408,11 +409,14 @@ public class ReceiveEmail {
         try {
             ((MimeBodyPart) p).saveFile(filePath + filename);
             return true;
-        } catch (IOException | MessagingException ex) {
-            System.err.println("Attachment \"" + filename + "\" could not be saved");
+        } catch (IOException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved: IOException");
             ExceptionHandler.Handle(ex);
-            return false;
+        } catch (MessagingException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved: MessagingException");
+            ExceptionHandler.Handle(ex);
         }
+        return false;
     }
 
 }

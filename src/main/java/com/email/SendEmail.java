@@ -70,9 +70,17 @@ public class SendEmail {
     public static void sendEmails(EmailOutModel eml) {
         SystemEmailModel account = null;
 
+        String section = eml.getSection();
+        if (eml.getSection().equalsIgnoreCase("Hearings") &&
+                (  eml.getCaseType().equalsIgnoreCase("MED") 
+                || eml.getCaseType().equalsIgnoreCase("REP")
+                || eml.getCaseType().equalsIgnoreCase("ULP"))) {
+            section = eml.getCaseType();
+        }
+                
         //Get Account
         for (SystemEmailModel acc : Global.getSystemEmailParams()) {
-            if (acc.getSection().equals(eml.getSection())) {
+            if (acc.getSection().equals(section)) {
                 account = acc;
                 break;
             }
@@ -144,12 +152,12 @@ public class SendEmail {
                 }
 
                 //Get parts
-                String FromAddress = account.getEmailAddress();
-                String[] TOAddressess = ((eml.getTo() == null) ? "".split(";") : eml.getTo().split(";"));
-                String[] CCAddressess = ((eml.getCc() == null) ? "".split(";") : eml.getCc().split(";"));
+                String   FromAddress   = account.getEmailAddress();
+                String[] TOAddressess  = ((eml.getTo() == null)  ? "".split(";") : eml.getTo().split(";"));
+                String[] CCAddressess  = ((eml.getCc() == null)  ? "".split(";") : eml.getCc().split(";"));
                 String[] BCCAddressess = ((eml.getBcc() == null) ? "".split(";") : eml.getBcc().split(";"));
-                String emailSubject = eml.getSubject();
-                String emailBody = eml.getBody();
+                String   emailSubject  = eml.getSubject();
+                String   emailBody     = eml.getBody();
 
                 //Set Email Parts
                 Authenticator auth = EmailAuthenticator.setEmailAuthenticator(account);
@@ -268,7 +276,7 @@ public class SendEmail {
                     addEmailActivity(eml, savedDoc, emailSentTime);
 
                     //Copy to related case folders for MED
-                    if (eml.getSection().equals("MED")) {
+                    if (section.equals("MED")) {
                         List<RelatedCaseModel> relatedList = RelatedCase.getRelatedCases(eml);
                         if (relatedList.size() > 0) {
                             for (RelatedCaseModel related : relatedList) {
@@ -276,7 +284,7 @@ public class SendEmail {
                                 //Copy finalized document to proper folder
                                 File srcFile = new File(casePath + savedDoc);
 
-                                File destPath = new File((eml.getSection().equals("CSC") || eml.getSection().equals("ORG"))
+                                File destPath = new File((section.equals("CSC") || section.equals("ORG"))
                                         ? FileService.getCaseFolderORGCSCLocation(related) : FileService.getCaseFolderLocationRelatedCase(related));
                                 destPath.mkdirs();
 

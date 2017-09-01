@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -165,12 +164,14 @@ public class ReceiveEmail {
 
         try {
             Address[] address;
+            
             //From
             if ((address = m.getFrom()) != null) {
                 for (Address addy : address) {
                     eml.setEmailFrom(addy.toString());
                 }
             }
+            
             //to
             if ((address = m.getRecipients(Message.RecipientType.TO)) != null) {
                 for (int j = 0; j < address.length; j++) {
@@ -182,6 +183,7 @@ public class ReceiveEmail {
                 }
             }
             eml.setEmailTo(removeEmojiAndSymbolFromString(to));
+            
             //CC
             if ((address = m.getRecipients(Message.RecipientType.CC)) != null) {
 
@@ -194,6 +196,7 @@ public class ReceiveEmail {
                 }
             }
             eml.setEmailCC(removeEmojiAndSymbolFromString(cc));
+            
             //BCC
             if ((address = m.getRecipients(Message.RecipientType.BCC)) != null) {
                 for (int j = 0; j < address.length; j++) {
@@ -205,6 +208,7 @@ public class ReceiveEmail {
                 }
             }
             eml.setEmailBCC(removeEmojiAndSymbolFromString(bcc));
+            
             //subject
             if (m.getSubject() == null) {
                 eml.setEmailSubject("");
@@ -216,9 +220,14 @@ public class ReceiveEmail {
             eml.setSentDate(new java.sql.Timestamp(m.getSentDate().getTime()));
             eml.setReceivedDate(new java.sql.Timestamp(m.getReceivedDate().getTime()));
 
+            //Get email body
             String emailBody = getEmailBodyText(p);
+            
+            // clean email Body
+            emailBody = StringUtilities.replaceOfficeTags(emailBody); 
+            
             if (StringUtilities.isHtml(emailBody)) {
-                Source htmlSource = new Source(getEmailBodyText(p));
+                Source htmlSource = new Source(emailBody);
                 Segment htmlSeg = new Segment(htmlSource, 0, htmlSource.length());
                 Renderer htmlRend = new Renderer(htmlSeg);
                 emailBody = htmlRend.toString();

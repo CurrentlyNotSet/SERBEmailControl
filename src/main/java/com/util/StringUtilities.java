@@ -45,6 +45,23 @@ public class StringUtilities {
     }
 
     /**
+     * Strips MS Office tags from copy/paste into emails. Outlook will recognize
+     * However nothing else does and Jericho throws a fit with parsing.
+     * 
+     * @param text
+     * @return String text Cleaned
+     */
+    public static String replaceOfficeTags(String text){
+        
+        text = text.replaceAll("<![if !supportLists]>", "    ");
+        text = text.replaceAll("<![endif]>", "");
+        
+        
+        
+        return text;
+    }
+    
+    /**
      * Builds out the filename for the attachment. order is...
      * [emailID_number_base.extension]
      *

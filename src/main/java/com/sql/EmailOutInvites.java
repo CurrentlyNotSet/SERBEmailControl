@@ -49,7 +49,7 @@ public class EmailOutInvites {
                 item.setHearingDescription(rs.getString("hearingDescription") == null ? "" : rs.getString("hearingDescription"));
                 item.setHearingStartTime(rs.getTimestamp("hearingStartTime"));
                 item.setHearingEndTime(rs.getTimestamp("hearingEndTime"));
-                item.setSection(rs.getString("emailSubject"));
+                item.setEmailSubject(rs.getString("emailSubject") == null ? "" : rs.getString("emailSubject"));
                 list.add(item);
             }
         } catch (SQLException ex) {

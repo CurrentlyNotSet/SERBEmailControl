@@ -283,7 +283,7 @@ public class ReceiveEmail {
                     }
                 }
             }
-            return null;
+            return "";
         } catch (MessagingException | IOException ex) {
             ExceptionHandler.Handle(ex);
         }

@@ -19,11 +19,8 @@ public class CalendarCalculation {
     public static Timestamp adjustTimeZoneOffset(Timestamp localTime){
         TimeZone tz = TimeZone.getDefault();  
         Calendar cal = GregorianCalendar.getInstance(tz);
-        long offsetInMillis = tz.getOffset(cal.getTimeInMillis());
         
-        long adjustedTime = localTime.getTime() - offsetInMillis;
-        
-        return new Timestamp(adjustedTime);
+        return new Timestamp(localTime.getTime() - tz.getOffset(cal.getTimeInMillis()));
     }
     
 }

@@ -11,6 +11,7 @@ import com.sql.Audit;
 import com.sql.EmailOutInvites;
 import com.util.ExceptionHandler;
 import com.util.Global;
+import java.util.Calendar;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
@@ -150,8 +151,8 @@ public class SendEmailCalInvite {
                     + "DTSTART:" + Global.getiCalendarDateFormat().format(eml.getHearingStartTime()) + "\n"
                     + "DTEND:" + Global.getiCalendarDateFormat().format(eml.getHearingEndTime()) + "\n"
                     //Subject
-                    + "SUMMARY: " + emailSubject.replace("Upcoming", "").trim() + "\n"
-                    + "UID:324\n"
+                    + "SUMMARY:" + emailSubject.replace("Upcoming", "").trim() + "\n"
+                    + "UID:" + Calendar.getInstance().get(Calendar.MILLISECOND) + "\n"
                     //return email
                     + "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:MAILTO:" + new InternetAddress(account.getEmailAddress()).getAddress() + "\n"
                     //return email

@@ -107,7 +107,7 @@ public class CMDSwebUpdater {
             line += String.format("%-3s", item.getType());
             line += String.format("%-2s", item.getMonth());
             line += String.format("%-4s", item.getCaseSeqNumber());
-            line += String.format("%-6s", item.getGroupNumber().equals("") ? "      " : item.getGroupNumber());
+            line += String.format("%-8s", item.getGroupNumber().equals("") ? "      " : item.getGroupNumber());
             line += String.format("%-3s", (item.getALJ() + "   ").substring(0, 3));
 
             //Party Information

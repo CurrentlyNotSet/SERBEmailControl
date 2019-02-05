@@ -56,7 +56,7 @@ public class EmailOutRelatedCase {
     }
     
     /**
-     * Deletes attachment based off of email ID
+     * Deletes related case based off of email ID
      * 
      * @param emailOutId Integer
      */

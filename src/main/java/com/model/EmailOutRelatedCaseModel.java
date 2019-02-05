@@ -11,7 +11,7 @@ package com.model;
  */
 public class EmailOutRelatedCaseModel {
     private int id;
-    private int emailId;
+    private int emailOutId;
     private String caseYear;
     private String caseType;
     private String caseMonth;
@@ -26,11 +26,11 @@ public class EmailOutRelatedCaseModel {
     }
 
     public int getEmailId() {
-        return emailId;
+        return emailOutId;
     }
 
-    public void setEmailId(int emailId) {
-        this.emailId = emailId;
+    public void setEmailOutId(int emailOutId) {
+        this.emailOutId = emailOutId;
     }
     
     public String getCaseYear() {

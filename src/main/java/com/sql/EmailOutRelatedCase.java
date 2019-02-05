@@ -38,7 +38,7 @@ public class EmailOutRelatedCase {
             while (rs.next()) {
                     EmailOutRelatedCaseModel item = new EmailOutRelatedCaseModel();
                     item.setId(rs.getInt("id"));
-                    item.setEmailId(rs.getInt("emailId"));
+                    item.setEmailOutId(rs.getInt("emailOutId"));
                     item.setCaseYear(rs.getString("caseYear"));
                     item.setCaseType(rs.getString("caseType"));
                     item.setCaseMonth(rs.getString("caseMonth"));
@@ -53,6 +53,28 @@ public class EmailOutRelatedCase {
             DbUtils.closeQuietly(rs);
         }
         return list;
+    }
+    
+    /**
+     * Deletes attachment based off of email ID
+     * 
+     * @param emailOutId Integer
+     */
+    public static void deleteEmailOutRelatedForEmail(int emailOutId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBConnection.connectToDB();
+            String sql = "DELETE FROM EmailOutRelatedCase WHERE emailOutID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, emailOutId);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            ExceptionHandler.Handle(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+        }
     }
 
 }

@@ -324,10 +324,10 @@ public class SendEmail {
                         }
                     }
 
-                    //Delete Out entries
+                    //Clean SQL entries
                     EmailOut.deleteEmailEntry(eml.getId());
                     EmailOutAttachment.deleteAttachmentsForEmail(eml.getId());
-                    //TODO: DELETE related Emails Outs
+                    EmailOutRelatedCase.deleteEmailOutRelatedForEmail(eml.getId());
 
                     //Clean up temp PDFs
                     for (String tempPDF : tempPDFList) {

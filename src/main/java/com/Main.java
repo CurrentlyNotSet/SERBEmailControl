@@ -5,6 +5,8 @@
  */
 package com;
 
+import com.util.Global;
+
 /**
  *
  * @author Andrew
@@ -16,13 +18,44 @@ public class Main {
      * YEAR = (# of release years; 1 = first year released '2017')
      */
     public static void main(String[] args) {
+        //Setup Application
+        setEnv(args);
+        displayWelcome();
+
+        //Run Application
+        MainClass bc = new MainClass();
+        bc.setDefaults();
+    }
+
+    private static void setEnv(String[] args) {
         System.setProperty("java.net.preferIPv4Stack", "true");
         java.util.logging.Logger.getLogger("org.apache.pdfbox").setLevel(java.util.logging.Level.OFF);
         java.util.logging.Logger.getLogger("net.htmlparser.jericho").setLevel(java.util.logging.Level.OFF);
+
+        //this logic will only only grab the first matching arg and use that, subsquential args will not work
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("-incoming") || arg.equalsIgnoreCase("-outgoing") || arg.equalsIgnoreCase("-all")) {
+                switch (arg) {
+                    case "-incoming":
+                        Global.setOutgoingOk(false);
+                        break;
+                    case "-outgoing":
+                        Global.setIncomingOk(false);
+                        break;
+                    case "-all":
+                        Global.setIncomingOk(true);
+                        Global.setOutgoingOk(true);
+                        break;
+                    default:
+                }
+                break;
+            }
+        }
+    }
+
+    private static void displayWelcome() {
         System.out.println("\n\n\n");
-        System.out.println("Starting SERB Email Server - v2.8.8");
+        System.out.println("Starting SERB Email Server - v" + Global.getVersion());
         System.out.println("\n\n\n");
-        MainClass bc = new MainClass();
-        bc.setDefaults();
     }
 }

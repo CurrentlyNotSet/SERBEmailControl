@@ -16,6 +16,11 @@ import java.util.List;
  * @author Andrew
  */
 public class Global {
+    
+    //System Environment variables
+    private static boolean incomingOk = true;
+    private static boolean outgoingOk = true;
+    private static final String version = "2.8.8";
 
     //Operational Parameters
     private static final boolean debug = false; //email debug
@@ -73,6 +78,26 @@ public class Global {
             ".vcf", ".war", ".wim", ".xar", ".xp3", ".xz", ".yz1", ".z",
             ".zip", ".zipx", ".zoo", ".zpaq", ".zz");
 
+    public static boolean isIncomingOk() {
+        return incomingOk;
+    }
+
+    public static void setIncomingOk(boolean incomingOk) {
+        Global.incomingOk = incomingOk;
+    }
+
+    public static boolean isOutgoingOk() {
+        return outgoingOk;
+    }
+
+    public static void setOutgoingOk(boolean outgoingOk) {
+        Global.outgoingOk = outgoingOk;
+    }
+
+    public static String getVersion() {
+        return version;
+    }
+    
     public static boolean isDebug() {
         return debug;
     }

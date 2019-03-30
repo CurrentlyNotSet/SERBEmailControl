@@ -29,7 +29,7 @@ public class EmailOutRelatedCase {
         ResultSet rs = null;
         try {
             conn = DBConnection.connectToDB();
-            String sql = "SELECT * FROM EmailOutRelatedCase WHERE emailId = ? ";
+            String sql = "SELECT * FROM EmailOutRelatedCase WHERE emailOutId = ? ";
 
             ps = conn.prepareStatement(sql);
             ps.setInt(1, eml.getId());

@@ -277,7 +277,7 @@ public class SendEmail {
                     //Add emailBody Activity
                     addEmailActivity(eml, savedDoc, emailSentTime);
 
-                    //Copy to related case folders for MED
+                    //Copy to related case folders
                     if (section.equals("MED")) {
                         List<RelatedCaseModel> relatedMedList = RelatedCase.getRelatedCases(eml);
                         if (relatedMedList.size() > 0) {
@@ -301,6 +301,7 @@ public class SendEmail {
                             }
                         }
                     } else {
+                        //This is blanket and should grab all related cases. (UNTESTED outside of CMDS)
                         List<EmailOutRelatedCaseModel> relatedList = EmailOutRelatedCase.getRelatedCases(eml);
                         if (relatedList.size() > 0) {
                             for (EmailOutRelatedCaseModel related : relatedList) {

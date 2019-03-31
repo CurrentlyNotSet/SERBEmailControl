@@ -57,10 +57,14 @@ public class MainClass {
     }
 
     /**
-     * threads() runs several different threads simultaneously Email Thread
-     * Scans Thread Daily Crash Email (Scheduled Task) Refresh Email Accounts
-     * (Scheduled Task) REMOVED //Database Cleanup (Scheduled Task) DISABLED
-     * //Database Backups (Scheduled Task) DISABLED
+     * threads() runs several different threads simultaneously 
+     * Email Thread
+     * Daily Crash Email (Scheduled Task) 
+     * Refresh Email Accounts (Scheduled Task) 
+     * 
+     * DISABLED //Scans Thread
+     * DISABLED //Database Cleanup (Scheduled Task)
+     * DISABLED //Database Backups (Scheduled Task)
      */
     private void threads() {
         Thread emailThread, scansThread;

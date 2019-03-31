@@ -21,10 +21,10 @@ public class Global {
     private static boolean incomingOk = true;
     private static boolean outgoingOk = true;
     private static final String version = "2.8.8";
-
-    //Operational Parameters
     private static final boolean debug = false; //email debug
     private static final boolean okToSendEmail = true; //false = DOES NOT SEND MAIL
+
+    //Operational Parameters
     private static final int sleep = 30000; //milliseconds  (0.5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";

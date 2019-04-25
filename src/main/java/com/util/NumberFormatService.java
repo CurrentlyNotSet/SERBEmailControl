@@ -8,6 +8,7 @@ package com.util;
 import com.model.ActivityModel;
 import com.model.CaseTypeModel;
 import com.model.EmailOutModel;
+import com.model.EmailOutRelatedCaseModel;
 import com.model.RelatedCaseModel;
 
 /**
@@ -42,6 +43,20 @@ public class NumberFormatService {
                 + related.getRelatedCaseType() + "-"
                 + related.getRelatedCaseMonth() + "-"
                 + related.getRelatedCaseNumber();
+    }
+    
+    /**
+     * Gets four columns worth of case number information and converts it to
+     * its single case number
+     *
+     * @param related RelatedCaseModel
+     * @return String full case number
+     */
+    public static String FullCaseNumber(EmailOutRelatedCaseModel related) {
+        return related.getCaseYear() + "-"
+                + related.getCaseType() + "-"
+                + related.getCaseMonth() + "-"
+                + related.getCaseNumber();
     }
 
     /**

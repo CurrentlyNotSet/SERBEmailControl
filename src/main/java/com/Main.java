@@ -14,8 +14,7 @@ import com.util.Global;
 public class Main {
 
     /**
-     * @param args the command line arguments Versioning follows YEAR*.MONTH.DAY
-     * YEAR = (# of release years; 1 = first year released '2017')
+     * @param args the command line arguments 
      */
     public static void main(String[] args) {
         //Setup Application

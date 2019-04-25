@@ -12,6 +12,7 @@ import com.fileOperations.WordToPDF;
 import com.model.ActivityModel;
 import com.model.EmailOutAttachmentModel;
 import com.model.EmailOutModel;
+import com.model.EmailOutRelatedCaseModel;
 import com.model.RelatedCaseModel;
 import com.model.SECExceptionsModel;
 import com.model.SystemEmailModel;
@@ -19,6 +20,7 @@ import com.sql.Activity;
 import com.sql.Audit;
 import com.sql.EmailOut;
 import com.sql.EmailOutAttachment;
+import com.sql.EmailOutRelatedCase;
 import com.sql.RelatedCase;
 import com.util.ExceptionHandler;
 import com.util.FileService;
@@ -275,11 +277,11 @@ public class SendEmail {
                     //Add emailBody Activity
                     addEmailActivity(eml, savedDoc, emailSentTime);
 
-                    //Copy to related case folders for MED
+                    //Copy to related case folders
                     if (section.equals("MED")) {
-                        List<RelatedCaseModel> relatedList = RelatedCase.getRelatedCases(eml);
-                        if (relatedList.size() > 0) {
-                            for (RelatedCaseModel related : relatedList) {
+                        List<RelatedCaseModel> relatedMedList = RelatedCase.getRelatedCases(eml);
+                        if (relatedMedList.size() > 0) {
+                            for (RelatedCaseModel related : relatedMedList) {
 
                                 //Copy finalized document to proper folder
                                 File srcFile = new File(casePath + savedDoc);
@@ -298,11 +300,35 @@ public class SendEmail {
                                 addEmailActivityRelatedCase(eml, related, savedDoc, emailSentTime);
                             }
                         }
+                    } else {
+                        //This is blanket and should grab all related cases. (UNTESTED outside of CMDS)
+                        List<EmailOutRelatedCaseModel> relatedList = EmailOutRelatedCase.getRelatedCases(eml);
+                        if (relatedList.size() > 0) {
+                            for (EmailOutRelatedCaseModel related : relatedList) {
+
+                                //Copy finalized document to proper folder
+                                File srcFile = new File(casePath + savedDoc);
+
+                                File destPath = new File((section.equals("CSC") || section.equals("ORG"))
+                                        ? FileService.getCaseFolderORGCSCLocation(related) : FileService.getCaseFolderLocationEmailOutRelatedCase(related));
+                                destPath.mkdirs();
+
+                                try {
+                                    FileUtils.copyFileToDirectory(srcFile, destPath);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
+                                //Add Related Case Activity Entry
+                                addEmailOutActivityRelatedCase(eml, related, savedDoc, emailSentTime);
+                            }
+                        }
                     }
 
-                    //Delete Out entries
+                    //Clean SQL entries
                     EmailOut.deleteEmailEntry(eml.getId());
                     EmailOutAttachment.deleteAttachmentsForEmail(eml.getId());
+                    EmailOutRelatedCase.deleteEmailOutRelatedForEmail(eml.getId());
 
                     //Clean up temp PDFs
                     for (String tempPDF : tempPDFList) {
@@ -374,4 +400,31 @@ public class SendEmail {
         Activity.insertActivity(act);
     }
 
+    /**
+     * Adds activity to related case after sending email
+     *
+     * @param eml EmailOutModel
+     * @param PDFname String (File Name)
+     * @param emailSentTime Date (Time Sent)
+     */
+    private static void addEmailOutActivityRelatedCase(EmailOutModel eml, EmailOutRelatedCaseModel related, String PDFname, Date emailSentTime) {
+        ActivityModel act = new ActivityModel();
+        act.setCaseYear(related.getCaseYear());
+        act.setCaseType(related.getCaseType());
+        act.setCaseMonth(related.getCaseMonth());
+        act.setCaseNumber(related.getCaseNumber());
+        act.setUserID(String.valueOf(eml.getUserID()));
+        act.setDate(new Timestamp(emailSentTime.getTime()));
+        act.setAction(Global.isOkToSendEmail() ? "OUT - " + eml.getSubject() : "OUT (Not Actually Sent) - " + eml.getSubject());
+        act.setFileName(PDFname);
+        act.setFrom(eml.getFrom());
+        act.setTo(eml.getTo());
+        act.setType("");
+        act.setComment(eml.getBody());
+        act.setRedacted(0);
+        act.setAwaitingTimestamp(0);
+
+        //Insert Email
+        Activity.insertActivity(act);
+    }
 }

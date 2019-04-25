@@ -23,8 +23,8 @@ public class Main {
         displayWelcome();
 
         //Run Application
-//        MainClass bc = new MainClass();
-//        bc.setDefaults();
+        MainClass bc = new MainClass();
+        bc.setDefaults();
     }
 
     private static void setEnv(String[] args) {

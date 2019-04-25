@@ -190,10 +190,19 @@ public class MainClass {
                     System.out.println(StringUtilities.currentTime()
                             + " - Starting Email Thread");
                     SystemEmail.loadEmailConnectionInformation();
-                    incomingEmails();
-                    calInvites();
-                    notificationEmails();
-                    outgoingEmail();
+                    
+                    //will run if arg is set to "-incoming", "-all", or no arg is provided 
+                    if (Global.isIncomingOk()){
+                        incomingEmails();
+                    }
+                    
+                    //will run if arg is set to "-outgoing", "-all", or no arg is provided
+                    if (Global.isOutgoingOk()){
+                        calInvites();
+                        notificationEmails();
+                        outgoingEmail();
+                    }
+                    
                     //Printout the sleep information
                     System.out.println("Email Thread - Sleeping for: "
                             + TimeUnit.MILLISECONDS.toSeconds(Global.getSleep()) + "sec \n");

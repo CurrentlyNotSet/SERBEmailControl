@@ -34,6 +34,7 @@ public class EmailProperties {
                     properties.setProperty("mail.imap.host", account.getIncomingURL());
                     properties.put("mail.imap.port", String.valueOf(account.getIncomingPort()));
                     properties.setProperty("mail.imap.partialfetch", "false");
+                    properties.setProperty("mail.imaps.partialfetch", "false");
                     break;
                 case "pop":
                     properties.setProperty("mail.pop3s.host", account.getIncomingURL());

@@ -7,6 +7,7 @@ package com.util;
 
 import com.model.ActivityModel;
 import com.model.EmailOutModel;
+import com.model.EmailOutRelatedCaseModel;
 import com.model.RelatedCaseModel;
 import com.model.SECExceptionsModel;
 //import static com.sun.media.jai.codec.TIFFEncodeParam.COMPRESSION_GROUP4;
@@ -144,6 +145,20 @@ public class FileService {
     }
     
     /**
+     * Get case file location
+     * 
+     * @param item RelatedCaseModel
+     * @return String file path
+     */
+    public static String getCaseFolderLocationEmailOutRelatedCase(EmailOutRelatedCaseModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + NumberFormatService.getSection(item.getCaseType())
+                + File.separatorChar + item.getCaseYear()
+                + File.separatorChar + NumberFormatService.FullCaseNumber(item)
+                + File.separatorChar;
+    }
+    
+    /**
      * Gets case folder location for ORG or CSC cases
      * 
      * @param item ActivityModel
@@ -163,6 +178,19 @@ public class FileService {
      * @return String file path
      */
     public static String getCaseFolderORGCSCLocation(EmailOutModel item) {
+        return Global.getActivityPath()
+                + File.separatorChar + item.getCaseType()
+                + File.separatorChar + item.getCaseNumber()
+                + File.separatorChar;
+    }
+    
+    /**
+     * Gets case folder location for ORG or CSC cases
+     * 
+     * @param item RelatedCaseModel
+     * @return String file path
+     */
+    public static String getCaseFolderORGCSCLocation(EmailOutRelatedCaseModel item) {
         return Global.getActivityPath()
                 + File.separatorChar + item.getCaseType()
                 + File.separatorChar + item.getCaseNumber()

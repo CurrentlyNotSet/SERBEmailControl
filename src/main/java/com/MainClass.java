@@ -57,10 +57,14 @@ public class MainClass {
     }
 
     /**
-     * threads() runs several different threads simultaneously Email Thread
-     * Scans Thread Daily Crash Email (Scheduled Task) Refresh Email Accounts
-     * (Scheduled Task) REMOVED //Database Cleanup (Scheduled Task) DISABLED
-     * //Database Backups (Scheduled Task) DISABLED
+     * threads() runs several different threads simultaneously 
+     * Email Thread
+     * Daily Crash Email (Scheduled Task) 
+     * Refresh Email Accounts (Scheduled Task) 
+     * 
+     * DISABLED //Scans Thread
+     * DISABLED //Database Cleanup (Scheduled Task)
+     * DISABLED //Database Backups (Scheduled Task)
      */
     private void threads() {
         Thread emailThread, scansThread;
@@ -186,10 +190,19 @@ public class MainClass {
                     System.out.println(StringUtilities.currentTime()
                             + " - Starting Email Thread");
                     SystemEmail.loadEmailConnectionInformation();
-                    incomingEmails();
-                    calInvites();
-                    notificationEmails();
-                    outgoingEmail();
+                    
+                    //will run if arg is set to "-incoming", "-all", or no arg is provided 
+                    if (Global.isIncomingOk()){
+                        incomingEmails();
+                    }
+                    
+                    //will run if arg is set to "-outgoing", "-all", or no arg is provided
+                    if (Global.isOutgoingOk()){
+                        calInvites();
+                        notificationEmails();
+                        outgoingEmail();
+                    }
+                    
                     //Printout the sleep information
                     System.out.println("Email Thread - Sleeping for: "
                             + TimeUnit.MILLISECONDS.toSeconds(Global.getSleep()) + "sec \n");

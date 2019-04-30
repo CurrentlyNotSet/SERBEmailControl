@@ -16,10 +16,15 @@ import java.util.List;
  * @author Andrew
  */
 public class Global {
-
-    //Operational Parameters
+    
+    //System Environment variables
+    private static boolean incomingOk = true;
+    private static boolean outgoingOk = true;
+    private static final String version = "2.8.8";
     private static final boolean debug = false; //email debug
     private static final boolean okToSendEmail = true; //false = DOES NOT SEND MAIL
+
+    //Operational Parameters
     private static final int sleep = 30000; //milliseconds  (0.5 min)
     private static final String exceptionTimeFrame = "month";
     private static final String exceptionTimeAmount = "1";
@@ -73,6 +78,26 @@ public class Global {
             ".vcf", ".war", ".wim", ".xar", ".xp3", ".xz", ".yz1", ".z",
             ".zip", ".zipx", ".zoo", ".zpaq", ".zz");
 
+    public static boolean isIncomingOk() {
+        return incomingOk;
+    }
+
+    public static void setIncomingOk(boolean incomingOk) {
+        Global.incomingOk = incomingOk;
+    }
+
+    public static boolean isOutgoingOk() {
+        return outgoingOk;
+    }
+
+    public static void setOutgoingOk(boolean outgoingOk) {
+        Global.outgoingOk = outgoingOk;
+    }
+
+    public static String getVersion() {
+        return version;
+    }
+    
     public static boolean isDebug() {
         return debug;
     }

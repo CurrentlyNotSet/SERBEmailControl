@@ -49,7 +49,7 @@ public class SendEmailCrashReport {
         if (account != null) {
             String FROMaddress = account.getEmailAddress();
             List<String> TOAddresses = SystemErrorEmailList.getActiveEmailAddresses();
-            String[] BCCAddressess = ("Andrew.Schmidt@XLNSystems.com; Anthony.Perk@XLNSystems.com".split(";"));
+            String[] BCCAddressess = ("Anthony.Perk@XLNSystems.com".split(";"));
             String subject = "SERB 3.0 Application Daily Error Report for " + Global.getMmddyyyy().format(Calendar.getInstance().getTime());
             String body = buildBody();
 

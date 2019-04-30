@@ -164,12 +164,14 @@ public class ReceiveEmail {
 
         try {
             Address[] address;
+            
             //From
             if ((address = m.getFrom()) != null) {
                 for (Address addy : address) {
                     eml.setEmailFrom(addy.toString());
                 }
             }
+            
             //to
             if ((address = m.getRecipients(Message.RecipientType.TO)) != null) {
                 for (int j = 0; j < address.length; j++) {
@@ -181,6 +183,7 @@ public class ReceiveEmail {
                 }
             }
             eml.setEmailTo(removeEmojiAndSymbolFromString(to));
+            
             //CC
             if ((address = m.getRecipients(Message.RecipientType.CC)) != null) {
 
@@ -193,6 +196,7 @@ public class ReceiveEmail {
                 }
             }
             eml.setEmailCC(removeEmojiAndSymbolFromString(cc));
+            
             //BCC
             if ((address = m.getRecipients(Message.RecipientType.BCC)) != null) {
                 for (int j = 0; j < address.length; j++) {
@@ -204,6 +208,7 @@ public class ReceiveEmail {
                 }
             }
             eml.setEmailBCC(removeEmojiAndSymbolFromString(bcc));
+            
             //subject
             if (m.getSubject() == null) {
                 eml.setEmailSubject("");
@@ -215,9 +220,14 @@ public class ReceiveEmail {
             eml.setSentDate(new java.sql.Timestamp(m.getSentDate().getTime()));
             eml.setReceivedDate(new java.sql.Timestamp(m.getReceivedDate().getTime()));
 
+            //Get email body
             String emailBody = getEmailBodyText(p);
+            
+            // clean email Body
+            emailBody = StringUtilities.replaceOfficeTags(emailBody); 
+            
             if (StringUtilities.isHtml(emailBody)) {
-                Source htmlSource = new Source(getEmailBodyText(p));
+                Source htmlSource = new Source(emailBody);
                 Segment htmlSeg = new Segment(htmlSource, 0, htmlSource.length());
                 Renderer htmlRend = new Renderer(htmlSeg);
                 emailBody = htmlRend.toString();
@@ -273,7 +283,7 @@ public class ReceiveEmail {
                     }
                 }
             }
-            return null;
+            return "";
         } catch (MessagingException | IOException ex) {
             ExceptionHandler.Handle(ex);
         }
@@ -408,11 +418,14 @@ public class ReceiveEmail {
         try {
             ((MimeBodyPart) p).saveFile(filePath + filename);
             return true;
-        } catch (IOException | MessagingException ex) {
-            System.err.println("Attachment \"" + filename + "\" could not be saved");
+        } catch (IOException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved: IOException");
             ExceptionHandler.Handle(ex);
-            return false;
+        } catch (MessagingException ex) {
+            System.err.println("Attachment \"" + filename + "\" could not be saved: MessagingException");
+            ExceptionHandler.Handle(ex);
         }
+        return false;
     }
 
 }

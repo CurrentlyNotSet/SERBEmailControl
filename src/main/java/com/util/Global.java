@@ -20,7 +20,7 @@ public class Global {
     //System Environment variables
     private static boolean incomingOk = true;
     private static boolean outgoingOk = true;
-    private static final String version = "2.8.8";
+    private static final String version = "2.9.0";
     private static final boolean debug = false; //email debug
     private static final boolean okToSendEmail = true; //false = DOES NOT SEND MAIL
 

@@ -81,18 +81,25 @@ public class MainClass {
             }
         };
 
+        //Run Tasks
+        //will run if arg is set to "-outgoing", "-all", or no arg is provided
+        if (Global.isOutgoingOk()){
+            timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
+            timer.scheduleAtFixedRate(new dailyCMDSWebupdater(), TimerSettings.cmdsUpdaterTime(), oneDay);
+        }
+        
+        emailThread.start();
+
+          //@Deprecated        
 //        scansThread = new Thread() {
 //            @Override
 //            public void run() {
 //                stampScansThread();
 //            }
 //        };
-        //Run Tasks
-        timer.scheduleAtFixedRate(new dailyCrashNotifyEmail(), TimerSettings.errorEmailTime(), oneDay);
-        timer.scheduleAtFixedRate(new dailyCMDSWebupdater(), TimerSettings.cmdsUpdaterTime(), oneDay);
+//
 //        timer.scheduleAtFixedRate(new databaseCleanupTask(), TimerSettings.dbCleanupTime(), oneDay);
 //        timer.scheduleAtFixedRate(new databaseBackups(), TimerSettings.dbBackupTime(), oneDay);
-        emailThread.start();
 //        scansThread.start();
     }
 

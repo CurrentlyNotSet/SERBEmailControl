@@ -174,7 +174,7 @@ public class SendEmailCalInvite {
                     + "END:VEVENT\n"
                     + "END:VCALENDAR";
             calendarPart.addHeader("Content-Class", "urn:content-classes:calendarmessage");
-            calendarPart.setContent(calendarContent, "text/calendar;method=CANCEL");
+            calendarPart.setContent(calendarContent, "text/calendar;method=REQUEST;name=\"meeting.ics\"");
         } catch (MessagingException ex) {
             ExceptionHandler.Handle(ex);
         }

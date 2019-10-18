@@ -173,8 +173,11 @@ public class SendEmailCalInvite {
                     + "END:VALARM\n"
                     + "END:VEVENT\n"
                     + "END:VCALENDAR";
+            
             calendarPart.addHeader("Content-Class", "urn:content-classes:calendarmessage");
-            calendarPart.setContent(calendarContent, "text/calendar;method=CANCEL");
+            calendarPart.addHeader("Content-ID", "calendar_message");
+            calendarPart.setContent(calendarContent, "text/calendar;method=REQUEST;name=\"meeting.ics\"");
+            
         } catch (MessagingException ex) {
             ExceptionHandler.Handle(ex);
         }
@@ -223,8 +226,11 @@ public class SendEmailCalInvite {
                     + "END:VALARM\n"
                     + "END:VEVENT\n"
                     + "END:VCALENDAR";
+            
             calendarPart.addHeader("Content-Class", "urn:content-classes:calendarmessage");
-            calendarPart.setContent(calendarContent, "text/calendar;method=CANCEL");
+            calendarPart.addHeader("Content-ID", "calendar_message");
+            calendarPart.setContent(calendarContent, "text/calendar;method=REQUEST;name=\"meeting.ics\"");
+            
         } catch (MessagingException ex) {
             ExceptionHandler.Handle(ex);
         }

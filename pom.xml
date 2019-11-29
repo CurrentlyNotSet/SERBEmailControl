@@ -50,7 +50,7 @@
         <dependency> <!-- parsing Emails -->
             <groupId>net.htmlparser.jericho</groupId>
             <artifactId>jericho-html</artifactId>
-            <version>3.4</version>
+            <version>3.3</version>
         </dependency>
         <dependency> <!-- Validate Email Addresses -->
             <groupId>commons-validator</groupId>

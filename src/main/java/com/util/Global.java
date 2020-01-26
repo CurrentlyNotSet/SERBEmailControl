@@ -58,10 +58,11 @@ public class Global {
     private static List<CaseTypeModel> caseTypeList;
 
     //CMDS WebUpdater information
-    private static final String destinationPath = "G:\\CMDS\\CMDSWeb\\";
+    private static final String destinationPath = "C:\\CMDS\\CMDSWeb\\";
     private static final String webCaseFileName = "Internet-Case-Extract.SEQ";
     private static final String webHistoryFileName = "Internet-History-Extract.SEQ";
-
+    private static final String webBoardOrdersFileName = "SPBR_Boards_Orders_List.csv";
+    
     //Attachment FileType Blacklist
     private static final List<String> fileBlackList = Arrays.asList(
             ".??_", ".?Q?", ".?Z?", ".7z", ".a", ".ace", ".afa", ".alz",
@@ -222,4 +223,8 @@ public class Global {
         return hourOfCMDSUpdater;
     }
 
+    public static String getWebBoardOrdersFileName() {
+        return webBoardOrdersFileName;
+    }
+    
 }

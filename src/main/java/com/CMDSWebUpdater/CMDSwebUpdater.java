@@ -253,7 +253,7 @@ public class CMDSwebUpdater {
 
         //Write File
         try {
-            Files.write(Paths.get(Global.getDestinationPath() + Global.getWebBoardOrdersFileName()), output.getBytes());
+            Files.write(Paths.get(Global.getDestinationPathBoardOrders() + Global.getWebBoardOrdersFileName()), output.getBytes());
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

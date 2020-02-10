@@ -59,6 +59,7 @@ public class Global {
 
     //CMDS WebUpdater information
     private static final String destinationPath = "G:\\CMDS\\CMDSWeb\\";
+    private static final String destinationPathBoardOrders = "I:\\Board_Orders_SPBR_Website_Upload_Folder\\";
     private static final String webCaseFileName = "Internet-Case-Extract.SEQ";
     private static final String webHistoryFileName = "Internet-History-Extract.SEQ";
     private static final String webBoardOrdersFileName = "SPBR_Boards_Orders_List.csv";
@@ -226,5 +227,9 @@ public class Global {
     public static String getWebBoardOrdersFileName() {
         return webBoardOrdersFileName;
     }
+
+    public static String getDestinationPathBoardOrders() {
+        return destinationPathBoardOrders;
+    }
     
-}
+ }

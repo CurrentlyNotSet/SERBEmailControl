@@ -216,7 +216,7 @@ public class CMDSwebUpdater {
         showHideLine += "H,"; //URL
         showHideLine += "S,"; //AppellantName
         showHideLine += "S,"; //AppelleeName
-        showHideLine += "S,"; //OpenDate
+        showHideLine += "H,"; //OpenDate
         showHideLine += "S,"; //BoardOrderDate
         showHideLine += "S,"; //Result
         output += (output.trim().equals("") ? showHideLine : System.lineSeparator() + showHideLine);
@@ -230,7 +230,7 @@ public class CMDSwebUpdater {
         headerLine += "Appellant,"; //AppellantName
         headerLine += "Appellee,"; //AppelleeName
         headerLine += "Open Date,"; //OpenDate
-        headerLine += "Board Order,"; //BoardOrderDate
+        headerLine += "Board Order Date,"; //BoardOrderDate
         headerLine += "Result,"; //Result
         output += (output.trim().equals("") ? headerLine : System.lineSeparator() + headerLine);
         

@@ -36,7 +36,7 @@ public class WebBoardOrders {
                     // View
                     + "('View') AS \"View\", "
                     // URL
-                    + "('https://spbr.ohio.gov/static/PDF/Board_Orders/' + CMDSCase.caseYear + '/' + (RIGHT (CMDSCase.caseYear, 2) + '-' + CMDSCase.caseType + '-' + CMDSCase.caseMonth + '-' + CMDSCase.caseNumber) + '.pdf') AS URL, "
+                    + "('https://pbr.ohio.gov/static/PDF/Board_Orders/' + CMDSCase.caseYear + '/' + (RIGHT (CMDSCase.caseYear, 2) + '-' + CMDSCase.caseType + '-' + CMDSCase.caseMonth + '-' + CMDSCase.caseNumber) + '.pdf') AS URL, "
                     // AppellantName
                     + "(SELECT CaseParty.firstName + ' ' + CaseParty.lastName FROM CaseParty WHERE (CaseParty.caseYear = CMDSCase.caseYear AND CaseParty.caseType = CMDSCase.caseType AND CaseParty.caseMonth = CMDSCase.caseMonth AND CaseParty.caseNumber = CMDSCase.caseNumber) AND CaseParty.caseRelation = 'Appellant' ) AS AppellantName, "
                     // AppelleeName

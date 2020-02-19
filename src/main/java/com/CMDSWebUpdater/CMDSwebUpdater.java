@@ -8,8 +8,10 @@ package com.CMDSWebUpdater;
 import com.Main;
 import com.model.CasePartyModel;
 import com.model.WEBCaseModel;
+import com.model.WebBoardOrderModel;
 import com.model.WebHistoryModel;
 import com.sql.CaseParty;
+import com.sql.WebBoardOrders;
 import com.sql.WebCase;
 import com.sql.WebHistory;
 import com.util.Global;
@@ -193,6 +195,70 @@ public class CMDSwebUpdater {
         }
 
         System.out.println("WebHistory End Time: " + new Date());
+    }
+    
+    public static void processBoardOrdersCSV() {
+        String output = "";
+
+        System.out.println("WebBoardOrders Start Time: " + new Date());
+
+        //Gather History List
+        List<WebBoardOrderModel> list = WebBoardOrders.getWebBoardOrdersList();
+
+        System.out.println("WebBoardOrders Gathered Cases Time: " + new Date());
+        System.out.println("WebBoardOrders Gathered Cases : " + list.size());
+        
+        //Header List
+        String showHideLine = "";
+            
+        showHideLine += "S,"; //CMDSCaseNumber
+        showHideLine += "S,"; //View
+        showHideLine += "H,"; //URL
+        showHideLine += "S,"; //AppellantName
+        showHideLine += "S,"; //AppelleeName
+        showHideLine += "H,"; //OpenDate
+        showHideLine += "S,"; //BoardOrderDate
+        showHideLine += "S,"; //Result
+        output += (output.trim().equals("") ? showHideLine : System.lineSeparator() + showHideLine);
+        
+        //Naming line
+        String headerLine = "";
+            
+        headerLine += "Case Number,"; //CMDSCaseNumber
+        headerLine += "View,"; //View
+        headerLine += "URL,"; //URL
+        headerLine += "Appellant,"; //AppellantName
+        headerLine += "Appellee,"; //AppelleeName
+        headerLine += "Open Date,"; //OpenDate
+        headerLine += "Board Order Date,"; //BoardOrderDate
+        headerLine += "Result,"; //Result
+        output += (output.trim().equals("") ? headerLine : System.lineSeparator() + headerLine);
+        
+        //Process Rows
+        for (WebBoardOrderModel item : list) {
+            String line = "";
+            
+            line += item.getCMDSCaseNumber() + ",";
+            line += item.getView() + ",";
+            line += item.getURL() + ",";
+            line += item.getAppellantName() + ",";
+            line += item.getAppelleeName() + ",";
+            line += item.getOpenDate() + ",";
+            line += item.getBoardOrderDate() + ",";
+            line += item.getResult() + ",";
+            output += (output.trim().equals("") ? line : System.lineSeparator() + line);
+        }
+
+        System.out.println("WebBoardOrders Writing File Time: " + new Date());
+
+        //Write File
+        try {
+            Files.write(Paths.get(Global.getDestinationPathBoardOrders() + Global.getWebBoardOrdersFileName()), output.getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.out.println("WebBoardOrders End Time: " + new Date());
     }
 
 }

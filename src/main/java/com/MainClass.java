@@ -130,6 +130,7 @@ public class MainClass {
             if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
                 CMDSwebUpdater.processWebCaseList();
                 CMDSwebUpdater.processWebHistoryList();
+                CMDSwebUpdater.processBoardOrdersCSV();
             }
         }
     }
